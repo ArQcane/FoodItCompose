@@ -1,10 +1,12 @@
 package com.example.fooditcompose.ui.theme
 
+import android.graphics.Color.parseColor
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -13,9 +15,12 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    secondary = Color(parseColor("#FFE9E1")),
+    secondaryVariant = Color(parseColor("#FFE3E1")),
+    primary = Color(parseColor("#EE3E38")),
+    primaryVariant = Color(parseColor("#FF9494")),
+    background = Color(parseColor("#FFF5E4")),
+    surface = Color.White
 
     /* Other default colors to override
     background = Color.White,
@@ -32,11 +37,7 @@ fun FoodItComposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
+    val colors = LightColorPalette
 
     MaterialTheme(
         colors = colors,
