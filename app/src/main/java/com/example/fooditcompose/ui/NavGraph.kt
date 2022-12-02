@@ -8,14 +8,18 @@ import com.example.fooditcompose.ui.screens.auth.LoginScreen
 import com.example.fooditcompose.ui.screens.auth.RegisterScreen
 import com.example.fooditcompose.ui.screens.auth.ResetPasswordWithEmailScreen
 import com.example.fooditcompose.ui.screens.home.HomeScreen
+import com.example.fooditcompose.ui.screens.splash.SplashScreen
 import com.example.fooditcompose.ui.utils.Screen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.LoginScreen.route,
+        startDestination = Screen.SplashScreen.route,
     ) {
+        composable(Screen.SplashScreen.route){
+           SplashScreen(navController)
+        }
         composable(Screen.LoginScreen.route) {
             LoginScreen(navController)
         }

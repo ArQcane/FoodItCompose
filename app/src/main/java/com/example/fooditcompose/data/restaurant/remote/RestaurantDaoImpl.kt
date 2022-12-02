@@ -67,10 +67,32 @@ class RestaurantDaoImpl @Inject constructor(
     }
 
     override suspend fun sortRestaurantsByDescendingRating(): Resource<List<Restaurant>> {
-        TODO("Not yet implemented")
+        val request = Request.Builder().url("$BASE_RESTAURANT_URL/sort/descending").build()
+        return try {
+            val response = okHttpClient.newCall(request).await()
+            Resource.Success(
+                Gson().fromJson(
+                    response.body?.toJson(),
+                    object : TypeToken<List<Restaurant>>() {}.type
+                )
+            )
+        } catch (e: NoNetworkException) {
+            Resource.Failure(e.message.toString())
+        }
     }
 
     override suspend fun sortRestaurantsByAscendingRating(): Resource<List<Restaurant>> {
-        TODO("Not yet implemented")
+        val request = Request.Builder().url("$BASE_RESTAURANT_URL/sort/ascending").build()
+        return try {
+            val response = okHttpClient.newCall(request).await()
+            Resource.Success(
+                Gson().fromJson(
+                    response.body?.toJson(),
+                    object : TypeToken<List<Restaurant>>() {}.type
+                )
+            )
+        } catch (e: NoNetworkException) {
+            Resource.Failure(e.message.toString())
+        }
     }
 }
