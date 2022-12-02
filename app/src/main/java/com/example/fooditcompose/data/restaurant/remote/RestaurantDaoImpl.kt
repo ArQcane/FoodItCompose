@@ -1,41 +1,36 @@
 package com.example.fooditcompose.data.restaurant.remote
 
-import com.example.fooditcompose.data.restaurant.Restaurant
-import com.example.fooditcompose.domain.common.dtos.DefaultErrorDto
-import com.example.fooditcompose.domain.common.exceptions.NoNetworkException
-import com.example.fooditcompose.utils.Constants.Companion.BASE_URL
+import com.example.fooditcompose.domain.restaurant.Restaurant
+import com.example.fooditcompose.domain.utils.Resource
+import com.example.fooditcompose.domain.utils.ResourceError
 import com.example.fooditcompose.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
-import com.example.fooditcompose.utils.Resource
-import com.example.fooditcompose.utils.await
 import com.example.fooditcompose.utils.decodeFromJson
 import com.example.fooditcompose.utils.toJson
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okio.IOException
 import javax.inject.Inject
 
 class RestaurantDaoImpl @Inject constructor(
-    private val okHttpClient: OkHttpClient,
-    private val gson: Gson,
-): RestaurantDao {
-    companion object {
-        val BASE_RESTAURANT_URL = "$BASE_URL/restaurants"
-    }
-
+    okHttpClient: OkHttpClient,
+    gson: Gson,
+) : RestaurantDao(okHttpClient, gson) {
     override suspend fun getAllRestaurants(): Resource<List<Restaurant>> {
-        val request = Request.Builder().url(BASE_RESTAURANT_URL).build()
-        return try {
-            val response = okHttpClient.newCall(request).await()
-            Resource.Success(
-                Gson().fromJson(
-                    response.body?.toJson(),
-                    object : TypeToken<List<Restaurant>>() {}.type
-                )
+        try {
+            val response = get()
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
             )
-        } catch (e: NoNetworkException) {
-            Resource.Failure(e.message.toString())
+            if (response.code == 200) return Resource.Success(
+                gson.decodeFromJson(json)
+            )
+            return Resource.Failure(
+                gson.decodeFromJson<ResourceError.Default>(json)
+            )
+        } catch (e: IOException) {
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
         }
     }
 
@@ -49,50 +44,58 @@ class RestaurantDaoImpl @Inject constructor(
     }
 
     override suspend fun searchRestaurant(restaurantName: String?): Resource<List<Restaurant>> {
-        val request = Request.Builder()
-            .url("BASE_RESTAURANT_URL/$restaurantName")
-            .build()
         try {
-            val response = okHttpClient.newCall(request).await()
-            val json = response.body?.toJson()
-            json ?: return Resource.Failure(UNABLE_GET_BODY_ERROR_MESSAGE)
+            val response = get("/search/$restaurantName")
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+            )
             if (response.code == 200) return Resource.Success(
                 gson.decodeFromJson(json)
             )
-            val errorDto = gson.decodeFromJson<DefaultErrorDto>(json)
-            return Resource.Failure(errorDto.error)
+            return Resource.Failure(
+                gson.decodeFromJson<ResourceError.Default>(json)
+            )
         } catch (e: IOException) {
-            return Resource.Failure(e.message.toString())
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
         }
     }
 
     override suspend fun sortRestaurantsByDescendingRating(): Resource<List<Restaurant>> {
-        val request = Request.Builder().url("$BASE_RESTAURANT_URL/sort/descending").build()
-        return try {
-            val response = okHttpClient.newCall(request).await()
-            Resource.Success(
-                Gson().fromJson(
-                    response.body?.toJson(),
-                    object : TypeToken<List<Restaurant>>() {}.type
-                )
+        try {
+            val response = get("/sort/descending")
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
             )
-        } catch (e: NoNetworkException) {
-            Resource.Failure(e.message.toString())
+            if (response.code == 200) return Resource.Success(
+                gson.decodeFromJson(json)
+            )
+            return Resource.Failure(
+                gson.decodeFromJson<ResourceError.Default>(json)
+            )
+        } catch (e: IOException) {
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
         }
     }
-
     override suspend fun sortRestaurantsByAscendingRating(): Resource<List<Restaurant>> {
-        val request = Request.Builder().url("$BASE_RESTAURANT_URL/sort/ascending").build()
-        return try {
-            val response = okHttpClient.newCall(request).await()
-            Resource.Success(
-                Gson().fromJson(
-                    response.body?.toJson(),
-                    object : TypeToken<List<Restaurant>>() {}.type
-                )
+        try {
+            val response = get("/sort/ascending")
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
             )
-        } catch (e: NoNetworkException) {
-            Resource.Failure(e.message.toString())
+            if (response.code == 200) return Resource.Success(
+                gson.decodeFromJson(json)
+            )
+            return Resource.Failure(
+                gson.decodeFromJson<ResourceError.Default>(json)
+            )
+        } catch (e: IOException) {
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
         }
     }
 }

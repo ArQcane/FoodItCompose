@@ -11,6 +11,6 @@ data class RegisterDto(
     val phoneNumber: Int,
     val gender: String,
     val address: String,
-    val image: File,
+    val profile_pic: String? = null,
     val fcmToken: String,
 )

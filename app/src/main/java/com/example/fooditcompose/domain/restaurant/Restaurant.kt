@@ -1,4 +1,4 @@
-package com.example.fooditcompose.data.restaurant
+package com.example.fooditcompose.domain.restaurant
 
 data class Restaurant(
     val restaurant_id: Int,

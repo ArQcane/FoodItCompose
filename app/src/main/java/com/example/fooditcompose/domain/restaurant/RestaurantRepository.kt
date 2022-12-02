@@ -1,7 +1,6 @@
 package com.example.fooditcompose.domain.restaurant
 
-import com.example.fooditcompose.data.restaurant.Restaurant
-import com.example.fooditcompose.utils.Resource
+import com.example.fooditcompose.domain.utils.Resource
 
 interface RestaurantRepository {
     suspend fun getAllRestaurants(): Resource<List<Restaurant>>

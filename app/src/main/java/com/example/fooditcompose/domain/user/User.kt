@@ -1,4 +1,4 @@
-package com.example.fooditcompose.data.user
+package com.example.fooditcompose.domain.user
 
 data class User(
     val userId: Int,
@@ -11,7 +11,6 @@ data class User(
     val email: String,
     val address: String,
     val profile_pic: String,
-
 )
 
 
