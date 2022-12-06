@@ -20,5 +20,5 @@ abstract class RemoteUserDao(
     abstract suspend fun updateAccount(updateAccountDto: UpdateAccountDto): Resource<String>
     abstract suspend fun deleteAccount(userId: String): Resource<String>
     abstract suspend fun login(loginDto: LoginDto): Resource<String>
-    abstract suspend fun register(signUpDto: RegisterDto): Resource<String>
+    abstract suspend fun register(registerDto: RegisterDto): Resource<String>
 }

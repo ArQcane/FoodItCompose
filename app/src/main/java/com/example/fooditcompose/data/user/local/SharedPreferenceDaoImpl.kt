@@ -30,7 +30,7 @@ class SharedPreferenceDaoImpl @Inject constructor(
     }
 
     companion object {
-        const val SHARED_PREF_NAME = "CLICKTOEAT_PREFS"
+        const val SHARED_PREF_NAME = "FOODIT_PREFS"
         const val TOKEN = "FOODIT_TOKEN"
     }
 }

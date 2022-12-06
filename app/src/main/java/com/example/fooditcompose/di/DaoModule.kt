@@ -2,6 +2,8 @@ package com.example.fooditcompose.di
 
 import com.example.fooditcompose.data.restaurant.remote.RemoteRestaurantDao
 import com.example.fooditcompose.data.restaurant.remote.RemoteRestaurantDaoImpl
+import com.example.fooditcompose.data.review.remote.RemoteReviewDao
+import com.example.fooditcompose.data.review.remote.RemoteReviewDaoImpl
 import com.example.fooditcompose.data.user.local.SharedPreferenceDao
 import com.example.fooditcompose.data.user.local.SharedPreferenceDaoImpl
 import com.example.fooditcompose.data.user.remote.RemoteUserDao
@@ -32,5 +34,11 @@ abstract class DaoModule {
     abstract fun bindsSharedPreferenceDao(
         sharedPreferenceDaoImpl: SharedPreferenceDaoImpl
     ): SharedPreferenceDao
+
+    @Singleton
+    @Binds
+    abstract fun bindsRemoteReviewDao(
+        remoteReviewDaoImpl: RemoteReviewDaoImpl
+    ): RemoteReviewDao
 
 }

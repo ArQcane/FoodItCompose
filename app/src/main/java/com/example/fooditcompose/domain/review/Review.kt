@@ -10,5 +10,4 @@ data class Review(
     val review: String,
     val rating: Double,
     @SerializedName("dateposted") val dateposted: Date,
-
     )

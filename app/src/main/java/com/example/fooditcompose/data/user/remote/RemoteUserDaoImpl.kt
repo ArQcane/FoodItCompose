@@ -24,6 +24,12 @@ class RemoteUserDaoImpl @Inject constructor(
 ) : RemoteUserDao(okHttpClient, gson) {
     companion object {
         const val FORGOT_PASSWORD_ENDPOINT = "/resetPassword"
+        const val GET_USER_BY_ID_ENDPOINT = "/id"
+        const val VALIDATE_TOKEN_ENDPOINT = "/members"
+        const val LOGIN_ENDPOINT = "/login"
+        const val REGISTER_ENDPOINT = "/register"
+        const val UPDATE_ACCOUNT_ENDPOINT = "/updateuser"
+        const val DELETE_ACCOUNT_ENDPOINT = "/deleteuser"
     }
 
     override suspend fun getAllUsers(): Resource<List<User>> =
@@ -45,7 +51,7 @@ class RemoteUserDaoImpl @Inject constructor(
 
     override suspend fun getUserById(id: String): Resource<User> =
         tryWithIoExceptionHandling {
-            val response = get(endpoint = "/id/$id")
+            val response = get(endpoint = "$GET_USER_BY_ID_ENDPOINT/$id")
             val json = response.body?.toJson()
                 ?: return@tryWithIoExceptionHandling Resource.Failure(
                     ResourceError.Default("No user with id $id found")
@@ -58,7 +64,7 @@ class RemoteUserDaoImpl @Inject constructor(
     override suspend fun validateToken(token: String): Resource<User> =
         tryWithIoExceptionHandling {
             val response = post(
-                endpoint = "http://127.0.0.1:8080/members",
+                endpoint = VALIDATE_TOKEN_ENDPOINT,
                 body = mapOf("token" to token)
             )
             val json = response.body?.toJson()
@@ -104,7 +110,7 @@ class RemoteUserDaoImpl @Inject constructor(
         updateAccountDto: UpdateAccountDto
     ): Resource<String> = tryWithIoExceptionHandling {
         val response = put(
-            endpoint = "/updateuser",
+            endpoint = UPDATE_ACCOUNT_ENDPOINT,
             body = updateAccountDto.copy(),
         )
         val json = response.body?.toJson()
@@ -123,9 +129,9 @@ class RemoteUserDaoImpl @Inject constructor(
 
     override suspend fun deleteAccount(
         userId: String
-    ): Resource<String>  = tryWithIoExceptionHandling {
-        val response = delete<Response>(
-            endpoint = "/deleteuser/$userId"
+    ): Resource<String> = tryWithIoExceptionHandling {
+        val response = delete<Unit>(
+            endpoint = "$DELETE_ACCOUNT_ENDPOINT/$userId"
         )
         val json = response.body?.toJson()
             ?: return@tryWithIoExceptionHandling Resource.Failure(
@@ -144,10 +150,10 @@ class RemoteUserDaoImpl @Inject constructor(
         }
     }
 
-    override suspend fun login(loginDto: LoginDto): Resource<String>  =
+    override suspend fun login(loginDto: LoginDto): Resource<String> =
         tryWithIoExceptionHandling {
             val response = post(
-                endpoint = "/login",
+                endpoint = LOGIN_ENDPOINT,
                 body = loginDto
             )
             val json = response.body?.toJson()
@@ -170,7 +176,7 @@ class RemoteUserDaoImpl @Inject constructor(
     override suspend fun register(registerDto: RegisterDto): Resource<String> =
         tryWithIoExceptionHandling {
             val response = post(
-                endpoint = "/register",
+                endpoint = REGISTER_ENDPOINT,
                 body = registerDto.copy(),
             )
             val json = response.body?.toJson()
