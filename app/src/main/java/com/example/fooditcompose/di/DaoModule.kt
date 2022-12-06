@@ -1,9 +1,11 @@
 package com.example.fooditcompose.di
 
-import com.example.fooditcompose.data.restaurant.remote.RestaurantDao
-import com.example.fooditcompose.data.restaurant.remote.RestaurantDaoImpl
-import com.example.fooditcompose.data.user.remote.UserDao
-import com.example.fooditcompose.data.user.remote.UserDaoImpl
+import com.example.fooditcompose.data.restaurant.remote.RemoteRestaurantDao
+import com.example.fooditcompose.data.restaurant.remote.RemoteRestaurantDaoImpl
+import com.example.fooditcompose.data.user.local.SharedPreferenceDao
+import com.example.fooditcompose.data.user.local.SharedPreferenceDaoImpl
+import com.example.fooditcompose.data.user.remote.RemoteUserDao
+import com.example.fooditcompose.data.user.remote.RemoteUserDaoImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,13 +19,18 @@ abstract class DaoModule {
     @Singleton
     @Binds
     abstract fun bindsRestaurantDao(
-        restaurantDaoImpl: RestaurantDaoImpl
-    ): RestaurantDao
+        restaurantDaoImpl: RemoteRestaurantDaoImpl
+    ): RemoteRestaurantDao
 
     @Singleton
     @Binds
-    abstract fun bindsUserDao(
-        userDaoImpl: UserDaoImpl
-    ): UserDao
+    abstract fun bindsRemoteUserDao(
+        userDaoImpl: RemoteUserDaoImpl
+    ): RemoteUserDao
+
+    @Binds
+    abstract fun bindsSharedPreferenceDao(
+        sharedPreferenceDaoImpl: SharedPreferenceDaoImpl
+    ): SharedPreferenceDao
 
 }

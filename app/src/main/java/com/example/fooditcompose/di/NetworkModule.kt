@@ -1,12 +1,7 @@
 package com.example.fooditcompose.di
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import com.example.fooditcompose.data.restaurant.remote.RestaurantDao
-import com.example.fooditcompose.data.restaurant.remote.RestaurantDaoImpl
-import com.example.fooditcompose.domain.common.NetworkInterceptor
-import com.example.fooditcompose.domain.common.exceptions.NoNetworkException
+import com.example.fooditcompose.data.common.NetworkInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -16,7 +11,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import javax.inject.Singleton
 
 @Module

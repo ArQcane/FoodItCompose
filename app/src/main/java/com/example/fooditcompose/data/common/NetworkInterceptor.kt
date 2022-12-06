@@ -1,12 +1,12 @@
-package com.example.fooditcompose.domain.common
+package com.example.fooditcompose.data.common
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.fooditcompose.domain.common.exceptions.NoInternetException
-import com.example.fooditcompose.domain.common.exceptions.NoNetworkException
+import com.example.fooditcompose.data.common.exceptions.NoInternetException
+import com.example.fooditcompose.data.common.exceptions.NoNetworkException
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.IOException
@@ -36,14 +36,14 @@ class NetworkInterceptor(
             val timeOutMs = 1500
             val sock = Socket()
             val socketAddress = InetSocketAddress("8.8.8.8", 53)
-            sock.connect(socketAddress)
+            sock.connect(socketAddress, timeOutMs)
             sock.close()
             true
         } catch (e: IOException) {
             false
         }
     }
-    @RequiresApi(Build.VERSION_CODES.M)
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         if (!isConnected()) throw NoNetworkException()

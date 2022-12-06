@@ -11,7 +11,7 @@ data class UpdateAccountDto(
     val phoneNumber: Int? = null,
     val gender: String? = null,
     val address: String? = null,
-    val image: File? = null,
+    val profile_pic: File? = null,
     val deleteImage: Boolean? = null,
     val fcmToken: String? = null,
 )
