@@ -4,7 +4,7 @@ import com.example.fooditcompose.domain.utils.Resource
 import com.example.fooditcompose.domain.utils.ResourceError
 import okio.IOException
 
-suspend fun <T> tryWithIoExceptionHandling(
+suspend fun <T> tryWithIoHandling(
     callback: suspend () -> Resource<T>
 ): Resource<T> {
     return try {

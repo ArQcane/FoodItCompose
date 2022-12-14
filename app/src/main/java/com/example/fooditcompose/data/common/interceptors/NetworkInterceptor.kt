@@ -1,4 +1,4 @@
-package com.example.fooditcompose.data.common
+package com.example.fooditcompose.data.common.interceptors
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -44,6 +44,7 @@ class NetworkInterceptor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         if (!isConnected()) throw NoNetworkException()

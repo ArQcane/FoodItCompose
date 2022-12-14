@@ -1,7 +1,9 @@
 package com.example.fooditcompose.di
 
 import android.content.Context
-import com.example.fooditcompose.data.common.NetworkInterceptor
+import com.example.fooditcompose.data.common.converter.JsonConverter
+import com.example.fooditcompose.data.common.converter.JsonConverterImpl
+import com.example.fooditcompose.data.common.interceptors.NetworkInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -36,4 +38,9 @@ object NetworkModule {
     fun providesGson(): Gson = GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         .create()
+
+    @Provides
+    fun providesJsonConverter(
+        gson: Gson
+    ): JsonConverter = JsonConverterImpl(gson)
 }

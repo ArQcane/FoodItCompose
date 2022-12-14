@@ -1,8 +1,10 @@
 package com.example.fooditcompose.di
 
+import com.example.fooditcompose.data.favourites.FavouritesRepositoryImpl
 import com.example.fooditcompose.data.restaurant.RestaurantRepositoryImpl
 import com.example.fooditcompose.data.review.ReviewRepositoryImpl
 import com.example.fooditcompose.data.user.UserRepositoryImpl
+import com.example.fooditcompose.domain.favourites.FavouritesRepository
 import com.example.fooditcompose.domain.restaurant.RestaurantRepository
 import com.example.fooditcompose.domain.review.ReviewRepository
 import com.example.fooditcompose.domain.user.UserRepository
@@ -32,4 +34,10 @@ abstract class RepositoryModule {
     abstract fun bindsReviewRepository(
         reviewRepositoryImpl: ReviewRepositoryImpl
     ): ReviewRepository
+
+    @Binds
+    abstract fun bindsFavoriteRepository(
+        favoriteRepositoryImpl: FavouritesRepositoryImpl
+    ): FavouritesRepository
+
 }
