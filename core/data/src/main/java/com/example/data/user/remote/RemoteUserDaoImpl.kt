@@ -2,7 +2,6 @@ package com.example.data.user.remote
 
 
 import com.example.data.common.DefaultMessageDto
-import com.example.data.user.remote.RemoteUserDao
 import com.example.data.user.remote.dto.LoginDto
 import com.example.data.user.remote.dto.RegisterDto
 import com.example.data.user.remote.dto.TokenDto
@@ -13,21 +12,22 @@ import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import com.example.network.Authorization
 import com.example.network.OkHttpDao
-import com.example.network.converter.JsonConverter
 import com.example.network.delegations.AuthorizationImpl
 import com.example.network.delegations.OkHttpDaoImpl
 import com.example.network.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
 import com.example.network.utils.toJson
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 class RemoteUserDaoImpl @Inject constructor(
     okHttpClient: OkHttpClient,
-    converter: JsonConverter,
+    gson: Gson,
 ) : RemoteUserDao,
     Authorization by AuthorizationImpl(),
     OkHttpDao by OkHttpDaoImpl(
-        converter = converter,
+        gson = gson,
         okHttpClient = okHttpClient,
         path = "/users"
     ) {
@@ -48,10 +48,16 @@ class RemoteUserDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson(json)
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<User>>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -64,7 +70,10 @@ class RemoteUserDaoImpl @Inject constructor(
                     ResourceError.Default("No user with id $id found")
                 )
             return@tryWithIoHandling Resource.Success(
-                converter.fromJson(json)
+                gson.fromJson(
+                    json,
+                    object : TypeToken<User>() {}.type
+                )
             )
         }
 
@@ -80,10 +89,16 @@ class RemoteUserDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson(json)
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<User>>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -100,13 +115,22 @@ class RemoteUserDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson<DefaultMessageDto>(json).message
+                    gson.fromJson<DefaultMessageDto>(
+                        json,
+                        object : TypeToken<DefaultMessageDto>() {}.type
+                    ).message
                 )
                 400 -> Resource.Failure(
-                    converter.fromJson<ResourceError.Field>(json)
+                    gson.fromJson<ResourceError.Field>(
+                        json,
+                        object : TypeToken<ResourceError.Field>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -124,10 +148,16 @@ class RemoteUserDaoImpl @Inject constructor(
             )
         return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                converter.fromJson<TokenDto>(json).token
+                gson.fromJson<TokenDto>(
+                    json,
+                    object : TypeToken<TokenDto>() {}.type
+                ).token
             )
             else -> Resource.Failure(
-                converter.fromJson<ResourceError.Default>(json)
+                gson.fromJson<ResourceError.Default>(
+                    json,
+                    object : TypeToken<ResourceError.Default>() {}.type
+                )
             )
         }
     }
@@ -144,13 +174,22 @@ class RemoteUserDaoImpl @Inject constructor(
             )
         return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                converter.fromJson<DefaultMessageDto>(json).message
+                gson.fromJson<DefaultMessageDto>(
+                    json,
+                    object : TypeToken<DefaultMessageDto>() {}.type
+                ).message
             )
             400 -> Resource.Failure(
-                converter.fromJson<ResourceError.Field>(json)
+                gson.fromJson<ResourceError.Field>(
+                    json,
+                    object : TypeToken<ResourceError.Field>() {}.type
+                )
             )
             else -> Resource.Failure(
-                converter.fromJson<ResourceError.Default>(json)
+                gson.fromJson<ResourceError.Default>(
+                    json,
+                    object : TypeToken<ResourceError.Default>() {}.type
+                )
             )
         }
     }
@@ -167,13 +206,22 @@ class RemoteUserDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson<TokenDto>(json).token
+                    gson.fromJson<TokenDto>(
+                        json,
+                        object : TypeToken<TokenDto>() {}.type
+                    ).token
                 )
                 400 -> Resource.Failure(
-                    converter.fromJson<ResourceError.Field>(json)
+                    gson.fromJson<ResourceError.Field>(
+                        json,
+                        object : TypeToken<ResourceError.Field>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -190,13 +238,22 @@ class RemoteUserDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson<TokenDto>(json).token
+                    gson.fromJson<TokenDto>(
+                        json,
+                        object : TypeToken<TokenDto>() {}.type
+                    ).token
                 )
                 400 -> Resource.Failure(
-                    converter.fromJson<ResourceError.Field>(json)
+                    gson.fromJson<ResourceError.Field>(
+                        json,
+                        object : TypeToken<ResourceError.Field>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }

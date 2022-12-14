@@ -8,22 +8,23 @@ import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import com.example.network.Authorization
 import com.example.network.OkHttpDao
-import com.example.network.converter.JsonConverter
 import com.example.network.delegations.AuthorizationImpl
 import com.example.network.delegations.OkHttpDaoImpl
 import com.example.network.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
 import com.example.network.utils.toJson
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 class RemoteFavoriteDaoImpl @Inject constructor(
     okHttpClient: OkHttpClient,
-    jsonConverter: JsonConverter
+    gson: Gson
 ) : RemoteFavoriteDao,
     Authorization by AuthorizationImpl(),
     OkHttpDao by OkHttpDaoImpl(
         okHttpClient = okHttpClient,
-        converter = jsonConverter,
+        gson = gson,
         path = "/favourites"
     ) {
 
@@ -35,10 +36,16 @@ class RemoteFavoriteDaoImpl @Inject constructor(
             )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson(json)
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<Restaurant>>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -51,10 +58,16 @@ class RemoteFavoriteDaoImpl @Inject constructor(
             )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson(json)
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<User>>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -72,10 +85,16 @@ class RemoteFavoriteDaoImpl @Inject constructor(
         )
         return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                converter.fromJson<DefaultMessageDto>(json).message
+                gson.fromJson<DefaultMessageDto>(
+                    json,
+                    object : TypeToken<DefaultMessageDto>() {}.type
+                ).message
             )
             else -> Resource.Failure(
-                converter.fromJson<ResourceError.Default>(json)
+                gson.fromJson<ResourceError.Default>(
+                    json,
+                    object : TypeToken<ResourceError.Default>() {}.type
+                )
             )
         }
     }
@@ -93,10 +112,16 @@ class RemoteFavoriteDaoImpl @Inject constructor(
         )
         return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                converter.fromJson<DefaultMessageDto>(json).message
+                gson.fromJson<DefaultMessageDto>(
+                    json,
+                    object : TypeToken<DefaultMessageDto>() {}.type
+                ).message
             )
             else -> Resource.Failure(
-                converter.fromJson<ResourceError.Default>(json)
+                gson.fromJson<ResourceError.Default>(
+                    json,
+                    object : TypeToken<ResourceError.Default>() {}.type
+                )
             )
         }
     }

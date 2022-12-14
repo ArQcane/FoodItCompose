@@ -1,12 +1,12 @@
 package com.example.network
 
-import com.example.network.converter.JsonConverter
+import com.google.gson.Gson
 import okhttp3.Response
 import java.io.File
 
 interface OkHttpDao {
 
-    val converter: JsonConverter
+    val gson: Gson
 
     suspend fun get(
         endpoint: String = "/",

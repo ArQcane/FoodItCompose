@@ -1,8 +1,6 @@
 package com.example.network.di
 
 import android.content.Context
-import com.example.network.converter.JsonConverter
-import com.example.network.converter.JsonConverterImpl
 import com.example.network.interceptors.NetworkInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -39,8 +37,4 @@ object NetworkModule {
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         .create()
 
-    @Provides
-    fun providesJsonConverter(
-        gson: Gson
-    ): JsonConverter = JsonConverterImpl(gson)
 }

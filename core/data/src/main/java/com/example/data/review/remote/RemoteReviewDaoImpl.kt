@@ -2,7 +2,6 @@ package com.example.data.review.remote
 
 import com.example.data.common.DefaultMessageDto
 import com.example.data.common.EntityCreatedDto
-import com.example.data.review.remote.RemoteReviewDao
 import com.example.data.review.remote.dto.CreateReviewDto
 import com.example.data.review.remote.dto.UpdateReviewDto
 import com.example.data.utils.tryWithIoHandling
@@ -12,23 +11,25 @@ import com.example.domain.utils.ResourceError
 
 import com.example.network.Authorization
 import com.example.network.OkHttpDao
-import com.example.network.converter.JsonConverter
 import com.example.network.delegations.AuthorizationImpl
 import com.example.network.delegations.OkHttpDaoImpl
 import com.example.network.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
 import com.example.network.utils.toJson
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 import okhttp3.OkHttpClient
+import org.w3c.dom.Comment
 
 import javax.inject.Inject
 
 class RemoteReviewDaoImpl @Inject constructor(
     okHttpClient: OkHttpClient,
-    converter: JsonConverter,
+    gson: Gson
 ) : RemoteReviewDao,
     Authorization by AuthorizationImpl(),
     OkHttpDao by OkHttpDaoImpl(
-        converter = converter,
+        gson = gson,
         okHttpClient = okHttpClient,
         path = "/reviews"
     ) {
@@ -42,10 +43,16 @@ class RemoteReviewDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson(json)
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<Review>>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -59,10 +66,16 @@ class RemoteReviewDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson(json)
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<Review>>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -76,10 +89,16 @@ class RemoteReviewDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson(json)
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<Review>>() {}.type
+                    )
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
@@ -99,13 +118,22 @@ class RemoteReviewDaoImpl @Inject constructor(
             )
         return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                converter.fromJson<EntityCreatedDto>(json).insertId
+                gson.fromJson<EntityCreatedDto>(
+                    json,
+                    object : TypeToken<EntityCreatedDto>() {}.type
+                ).insertId
             )
             400 -> Resource.Failure(
-                converter.fromJson<ResourceError.Field>(json)
+                gson.fromJson<ResourceError.Field>(
+                    json,
+                    object : TypeToken<ResourceError.Field>() {}.type
+                )
             )
             else -> Resource.Failure(
-                converter.fromJson<ResourceError.Default>(json)
+                gson.fromJson<ResourceError.Default>(
+                    json,
+                    object : TypeToken<ResourceError.Default>() {}.type
+                )
             )
         }
     }
@@ -126,10 +154,16 @@ class RemoteReviewDaoImpl @Inject constructor(
             )
         return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                converter.fromJson(json)
+                gson.fromJson(
+                    json,
+                    object : TypeToken<Review>() {}.type
+                )
             )
             else -> Resource.Failure(
-                converter.fromJson<ResourceError.Default>(json)
+                gson.fromJson<ResourceError.Default>(
+                    json,
+                    object : TypeToken<ResourceError.Default>() {}.type
+                )
             )
         }
     }
@@ -145,10 +179,16 @@ class RemoteReviewDaoImpl @Inject constructor(
                 )
             return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    converter.fromJson<DefaultMessageDto>(json).message
+                    gson.fromJson<DefaultMessageDto>(
+                        json,
+                        object : TypeToken<DefaultMessageDto>() {}.type
+                    ).message
                 )
                 else -> Resource.Failure(
-                    converter.fromJson<ResourceError.Default>(json)
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
                 )
             }
         }
