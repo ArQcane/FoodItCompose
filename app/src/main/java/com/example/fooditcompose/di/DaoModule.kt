@@ -1,5 +1,7 @@
 package com.example.fooditcompose.di
 
+import com.example.fooditcompose.data.favourites.remote.RemoteFavoriteDao
+import com.example.fooditcompose.data.favourites.remote.RemoteFavoriteDaoImpl
 import com.example.fooditcompose.data.restaurant.remote.RemoteRestaurantDao
 import com.example.fooditcompose.data.restaurant.remote.RemoteRestaurantDaoImpl
 import com.example.fooditcompose.data.review.remote.RemoteReviewDao
@@ -18,13 +20,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class DaoModule {
 
-    @Singleton
     @Binds
     abstract fun bindsRestaurantDao(
         restaurantDaoImpl: RemoteRestaurantDaoImpl
     ): RemoteRestaurantDao
 
-    @Singleton
     @Binds
     abstract fun bindsRemoteUserDao(
         userDaoImpl: RemoteUserDaoImpl
@@ -35,10 +35,15 @@ abstract class DaoModule {
         sharedPreferenceDaoImpl: SharedPreferenceDaoImpl
     ): SharedPreferenceDao
 
-    @Singleton
     @Binds
     abstract fun bindsRemoteReviewDao(
         remoteReviewDaoImpl: RemoteReviewDaoImpl
     ): RemoteReviewDao
+
+    @Binds
+    abstract fun bindsRemoteFavoriteDao(
+        remoteFavoriteDaoImpl: RemoteFavoriteDaoImpl
+    ): RemoteFavoriteDao
+
 
 }

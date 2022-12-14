@@ -1,197 +1,200 @@
 package com.example.fooditcompose.data.user.remote
 
+import OkHttpDao
+import com.example.fooditcompose.data.common.Authorization
+import com.example.fooditcompose.data.common.converter.JsonConverter
+import com.example.fooditcompose.data.common.delegations.AuthorizationImpl
+import com.example.fooditcompose.data.common.delegations.OkHttpDaoImpl
 import com.example.fooditcompose.data.user.remote.dto.LoginDto
 import com.example.fooditcompose.domain.user.User
 import com.example.fooditcompose.data.user.remote.dto.RegisterDto
 import com.example.fooditcompose.data.user.remote.dto.TokenDto
 import com.example.fooditcompose.data.user.remote.dto.UpdateAccountDto
 import com.example.fooditcompose.data.common.dtos.DefaultMessageDto
-import com.example.fooditcompose.data.utils.tryWithIoExceptionHandling
+import com.example.fooditcompose.data.utils.tryWithIoHandling
 import com.example.fooditcompose.domain.utils.Resource
 import com.example.fooditcompose.domain.utils.ResourceError
 import com.example.fooditcompose.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
-import com.example.fooditcompose.utils.decodeFromJson
 import com.example.fooditcompose.utils.toJson
-import com.google.gson.Gson
 import okhttp3.OkHttpClient
-import okhttp3.Response
-import okio.IOException
 import javax.inject.Inject
 
 class RemoteUserDaoImpl @Inject constructor(
     okHttpClient: OkHttpClient,
-    gson: Gson,
-) : RemoteUserDao(okHttpClient, gson) {
+    converter: JsonConverter,
+) : RemoteUserDao,
+    Authorization by AuthorizationImpl(),
+    OkHttpDao by OkHttpDaoImpl(
+        converter = converter,
+        okHttpClient = okHttpClient,
+        path = "/users"
+    ) {
+
     companion object {
         const val FORGOT_PASSWORD_ENDPOINT = "/resetPassword"
-        const val GET_USER_BY_ID_ENDPOINT = "/id"
-        const val VALIDATE_TOKEN_ENDPOINT = "/members"
         const val LOGIN_ENDPOINT = "/login"
-        const val REGISTER_ENDPOINT = "/register"
-        const val UPDATE_ACCOUNT_ENDPOINT = "/updateuser"
-        const val DELETE_ACCOUNT_ENDPOINT = "/deleteuser"
+        const val SIGN_UP_ENDPOINT = "/register"
+        const val VALIDATE_TOKEN_ENDPOINT = "/members"
     }
 
     override suspend fun getAllUsers(): Resource<List<User>> =
-        tryWithIoExceptionHandling {
+        tryWithIoHandling {
             val response = get()
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
                 )
-            return@tryWithIoExceptionHandling when (response.code) {
+            return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson(json)
+                    converter.fromJson(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
         }
 
     override suspend fun getUserById(id: String): Resource<User> =
-        tryWithIoExceptionHandling {
-            val response = get(endpoint = "$GET_USER_BY_ID_ENDPOINT/$id")
+        tryWithIoHandling {
+            val response = get(endpoint = "/id/$id")
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default("No user with id $id found")
                 )
-            return@tryWithIoExceptionHandling Resource.Success(
-                gson.decodeFromJson(json)
+            return@tryWithIoHandling Resource.Success(
+                converter.fromJson(json)
             )
         }
 
     override suspend fun validateToken(token: String): Resource<User> =
-        tryWithIoExceptionHandling {
-            val response = post(
+        tryWithIoHandling {
+            val response = get(
                 endpoint = VALIDATE_TOKEN_ENDPOINT,
-                body = mapOf("token" to token)
+                headers = createAuthorizationHeader(token)
             )
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
                 )
-            return@tryWithIoExceptionHandling when (response.code) {
+            return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson(json)
+                    converter.fromJson(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
         }
 
-
     override suspend fun forgotPassword(email: String): Resource<String> =
-        tryWithIoExceptionHandling {
+        tryWithIoHandling {
             val response = post(
                 endpoint = FORGOT_PASSWORD_ENDPOINT,
                 body = mapOf("email" to email),
             )
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
                 )
-            return@tryWithIoExceptionHandling when (response.code) {
+            return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson<DefaultMessageDto>(json).message
+                    converter.fromJson<DefaultMessageDto>(json).message
                 )
                 400 -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Field>(json)
+                    converter.fromJson<ResourceError.Field>(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
         }
 
-
     override suspend fun updateAccount(
         updateAccountDto: UpdateAccountDto
-    ): Resource<String> = tryWithIoExceptionHandling {
+    ): Resource<String> = tryWithIoHandling {
         val response = put(
-            endpoint = UPDATE_ACCOUNT_ENDPOINT,
+            endpoint = "/updateuser",
             body = updateAccountDto.copy(),
         )
         val json = response.body?.toJson()
-            ?: return@tryWithIoExceptionHandling Resource.Failure(
+            ?: return@tryWithIoHandling Resource.Failure(
                 ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
             )
-        return@tryWithIoExceptionHandling when (response.code) {
+        return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                gson.decodeFromJson<TokenDto>(json).token
+                converter.fromJson<TokenDto>(json).token
             )
             else -> Resource.Failure(
-                gson.decodeFromJson<ResourceError.Default>(json)
+                converter.fromJson<ResourceError.Default>(json)
             )
         }
     }
 
     override suspend fun deleteAccount(
         userId: String
-    ): Resource<String> = tryWithIoExceptionHandling {
+    ): Resource<String> = tryWithIoHandling {
         val response = delete<Unit>(
-            endpoint = "$DELETE_ACCOUNT_ENDPOINT/$userId"
+            endpoint = "/deleteuser/$userId"
         )
         val json = response.body?.toJson()
-            ?: return@tryWithIoExceptionHandling Resource.Failure(
+            ?: return@tryWithIoHandling Resource.Failure(
                 ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
             )
-        return@tryWithIoExceptionHandling when (response.code) {
+        return@tryWithIoHandling when (response.code) {
             200 -> Resource.Success(
-                gson.decodeFromJson<DefaultMessageDto>(json).message
+                converter.fromJson<DefaultMessageDto>(json).message
             )
             400 -> Resource.Failure(
-                gson.decodeFromJson<ResourceError.Field>(json)
+                converter.fromJson<ResourceError.Field>(json)
             )
             else -> Resource.Failure(
-                gson.decodeFromJson<ResourceError.Default>(json)
+                converter.fromJson<ResourceError.Default>(json)
             )
         }
     }
 
     override suspend fun login(loginDto: LoginDto): Resource<String> =
-        tryWithIoExceptionHandling {
+        tryWithIoHandling {
             val response = post(
                 endpoint = LOGIN_ENDPOINT,
                 body = loginDto
             )
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
                 )
-            return@tryWithIoExceptionHandling when (response.code) {
+            return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson<TokenDto>(json).token
+                    converter.fromJson<TokenDto>(json).token
                 )
                 400 -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Field>(json)
+                    converter.fromJson<ResourceError.Field>(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
         }
 
     override suspend fun register(registerDto: RegisterDto): Resource<String> =
-        tryWithIoExceptionHandling {
+        tryWithIoHandling {
             val response = post(
-                endpoint = REGISTER_ENDPOINT,
+                endpoint = SIGN_UP_ENDPOINT,
                 body = registerDto.copy(),
             )
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
                 )
-            return@tryWithIoExceptionHandling when (response.code) {
+            return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson<TokenDto>(json).token
+                    converter.fromJson<TokenDto>(json).token
                 )
                 400 -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Field>(json)
+                    converter.fromJson<ResourceError.Field>(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
         }

@@ -1,112 +1,154 @@
 package com.example.fooditcompose.data.restaurant.remote
 
-import com.example.fooditcompose.data.utils.tryWithIoExceptionHandling
+import OkHttpDao
+import com.example.fooditcompose.data.common.Authorization
+import com.example.fooditcompose.data.common.converter.JsonConverter
+import com.example.fooditcompose.data.common.delegations.AuthorizationImpl
+import com.example.fooditcompose.data.common.delegations.OkHttpDaoImpl
+import com.example.fooditcompose.data.restaurant.remote.dto.FilterRestaurantDto
+
+import com.example.fooditcompose.data.utils.tryWithIoHandling
 import com.example.fooditcompose.domain.restaurant.Restaurant
 import com.example.fooditcompose.domain.utils.Resource
 import com.example.fooditcompose.domain.utils.ResourceError
 import com.example.fooditcompose.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
-import com.example.fooditcompose.utils.decodeFromJson
 import com.example.fooditcompose.utils.toJson
-import com.google.gson.Gson
+
 import okhttp3.OkHttpClient
 import okio.IOException
 import javax.inject.Inject
 
 class RemoteRestaurantDaoImpl @Inject constructor(
     okHttpClient: OkHttpClient,
-    gson: Gson,
-) : RemoteRestaurantDao(okHttpClient, gson) {
+    converter: JsonConverter,
+) : RemoteRestaurantDao,
+    Authorization by AuthorizationImpl(),
+    OkHttpDao by OkHttpDaoImpl(
+        converter = converter,
+        okHttpClient = okHttpClient,
+        path = "/restaurants"
+    ) {
+
     override suspend fun getAllRestaurants(): Resource<List<Restaurant>> =
-        tryWithIoExceptionHandling {
+        tryWithIoHandling {
             val response = get()
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
                 )
-            return@tryWithIoExceptionHandling when (response.code) {
+            return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson(json)
+                    converter.fromJson(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
         }
 
     override suspend fun getRestaurantById(id: String): Resource<Restaurant> =
-        tryWithIoExceptionHandling {
-            val response = get(endpoint = "/id/$id")
+        tryWithIoHandling {
+            val response = get(endpoint = "/$id")
             val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
+                ?: return@tryWithIoHandling Resource.Failure(
                     ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
                 )
-            return@tryWithIoExceptionHandling when (response.code) {
+            return@tryWithIoHandling when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson(json)
+                    converter.fromJson(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
         }
 
     override suspend fun filterRestaurant(
-        region: String?,
-        cuisine: String?,
-        average_price_range: Int?,
-        average_rating: Int?
+        filterRestaurantDto: FilterRestaurantDto,
     ): Resource<List<Restaurant>> {
-        TODO("Not yet implemented")
+        try {
+            val response = post(
+                endpoint = "/filter",
+                body = filterRestaurantDto.copy()
+            )
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+            )
+            return when (response.code) {
+                200 -> Resource.Success(
+                    converter.fromJson(json)
+                )
+                else -> Resource.Failure(
+                    converter.fromJson<ResourceError.Default>(json)
+                )
+            }
+        } catch (e: IOException) {
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
+        }
     }
 
-    override suspend fun searchRestaurant(restaurantName: String?): Resource<List<Restaurant>> =
-        tryWithIoExceptionHandling {
+    override suspend fun searchRestaurant(restaurantName: String?): Resource<List<Restaurant>> {
+        try {
             val response = get(endpoint = "/search/$restaurantName")
-            val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoExceptionHandling when (response.code) {
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+            )
+            return when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson(json)
+                    converter.fromJson(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
+        } catch (e: IOException) {
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
         }
+    }
 
-    override suspend fun sortRestaurantsByDescendingRating(): Resource<List<Restaurant>> =
-        tryWithIoExceptionHandling {
-            val response = get(endpoint = "/sort/descending")
-            val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoExceptionHandling when (response.code) {
+    override suspend fun sortRestaurantsByDescendingRating(): Resource<List<Restaurant>> {
+        try {
+            val response = get("/sort/descending")
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+            )
+            return when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson(json)
+                    converter.fromJson(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
+        } catch (e: IOException) {
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
         }
+    }
 
-    override suspend fun sortRestaurantsByAscendingRating(): Resource<List<Restaurant>> =
-        tryWithIoExceptionHandling {
-            val response = get(endpoint = "/sort/ascending")
-            val json = response.body?.toJson()
-                ?: return@tryWithIoExceptionHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoExceptionHandling when (response.code) {
+    override suspend fun sortRestaurantsByAscendingRating(): Resource<List<Restaurant>> {
+        try {
+            val response = get("/sort/ascending")
+            val json = response.body?.toJson() ?: return Resource.Failure(
+                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+            )
+            return when (response.code) {
                 200 -> Resource.Success(
-                    gson.decodeFromJson(json)
+                    converter.fromJson(json)
                 )
                 else -> Resource.Failure(
-                    gson.decodeFromJson<ResourceError.Default>(json)
+                    converter.fromJson<ResourceError.Default>(json)
                 )
             }
+        } catch (e: IOException) {
+            return Resource.Failure(
+                ResourceError.Default(e.message.toString())
+            )
         }
+    }
 }
