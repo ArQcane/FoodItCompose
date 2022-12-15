@@ -12,13 +12,13 @@ import javax.inject.Inject
 class ReviewRepositoryImpl @Inject constructor(
     private val remoteReviewDao: RemoteReviewDao
 ) : ReviewRepository {
-    override suspend fun getAllReviews(): Resource<List<Review>> =
+    override suspend fun getAllReviews(): Resource<List<com.example.domain.review.Review>> =
         remoteReviewDao.getAllReviews()
 
-    override suspend fun getReviewsByUser(userId: String): Resource<List<Review>> =
+    override suspend fun getReviewsByUser(userId: String): Resource<List<com.example.domain.review.Review>> =
         remoteReviewDao.getReviewsByUser(userId)
 
-    override suspend fun getReviewsByRestaurant(restaurantId: String): Resource<List<Review>> =
+    override suspend fun getReviewsByRestaurant(restaurantId: String): Resource<List<com.example.domain.review.Review>> =
         remoteReviewDao.getReviewsByRestaurant(restaurantId)
 
     override suspend fun createReview(
@@ -48,7 +48,7 @@ class ReviewRepositoryImpl @Inject constructor(
         idUser: Int?,
         review: String?,
         rating: Int?
-    ): Resource<Review> =
+    ): Resource<com.example.domain.review.Review> =
         remoteReviewDao.updateReview(
             userId = userId,
             restaurantId = restaurantId,

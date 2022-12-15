@@ -50,7 +50,7 @@ class RemoteFavoriteDaoImpl @Inject constructor(
             }
         }
 
-    override suspend fun getUsersWhoFavoriteRestaurant(restaurantId: String): Resource<List<User>> =
+    override suspend fun getUsersWhoFavoriteRestaurant(restaurantId: String): Resource<List<com.example.domain.user.User>> =
         tryWithIoHandling {
             val response = get(endpoint = "/restaurant/$restaurantId")
             val json = response.body?.toJson() ?: return@tryWithIoHandling Resource.Failure(
@@ -60,7 +60,7 @@ class RemoteFavoriteDaoImpl @Inject constructor(
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
-                        object : TypeToken<List<User>>() {}.type
+                        object : TypeToken<List<com.example.domain.user.User>>() {}.type
                     )
                 )
                 else -> Resource.Failure(

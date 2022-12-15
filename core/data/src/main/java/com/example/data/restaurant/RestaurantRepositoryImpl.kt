@@ -11,7 +11,7 @@ class RestaurantRepositoryImpl @Inject constructor(
     private val restaurantDao: RemoteRestaurantDao
 ) : RestaurantRepository {
     override suspend fun getAllRestaurants() = restaurantDao.getAllRestaurants()
-    override suspend fun getRestaurantById(id: String): Resource<Restaurant> =
+    override suspend fun getRestaurantById(id: String): Resource<com.example.domain.restaurant.Restaurant> =
         restaurantDao.getRestaurantById(id = id)
 
     override suspend fun filterRestaurant(
@@ -19,7 +19,7 @@ class RestaurantRepositoryImpl @Inject constructor(
         cuisine: String?,
         average_price_range: Int?,
         average_rating: Int?
-    ): Resource<List<Restaurant>> =
+    ): Resource<List<com.example.domain.restaurant.Restaurant>> =
         restaurantDao.filterRestaurant(
             filterRestaurantDto = FilterRestaurantDto(
                 region = region,
@@ -29,12 +29,12 @@ class RestaurantRepositoryImpl @Inject constructor(
             )
         )
 
-    override suspend fun searchRestaurant(restaurantName: String?): Resource<List<Restaurant>> =
+    override suspend fun searchRestaurant(restaurantName: String?): Resource<List<com.example.domain.restaurant.Restaurant>> =
         restaurantDao.searchRestaurant(restaurantName = restaurantName)
 
-    override suspend fun sortRestaurantsByDescendingRating(): Resource<List<Restaurant>> =
+    override suspend fun sortRestaurantsByDescendingRating(): Resource<List<com.example.domain.restaurant.Restaurant>> =
         restaurantDao.sortRestaurantsByDescendingRating()
 
-    override suspend fun sortRestaurantsByAscendingRating(): Resource<List<Restaurant>> =
+    override suspend fun sortRestaurantsByAscendingRating(): Resource<List<com.example.domain.restaurant.Restaurant>> =
         restaurantDao.sortRestaurantsByAscendingRating()
 }

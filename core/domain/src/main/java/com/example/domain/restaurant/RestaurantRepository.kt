@@ -1,7 +1,6 @@
 package com.example.domain.restaurant
 
 import com.example.domain.utils.Resource
-import java.io.File
 
 
 interface RestaurantRepository {

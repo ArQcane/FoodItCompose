@@ -13,7 +13,7 @@ class FavouritesRepositoryImpl @Inject constructor(
     override suspend fun getFavoriteRestaurantsOfUser(userId: String): Resource<List<Restaurant>> =
         remoteFavoriteDao.getFavoriteRestaurantsOfUser(userId)
 
-    override suspend fun getUsersWhoFavoriteRestaurant(restaurantId: String): Resource<List<User>> =
+    override suspend fun getUsersWhoFavoriteRestaurant(restaurantId: String): Resource<List<com.example.domain.user.User>> =
         remoteFavoriteDao.getUsersWhoFavoriteRestaurant(restaurantId)
 
     override suspend fun addFavorite(userId: String, restaurantId: String): Resource<String> =

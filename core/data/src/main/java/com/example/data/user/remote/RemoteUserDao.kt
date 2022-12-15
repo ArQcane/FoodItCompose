@@ -7,6 +7,7 @@ import com.example.data.user.remote.dto.UpdateAccountDto
 import com.example.domain.user.User
 import com.example.domain.utils.Resource
 
+
 interface RemoteUserDao {
     suspend fun getAllUsers(): Resource<List<User>>
     suspend fun getUserById(id: String): Resource<User>

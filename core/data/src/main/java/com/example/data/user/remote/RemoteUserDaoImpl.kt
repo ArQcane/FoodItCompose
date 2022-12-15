@@ -39,7 +39,7 @@ class RemoteUserDaoImpl @Inject constructor(
         const val VALIDATE_TOKEN_ENDPOINT = "/members"
     }
 
-    override suspend fun getAllUsers(): Resource<List<User>> =
+    override suspend fun getAllUsers(): Resource<List<com.example.domain.user.User>> =
         tryWithIoHandling {
             val response = get()
             val json = response.body?.toJson()
@@ -50,7 +50,7 @@ class RemoteUserDaoImpl @Inject constructor(
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
-                        object : TypeToken<List<User>>() {}.type
+                        object : TypeToken<List<com.example.domain.user.User>>() {}.type
                     )
                 )
                 else -> Resource.Failure(
@@ -62,7 +62,7 @@ class RemoteUserDaoImpl @Inject constructor(
             }
         }
 
-    override suspend fun getUserById(id: String): Resource<User> =
+    override suspend fun getUserById(id: String): Resource<com.example.domain.user.User> =
         tryWithIoHandling {
             val response = get(endpoint = "/id/$id")
             val json = response.body?.toJson()
@@ -72,12 +72,12 @@ class RemoteUserDaoImpl @Inject constructor(
             return@tryWithIoHandling Resource.Success(
                 gson.fromJson(
                     json,
-                    object : TypeToken<User>() {}.type
+                    object : TypeToken<com.example.domain.user.User>() {}.type
                 )
             )
         }
 
-    override suspend fun validateToken(token: String): Resource<User> =
+    override suspend fun validateToken(token: String): Resource<com.example.domain.user.User> =
         tryWithIoHandling {
             val response = get(
                 endpoint = VALIDATE_TOKEN_ENDPOINT,
@@ -91,7 +91,7 @@ class RemoteUserDaoImpl @Inject constructor(
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
-                        object : TypeToken<List<User>>() {}.type
+                        object : TypeToken<List<com.example.domain.user.User>>() {}.type
                     )
                 )
                 else -> Resource.Failure(

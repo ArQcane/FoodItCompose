@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.SemanticsProperties.Text
 import androidx.compose.ui.text.TextStyle
@@ -21,14 +22,36 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.fooditcompose.ui.NavGraph
 import com.example.fooditcompose.ui.utils.Screen
 import com.example.fooditcompose.R
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel = hiltViewModel(),
+) {
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(true) {
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.isLoggedIn.collect {
+                    if (!it) return@collect
+                    navController.navigate(Screen.HomeScreen.route)
+                }
+            }
+        }
+    }
+
     var usernameState by remember {
         mutableStateOf("")
     }

@@ -5,7 +5,6 @@ import com.example.data.user.remote.RemoteUserDao
 import com.example.data.user.remote.dto.LoginDto
 import com.example.data.user.remote.dto.RegisterDto
 import com.example.data.user.remote.dto.UpdateAccountDto
-import com.example.domain.user.User
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
 import java.io.File
@@ -21,13 +20,13 @@ class UserRepositoryImpl @Inject constructor(
     override fun saveToken(token: String) =
         sharedPreferenceDao.saveToken(token)
 
-    override suspend fun getAllUsers(): Resource<List<User>> =
+    override suspend fun getAllUsers(): Resource<List<com.example.domain.user.User>> =
         remoteUserDao.getAllUsers()
 
-    override suspend fun getUserById(id: String): Resource<User> =
+    override suspend fun getUserById(id: String): Resource<com.example.domain.user.User> =
         remoteUserDao.getUserById(id = id)
 
-    override suspend fun validateToken(token: String): Resource<User> =
+    override suspend fun validateToken(token: String): Resource<com.example.domain.user.User> =
         remoteUserDao.validateToken(token = token)
 
     override suspend fun forgotPassword(email: String): Resource<String> =
