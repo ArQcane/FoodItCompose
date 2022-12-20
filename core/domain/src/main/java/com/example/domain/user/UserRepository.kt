@@ -6,6 +6,7 @@ import java.io.File
 interface UserRepository {
     fun getToken(): Resource<String>
     fun saveToken(token: String)
+    fun deleteToken()
 
     suspend fun getAllUsers(): Resource<List<User>>
     suspend fun getUserById(id: String): Resource<User>
@@ -27,8 +28,8 @@ interface UserRepository {
 
     suspend fun deleteAccount(userId: String): Resource<String>
     suspend fun login(
-        email: String,
-        password: String
+        username: String,
+        user_pass: String
     ): Resource<String>
 
     suspend fun register(
@@ -43,4 +44,6 @@ interface UserRepository {
         profile_pic: String? = null,
         fcmToken: String,
     ): Resource<String>
+
+
 }

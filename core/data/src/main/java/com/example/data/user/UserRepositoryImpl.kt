@@ -5,6 +5,7 @@ import com.example.data.user.remote.RemoteUserDao
 import com.example.data.user.remote.dto.LoginDto
 import com.example.data.user.remote.dto.RegisterDto
 import com.example.data.user.remote.dto.UpdateAccountDto
+import com.example.domain.user.User
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
 import java.io.File
@@ -20,13 +21,16 @@ class UserRepositoryImpl @Inject constructor(
     override fun saveToken(token: String) =
         sharedPreferenceDao.saveToken(token)
 
-    override suspend fun getAllUsers(): Resource<List<com.example.domain.user.User>> =
+    override fun deleteToken() =
+        sharedPreferenceDao.deleteToken()
+
+    override suspend fun getAllUsers(): Resource<List<User>> =
         remoteUserDao.getAllUsers()
 
-    override suspend fun getUserById(id: String): Resource<com.example.domain.user.User> =
+    override suspend fun getUserById(id: String): Resource<User> =
         remoteUserDao.getUserById(id = id)
 
-    override suspend fun validateToken(token: String): Resource<com.example.domain.user.User> =
+    override suspend fun validateToken(token: String): Resource<User> =
         remoteUserDao.validateToken(token = token)
 
     override suspend fun forgotPassword(email: String): Resource<String> =
@@ -63,10 +67,10 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun deleteAccount(userId: String): Resource<String> =
         remoteUserDao.deleteAccount(userId = userId)
 
-    override suspend fun login(email: String, password: String): Resource<String> = remoteUserDao.login(
+    override suspend fun login(username: String, user_pass: String): Resource<String> = remoteUserDao.login(
         loginDto = LoginDto(
-            email = email,
-            password = password
+            username = username,
+            user_pass = user_pass
         )
     )
 

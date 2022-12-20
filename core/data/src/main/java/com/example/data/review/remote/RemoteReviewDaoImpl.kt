@@ -4,6 +4,7 @@ import com.example.data.common.DefaultMessageDto
 import com.example.data.common.EntityCreatedDto
 import com.example.data.review.remote.dto.CreateReviewDto
 import com.example.data.review.remote.dto.UpdateReviewDto
+import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
 import com.example.domain.review.Review
 import com.example.domain.utils.Resource
@@ -13,13 +14,10 @@ import com.example.network.Authorization
 import com.example.network.OkHttpDao
 import com.example.network.delegations.AuthorizationImpl
 import com.example.network.delegations.OkHttpDaoImpl
-import com.example.network.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
-import com.example.network.utils.toJson
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 import okhttp3.OkHttpClient
-import org.w3c.dom.Comment
 
 import javax.inject.Inject
 
@@ -36,12 +34,11 @@ class RemoteReviewDaoImpl @Inject constructor(
 
     override suspend fun getAllReviews(): Resource<List<Review>> =
         tryWithIoHandling {
-            val response = get()
-            val json = response.body?.toJson()
-                ?: return@tryWithIoHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoHandling when (response.code) {
+            val (json, code) = get()
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
@@ -59,12 +56,11 @@ class RemoteReviewDaoImpl @Inject constructor(
 
     override suspend fun getReviewsByUser(userId: String): Resource<List<Review>> =
         tryWithIoHandling {
-            val response = get(endpoint = "/userId/$userId")
-            val json = response.body?.toJson()
-                ?: return@tryWithIoHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoHandling when (response.code) {
+            val (json,code) = get(endpoint = "/userId/$userId")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
@@ -82,12 +78,11 @@ class RemoteReviewDaoImpl @Inject constructor(
 
     override suspend fun getReviewsByRestaurant(restaurantId: String): Resource<List<Review>> =
         tryWithIoHandling {
-            val response = get(endpoint = "/restaurantId/$restaurantId")
-            val json = response.body?.toJson()
-                ?: return@tryWithIoHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoHandling when (response.code) {
+            val (json,code) = get(endpoint = "/restaurantId/$restaurantId")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
@@ -108,15 +103,14 @@ class RemoteReviewDaoImpl @Inject constructor(
         restaurantId: Int,
         CreateReviewDto: CreateReviewDto
     ): Resource<String> = tryWithIoHandling {
-        val response = post(
+        val (json,code) = post(
             endpoint = "/addreview",
             body = CreateReviewDto.copy(idRestaurant = restaurantId, idUser = userId),
         )
-        val json = response.body?.toJson()
-            ?: return@tryWithIoHandling Resource.Failure(
-                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-            )
-        return@tryWithIoHandling when (response.code) {
+        json ?: return@tryWithIoHandling Resource.Failure(
+            ResourceError.Default(NO_RESPONSE)
+        )
+        return@tryWithIoHandling when (code) {
             200 -> Resource.Success(
                 gson.fromJson<EntityCreatedDto>(
                     json,
@@ -144,15 +138,14 @@ class RemoteReviewDaoImpl @Inject constructor(
         reviewId: String,
         UpdateReviewDto: UpdateReviewDto
     ): Resource<Review> = tryWithIoHandling {
-        val response = put(
+        val (json,code) = put(
             endpoint = "/updatereview/$reviewId",
             body = UpdateReviewDto.copy(idRestaurant = restaurantId, idUser = userId),
         )
-        val json = response.body?.toJson()
-            ?: return@tryWithIoHandling Resource.Failure(
-                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-            )
-        return@tryWithIoHandling when (response.code) {
+        json ?: return@tryWithIoHandling Resource.Failure(
+            ResourceError.Default(NO_RESPONSE)
+        )
+        return@tryWithIoHandling when (code) {
             200 -> Resource.Success(
                 gson.fromJson(
                     json,
@@ -170,14 +163,13 @@ class RemoteReviewDaoImpl @Inject constructor(
 
     override suspend fun deleteReview(reviewId: String): Resource<String> =
         tryWithIoHandling {
-            val response = delete<Unit>(
+            val (json,code) = delete<Unit>(
                 endpoint = "/deletereview/$reviewId",
             )
-            val json = response.body?.toJson()
-                ?: return@tryWithIoHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoHandling when (response.code) {
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson<DefaultMessageDto>(
                         json,

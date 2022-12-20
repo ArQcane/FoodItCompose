@@ -29,6 +29,12 @@ class SharedPreferenceDaoImpl @Inject constructor(
         return Resource.Success(token)
     }
 
+    override fun deleteToken() {
+        sharedPreferences.edit()
+            .remove(TOKEN)
+            .apply()
+    }
+
     companion object {
         const val SHARED_PREF_NAME = "FOODIT_PREFS"
         const val TOKEN = "FOODIT_TOKEN"

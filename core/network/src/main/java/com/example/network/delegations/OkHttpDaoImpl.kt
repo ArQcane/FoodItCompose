@@ -1,6 +1,8 @@
 package com.example.network.delegations
 
 import com.example.network.OkHttpDao
+import com.example.network.mappers.toTransformedResponse
+import com.example.network.models.TransformedResponse
 import com.example.network.utils.Constants.Companion.BASE_URL
 import com.example.network.utils.await
 import com.google.gson.Gson
@@ -25,7 +27,7 @@ class OkHttpDaoImpl(
     override suspend fun get(
         endpoint: String,
         headers: Map<String, String>
-    ): Response = makeRequest(
+    ): TransformedResponse = makeRequest(
         endpoint = endpoint,
         headers = headers,
         method = HttpMethods.GET,
@@ -35,7 +37,7 @@ class OkHttpDaoImpl(
         endpoint: String,
         body: T,
         headers: Map<String, String>
-    ): Response = makeRequest(
+    ): TransformedResponse = makeRequest(
         endpoint = endpoint,
         body = body,
         headers = headers,
@@ -49,7 +51,7 @@ class OkHttpDaoImpl(
         file: File?,
         requestName: String,
         headers: Map<String, String>
-    ): Response = makeRequest(
+    ): TransformedResponse = makeRequest(
         endpoint = endpoint,
         body = body,
         headers = headers,
@@ -65,7 +67,7 @@ class OkHttpDaoImpl(
         endpoint: String,
         body: T,
         headers: Map<String, String>
-    ): Response = makeRequest(
+    ): TransformedResponse = makeRequest(
         endpoint = endpoint,
         body = body,
         headers = headers,
@@ -79,7 +81,7 @@ class OkHttpDaoImpl(
         file: File?,
         requestName: String,
         headers: Map<String, String>
-    ): Response = makeRequest(
+    ): TransformedResponse = makeRequest(
         endpoint = endpoint,
         body = body,
         headers = headers,
@@ -95,7 +97,7 @@ class OkHttpDaoImpl(
         endpoint: String,
         body: T?,
         headers: Map<String, String>
-    ): Response = makeRequest(
+    ): TransformedResponse = makeRequest(
         endpoint = endpoint,
         body = body,
         headers = headers,
@@ -110,7 +112,7 @@ class OkHttpDaoImpl(
         headers: Map<String, String> = mapOf(),
         fileUpload: FileUpload = FileUpload(),
         contentType: ContentType? = null
-    ): Response {
+    ): TransformedResponse {
         val requestBody = getRequestBody(
             body = body,
             contentType = contentType,
@@ -129,7 +131,9 @@ class OkHttpDaoImpl(
             requestBuilder = requestBuilder
         )
         val request = requestBuilder.build()
-        return okHttpClient.newCall(request = request).await()
+        return okHttpClient.newCall(request = request)
+            .await()
+            .toTransformedResponse()
     }
 
     private fun setHttpMethod(

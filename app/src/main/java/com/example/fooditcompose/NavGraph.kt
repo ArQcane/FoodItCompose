@@ -39,7 +39,7 @@ fun NavGraph(navController: NavHostController) {
             ResetPasswordWithEmailScreen(email = email, navController = navController)
         }
         composable(Screen.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
     }
 }

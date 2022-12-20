@@ -2,6 +2,7 @@ package com.example.data.restaurant.remote
 
 
 import com.example.data.restaurant.remote.dto.FilterRestaurantDto
+import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
 import com.example.domain.restaurant.Restaurant
 import com.example.domain.utils.Resource
@@ -10,13 +11,10 @@ import com.example.network.Authorization
 import com.example.network.OkHttpDao
 import com.example.network.delegations.AuthorizationImpl
 import com.example.network.delegations.OkHttpDaoImpl
-import com.example.network.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
-import com.example.network.utils.toJson
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 import okhttp3.OkHttpClient
-import okio.IOException
 import javax.inject.Inject
 
 class RemoteRestaurantDaoImpl @Inject constructor(
@@ -32,12 +30,11 @@ class RemoteRestaurantDaoImpl @Inject constructor(
 
     override suspend fun getAllRestaurants(): Resource<List<Restaurant>> =
         tryWithIoHandling {
-            val response = get()
-            val json = response.body?.toJson()
-                ?: return@tryWithIoHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoHandling when (response.code) {
+            val (json, code) = get()
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
@@ -55,12 +52,11 @@ class RemoteRestaurantDaoImpl @Inject constructor(
 
     override suspend fun getRestaurantById(id: String): Resource<Restaurant> =
         tryWithIoHandling {
-            val response = get(endpoint = "/$id")
-            val json = response.body?.toJson()
-                ?: return@tryWithIoHandling Resource.Failure(
-                    ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
-                )
-            return@tryWithIoHandling when (response.code) {
+            val (json, code) = get(endpoint = "/$id")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
@@ -78,16 +74,16 @@ class RemoteRestaurantDaoImpl @Inject constructor(
 
     override suspend fun filterRestaurant(
         filterRestaurantDto: FilterRestaurantDto,
-    ): Resource<List<Restaurant>> {
-        try {
-            val response = post(
+    ): Resource<List<Restaurant>> =
+        tryWithIoHandling {
+            val (json, code) = post(
                 endpoint = "/filter",
                 body = filterRestaurantDto.copy()
             )
-            val json = response.body?.toJson() ?: return Resource.Failure(
-                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
             )
-            return when (response.code) {
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
@@ -101,20 +97,15 @@ class RemoteRestaurantDaoImpl @Inject constructor(
                     )
                 )
             }
-        } catch (e: IOException) {
-            return Resource.Failure(
-                ResourceError.Default(e.message.toString())
-            )
         }
-    }
 
-    override suspend fun searchRestaurant(restaurantName: String?): Resource<List<Restaurant>> {
-        try {
-            val response = get(endpoint = "/search/$restaurantName")
-            val json = response.body?.toJson() ?: return Resource.Failure(
-                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+    override suspend fun searchRestaurant(restaurantName: String?): Resource<List<Restaurant>> =
+        tryWithIoHandling {
+            val (json, code) = get(endpoint = "/search/$restaurantName")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
             )
-            return when (response.code) {
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
@@ -128,24 +119,19 @@ class RemoteRestaurantDaoImpl @Inject constructor(
                     )
                 )
             }
-        } catch (e: IOException) {
-            return Resource.Failure(
-                ResourceError.Default(e.message.toString())
-            )
         }
-    }
 
-    override suspend fun sortRestaurantsByDescendingRating(): Resource<List<Restaurant>> {
-        try {
-            val response = get("/sort/descending")
-            val json = response.body?.toJson() ?: return Resource.Failure(
-                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+    override suspend fun sortRestaurantsByDescendingRating(): Resource<List<Restaurant>> =
+        tryWithIoHandling {
+            val (json, code) = get("/sort/descending")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
             )
-            return when (response.code) {
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
-                        object : TypeToken<Restaurant>() {}.type
+                        object : TypeToken<List<Restaurant>>() {}.type
                     )
                 )
                 else -> Resource.Failure(
@@ -155,24 +141,19 @@ class RemoteRestaurantDaoImpl @Inject constructor(
                     )
                 )
             }
-        } catch (e: IOException) {
-            return Resource.Failure(
-                ResourceError.Default(e.message.toString())
-            )
         }
-    }
 
-    override suspend fun sortRestaurantsByAscendingRating(): Resource<List<Restaurant>> {
-        try {
-            val response = get("/sort/ascending")
-            val json = response.body?.toJson() ?: return Resource.Failure(
-                ResourceError.Default(UNABLE_GET_BODY_ERROR_MESSAGE)
+    override suspend fun sortRestaurantsByAscendingRating(): Resource<List<Restaurant>> =
+        tryWithIoHandling {
+            val (json, code) = get("/sort/ascending")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
             )
-            return when (response.code) {
+            return@tryWithIoHandling when (code) {
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
-                        object : TypeToken<Restaurant>() {}.type
+                        object : TypeToken<List<Restaurant>>() {}.type
                     )
                 )
                 else -> Resource.Failure(
@@ -182,10 +163,5 @@ class RemoteRestaurantDaoImpl @Inject constructor(
                     )
                 )
             }
-        } catch (e: IOException) {
-            return Resource.Failure(
-                ResourceError.Default(e.message.toString())
-            )
         }
-    }
 }
