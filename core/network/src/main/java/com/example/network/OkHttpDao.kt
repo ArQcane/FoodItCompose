@@ -11,8 +11,7 @@ interface OkHttpDao {
 
     suspend fun get(
         endpoint: String = "/",
-        headers:
-        Map<String, String> = mapOf()
+        headers: Map<String, String> = mapOf()
     ): TransformedResponse
 
     suspend fun <T> post(

@@ -45,9 +45,8 @@ class UserRepositoryImpl @Inject constructor(
         phoneNumber: Int?,
         gender: String?,
         address: String?,
-        profile_pic: File?,
+        profile_pic: String?,
         deleteImage: Boolean?,
-        fcmToken: String?
     ): Resource<String> = remoteUserDao.updateAccount(
         updateAccountDto = UpdateAccountDto(
             firstName = firstName,
@@ -59,7 +58,6 @@ class UserRepositoryImpl @Inject constructor(
             gender = gender,
             address = address,
             profile_pic = profile_pic,
-            fcmToken = fcmToken,
             deleteImage = deleteImage
         )
     )
@@ -75,27 +73,25 @@ class UserRepositoryImpl @Inject constructor(
     )
 
     override suspend fun register(
-        firstName: String,
-        lastName: String,
+        first_name: String,
+        last_name: String,
         username: String,
-        password: String,
+        user_pass: String,
         email: String,
-        phoneNumber: Int,
+        mobile_number: Int,
         gender: String,
         address: String,
         profile_pic: String?,
-        fcmToken: String
     ): Resource<String> = remoteUserDao.register(
         registerDto = RegisterDto(
-            firstName = firstName,
-            lastName = lastName,
+            first_name = first_name,
+            last_name = last_name,
             username = username,
-            password = password,
+            user_pass = user_pass,
             email = email,
-            phoneNumber = phoneNumber,
+            mobile_number = mobile_number,
             gender = gender,
             address = address,
-            fcmToken = fcmToken,
             profile_pic = profile_pic,
         )
     )

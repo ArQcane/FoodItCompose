@@ -9,7 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.fooditcompose.ui.utils.Screen
+import com.example.authentication.navigationArgs.navigateToAuthScreen
+import com.example.common.utils.Screen
 
 @Composable
 fun HomeScreen(
@@ -22,7 +23,7 @@ fun HomeScreen(
     ) {
         Button(onClick = {
             homeViewModel.logout()
-            navController.navigate(Screen.LoginScreen.route)
+            navController.navigateToAuthScreen()
         }) {
             Text(text = "Log Out")
         }

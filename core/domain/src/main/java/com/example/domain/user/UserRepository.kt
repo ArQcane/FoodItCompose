@@ -21,9 +21,8 @@ interface UserRepository {
         phoneNumber: Int? = null,
         gender: String? = null,
         address: String? = null,
-        profile_pic: File? = null,
+        profile_pic: String? = null,
         deleteImage: Boolean? = null,
-        fcmToken: String? = null,
     ): Resource<String>
 
     suspend fun deleteAccount(userId: String): Resource<String>
@@ -33,16 +32,15 @@ interface UserRepository {
     ): Resource<String>
 
     suspend fun register(
-        firstName: String,
-        lastName: String,
+        first_name: String,
+        last_name: String,
         username: String,
-        password: String,
+        user_pass: String,
         email: String,
-        phoneNumber: Int,
+        mobile_number: Int,
         gender: String,
         address: String,
-        profile_pic: String? = null,
-        fcmToken: String,
+        profile_pic: String? = null
     ): Resource<String>
 
 

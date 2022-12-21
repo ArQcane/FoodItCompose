@@ -90,6 +90,14 @@ class RemoteUserDaoImpl @Inject constructor(
                         object : TypeToken<User>() {}.type
                     )
                 )
+                401 -> Resource.Failure(
+                    ResourceError.Default(
+                        gson.fromJson<TokenDto>(
+                            json,
+                            object : TypeToken<TokenDto>() {}.type
+                        ).result
+                    )
+                )
                 else -> Resource.Failure(
                     gson.fromJson<ResourceError.Default>(
                         json,
@@ -133,7 +141,7 @@ class RemoteUserDaoImpl @Inject constructor(
     override suspend fun updateAccount(
         updateAccountDto: UpdateAccountDto
     ): Resource<String> = tryWithIoHandling {
-        val (json,code) = put(
+        val (json, code) = put(
             endpoint = "/updateuser",
             body = updateAccountDto.copy(),
         )
@@ -159,7 +167,7 @@ class RemoteUserDaoImpl @Inject constructor(
     override suspend fun deleteAccount(
         userId: String
     ): Resource<String> = tryWithIoHandling {
-        val (json,code) = delete<Unit>(
+        val (json, code) = delete<Unit>(
             endpoint = "/deleteuser/$userId"
         )
         json ?: return@tryWithIoHandling Resource.Failure(
@@ -189,7 +197,7 @@ class RemoteUserDaoImpl @Inject constructor(
 
     override suspend fun login(loginDto: LoginDto): Resource<String> =
         tryWithIoHandling {
-            val (json,code) = post(
+            val (json, code) = post(
                 endpoint = LOGIN_ENDPOINT,
                 body = loginDto
             )
@@ -222,7 +230,7 @@ class RemoteUserDaoImpl @Inject constructor(
 
     override suspend fun register(registerDto: RegisterDto): Resource<String> =
         tryWithIoHandling {
-            val (json,code) = post(
+            val (json, code) = post(
                 endpoint = SIGN_UP_ENDPOINT,
                 body = registerDto.copy(),
             )

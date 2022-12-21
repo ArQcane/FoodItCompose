@@ -8,8 +8,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.example.common.theme.FoodItComposeTheme
 import com.example.fooditcompose.ui.NavGraph
-import com.example.fooditcompose.ui.theme.FoodItComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

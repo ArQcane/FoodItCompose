@@ -4,40 +4,21 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.fooditcompose.ui.screens.auth.LoginScreen
-import com.example.fooditcompose.ui.screens.auth.RegisterScreen
-import com.example.fooditcompose.ui.screens.auth.ResetPasswordWithEmailScreen
+import com.example.authentication.forgetPassword.ResetPasswordWithEmailScreen
+import com.example.authentication.login.LoginScreen
+import com.example.authentication.navigationArgs.authScreenComposable
+import com.example.authentication.navigationArgs.splashScreenRoute
+import com.example.authentication.register.RegisterScreen
+import com.example.common.utils.Screen
 import com.example.fooditcompose.ui.screens.home.HomeScreen
-import com.example.fooditcompose.ui.screens.splash.SplashScreen
-import com.example.fooditcompose.ui.utils.Screen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
+        startDestination = splashScreenRoute,
     ) {
-        composable(Screen.SplashScreen.route){
-           SplashScreen(navController)
-        }
-        composable(Screen.LoginScreen.route) {
-            LoginScreen(navController)
-        }
-        composable(Screen.RegisterScreen.route) {
-            RegisterScreen(navController)
-        }
-        composable(
-            Screen.ResetPasswordFromLink.route,
-            arguments = listOf(
-                navArgument("email") {
-                    defaultValue = ""
-                    type = NavType.StringType
-                }
-            )
-        ) { entry ->
-            val email = entry.arguments?.getString("email")
-            ResetPasswordWithEmailScreen(email = email, navController = navController)
-        }
+        authScreenComposable(navController = navController)
         composable(Screen.HomeScreen.route) {
             HomeScreen(navController = navController)
         }

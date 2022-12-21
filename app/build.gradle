@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.fooditcompose"
-        minSdk 23
+        minSdk 27
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -101,4 +101,6 @@ dependencies {
 
     implementation project(":core:domain")
     implementation project(":core:data")
+    implementation project(":feature:common")
+    implementation project(":feature:authentication")
 }
