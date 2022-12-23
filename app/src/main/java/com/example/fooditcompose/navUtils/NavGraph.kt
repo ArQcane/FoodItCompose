@@ -11,6 +11,8 @@ import com.example.authentication.navigationArgs.splashScreenRoute
 import com.example.authentication.register.RegisterScreen
 import com.example.common.utils.Screen
 import com.example.fooditcompose.ui.screens.home.HomeScreen
+import com.example.fooditcompose.ui.screens.profile.ProfileScreen
+import com.example.fooditcompose.ui.screens.search.SearchScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -21,6 +23,12 @@ fun NavGraph(navController: NavHostController) {
         authScreenComposable(navController = navController)
         composable(Screen.HomeScreen.route) {
             HomeScreen(navController = navController)
+        }
+        composable(Screen.ProfileScreen.route){
+            ProfileScreen(navController = navController)
+        }
+        composable(Screen.SearchScreen.route){
+            SearchScreen(navController = navController)
         }
     }
 }

@@ -3,9 +3,9 @@ package com.example.fooditcompose.ui.screens.home
 import android.R
 import android.graphics.Color.parseColor
 import android.graphics.fonts.FontStyle
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -40,24 +40,19 @@ fun HomeScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
 
+    val scrollState = rememberScrollState()
+
 
     Scaffold(
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
     ) {
-//        Box(
-//            modifier = Modifier.fillMaxSize(),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Button(onClick = {
-//                homeViewModel.logout()
-//                navController.navigateToAuthScreen()
-//            }) {
-//                Text(text = "Log Out")
-//            }
-//        }
-        Column() {
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
+        ) {
             StackedSearchBar(navController) //SearchBarFunctionality
             StackedRestaurantDisplayItems() //Display basic restaurants
+            StackedRestaurantDisplayItems() //Display featured restaurants
+            StackedRestaurantDisplayItems() //Display featured restaurants
             StackedRestaurantDisplayItems() //Display featured restaurants
         }
 
