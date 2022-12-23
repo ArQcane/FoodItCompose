@@ -38,7 +38,7 @@ class CreateAccountUseCase @Inject constructor(
         )
         when (registerResult) {
             is Resource.Success -> {
-                userRepository.saveToken(registerResult.result)
+//                userRepository.saveToken(registerResult.result)
                 emit(Resource.Success(Unit))
             }
             is Resource.Failure -> {

@@ -1,6 +1,6 @@
 package com.example.authentication.register
 
-internal data class RegisterState(
+data class RegisterState(
     val first_name: String = "",
     val last_name: String = "",
     val username: String = "",
@@ -11,15 +11,16 @@ internal data class RegisterState(
     val email: String = "",
     val address: String = "",
     val profile_pic: String = "",
-    val emailError: String? = null,
+    val firstNameError: String? = null,
+    val lastNameError: String? = null,
     val usernameError: String? = null,
-    val passwordError: String? = null,
-    val confirmPasswordError: String? = null,
-    val signUpStage: SignUpStage = SignUpStage.NAME,
+    val userPassError: String? = null,
+    val confirmUserPassError: String? = null,
+    val genderError: String? = null,
+    val mobileNumberError: String? = null,
+    val emailError: String? = null,
+    val addressError: String? = null,
+    val profilePicError: String? = null,
     val isLoading: Boolean = false,
     val isCreated: Boolean = false,
 )
-
-enum class SignUpStage {
-    NAME, PASSWORD
-}
