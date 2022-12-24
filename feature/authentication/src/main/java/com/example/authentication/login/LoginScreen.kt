@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.authentication.R
 import com.example.authentication.navigationArgs.registerScreenRoute
+import com.example.authentication.navigationArgs.resetPasswordFromEmailRoute
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput
 import com.example.common.utils.Screen
@@ -62,9 +63,9 @@ fun LoginScreen(
         navController.navigate(Screen.HomeScreen.route)
     }
 
-    LaunchedEffect(true){
+    LaunchedEffect(true) {
         lifecycleOwner.lifecycleScope.launch {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.errorChannel.collect {
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                     scaffoldState.snackbarHostState.showSnackbar(it, "Dismiss")
@@ -119,7 +120,7 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         error = state.usernameError,
-                        keyboardOptions =  KeyboardOptions(
+                        keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next
                         ),
@@ -153,14 +154,25 @@ fun LoginScreen(
                             onDone = { focusManager.clearFocus() }
                         ),
                     )
-                    TextButton(
-                        modifier = Modifier.align(Alignment.End),
-                        onClick = { navController.navigate(registerScreenRoute) }) {
-                        Text(
-                            text = "Don't have an account yet?",
-                            fontSize = 12.sp,
-                            color = colors.primaryVariant
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                    ) {
+                        TextButton(
+                            onClick = { navController.navigate(resetPasswordFromEmailRoute) }) {
+                            Text(
+                                text = "Forgot Password?",
+                                fontSize = 12.sp,
+                                color = colors.primaryVariant
+                            )
+                        }
+                        TextButton(
+                            onClick = { navController.navigate(registerScreenRoute) }) {
+                            Text(
+                                text = "Don't have an account yet?",
+                                fontSize = 12.sp,
+                                color = colors.primaryVariant
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     CltButton(
@@ -170,7 +182,7 @@ fun LoginScreen(
                             focusManager.clearFocus()
                             loginViewModel.onEvent(LoginEvent.OnSubmit)
                         }
-                    ){
+                    ) {
                         AnimatedContent(targetState = state.isLoading) { isLoading ->
                             if (isLoading)
                                 return@AnimatedContent CircularProgressIndicator(

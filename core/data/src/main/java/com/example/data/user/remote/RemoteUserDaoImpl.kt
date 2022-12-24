@@ -3,10 +3,7 @@ package com.example.data.user.remote
 
 import android.util.Log
 import com.example.data.common.DefaultMessageDto
-import com.example.data.user.remote.dto.LoginDto
-import com.example.data.user.remote.dto.RegisterDto
-import com.example.data.user.remote.dto.TokenDto
-import com.example.data.user.remote.dto.UpdateAccountDto
+import com.example.data.user.remote.dto.*
 import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
 import com.example.domain.user.User
@@ -33,7 +30,7 @@ class RemoteUserDaoImpl @Inject constructor(
     ) {
 
     companion object {
-        const val FORGOT_PASSWORD_ENDPOINT = "/resetPassword"
+        const val FORGOT_PASSWORD_ENDPOINT = "/forget-password"
         const val LOGIN_ENDPOINT = "/login"
         const val SIGN_UP_ENDPOINT = "/register"
         const val VALIDATE_TOKEN_ENDPOINT = "/members"
