@@ -16,6 +16,9 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase
 ): ViewModel() {
+    var base64ProfilePic = MutableStateFlow("")
+
+
     private val _errorChannel = Channel<String>()
     val errorChannel = _errorChannel.receiveAsFlow()
 
@@ -118,7 +121,7 @@ class RegisterViewModel @Inject constructor(
         val mobile_number = _registerState.value.mobile_number
         val email = _registerState.value.email
         val address = _registerState.value.address
-        val profile_pic = _registerState.value.profile_pic
+        val profile_pic = base64ProfilePic.value
         createAccountUseCase(
             first_name = first_name,
             last_name = last_name,

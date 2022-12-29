@@ -1,5 +1,19 @@
 package com.example.authentication.register
 
+import android.annotation.SuppressLint
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Base64
+import android.util.Base64.DEFAULT
+import android.util.Base64.encodeToString
+import android.util.Base64OutputStream
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
@@ -14,11 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,15 +45,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.authentication.R
-import com.example.authentication.login.LoginEvent
 import com.example.authentication.navigationArgs.loginScreenRoute
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
-import com.example.common.components.CltDropDownMenu
 import com.example.common.components.CltInput
-import com.example.common.utils.Screen
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -51,6 +69,7 @@ fun RegisterScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by registerViewModel.registerState.collectAsState()
     val scrollState = rememberScrollState()
+
 
     LaunchedEffect(state.isCreated) {
         if (!state.isCreated) return@LaunchedEffect
@@ -261,12 +280,11 @@ fun RegisterScreen(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
                         ),
                         onValueChange = {
-                            if(it != ""){
+                            if (it != "") {
                                 registerViewModel.onEvent(
                                     RegisterEvent.OnMobileNumberChange(mobile_number = it.toLong())
                                 )
-                            }
-                            else{
+                            } else {
                                 registerViewModel.onEvent(
                                     RegisterEvent.OnMobileNumberChange(mobile_number = 65)
                                 )
@@ -314,25 +332,26 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
-                        value = state.profile_pic,
-                        label = "User Profile Picture",
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        error = state.profilePicError,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                        ),
-                        onValueChange = {
-                            registerViewModel.onEvent(
-                                RegisterEvent.OnProfilePicChange(profile_pic = it)
-                            )
-                        }
-                    )
+                    pickImage()
+//                    CltInput(
+//                        value = state.profile_pic,
+//                        label = "User Profile Picture",
+//                        modifier = Modifier
+//                            .fillMaxWidth(),
+//                        error = state.profilePicError,
+//                        keyboardOptions = KeyboardOptions(
+//                            keyboardType = KeyboardType.Text,
+//                            imeAction = ImeAction.Next
+//                        ),
+//                        keyboardActions = KeyboardActions(
+//                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+//                        ),
+//                        onValueChange = {
+//                            registerViewModel.onEvent(
+//                                RegisterEvent.OnProfilePicChange(profile_pic = it)
+//                            )
+//                        }
+//                    )
                     Spacer(modifier = Modifier.padding(4.dp))
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
@@ -365,4 +384,57 @@ fun RegisterScreen(
             }
         }
     }
+}
+
+@SuppressLint("StateFlowValueCalledInComposition")
+@Composable
+fun pickImage(
+    registerViewModel: RegisterViewModel = hiltViewModel()
+) {
+
+    val context = LocalContext.current
+    val myImage: Bitmap =
+        BitmapFactory.decodeResource(Resources.getSystem(), android.R.mipmap.sym_def_app_icon)
+    val result = remember {
+        mutableStateOf<Bitmap>(myImage)
+    }
+    val loadImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        if (Build.VERSION.SDK_INT < 29) {
+            result.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+        }
+        else {
+            val source = ImageDecoder.createSource(context.contentResolver, it)
+            result.value = ImageDecoder.decodeBitmap(source)
+        }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            result.value.asImageBitmap(), contentDescription = "image",
+            modifier = Modifier
+                .size(300.dp)
+                .padding(10.dp)
+        )
+        CltButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                loadImage.launch("image/*")
+            }
+        ) {
+            Text(text = "Load Image", fontSize = 30.sp, color = Color.White)
+        }
+    }
+
+    registerViewModel.base64ProfilePic.value = encodeImage(result.value)!!
+}
+
+private fun encodeImage(bm: Bitmap): String? {
+    val baos = ByteArrayOutputStream()
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val b = baos.toByteArray()
+    return Base64.encodeToString(b, Base64.DEFAULT)
 }
