@@ -206,8 +206,46 @@ fun RegisterScreen(
                             )
                         }
                     )
+                    CltInput(
+                        value = state.confirmUserPass,
+                        label = "Confirm User Password",
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        error = state.confirmUserPassError,
+                        isPassword = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        ),
+                        onValueChange = {
+                            registerViewModel.onEvent(
+                                RegisterEvent.OnConfirmUserPassChange(confirmUserPass = it)
+                            )
+                        }
+                    )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltDropDownMenu(listOf("M", "F"),"Gender")
+                    CltInput(
+                        value = state.gender,
+                        label = "User Gender",
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        error = state.genderError,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        ),
+                        onValueChange = {
+                            registerViewModel.onEvent(
+                                RegisterEvent.OnGenderChange(gender = it)
+                            )
+                        }
+                    )
                     Spacer(modifier = Modifier.padding(4.dp))
                     CltInput(
                         value = state.mobile_number.toString(),
@@ -223,9 +261,16 @@ fun RegisterScreen(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
                         ),
                         onValueChange = {
-                            registerViewModel.onEvent(
-                                RegisterEvent.OnMobileNumberChange(mobile_number = it.toInt())
-                            )
+                            if(it != ""){
+                                registerViewModel.onEvent(
+                                    RegisterEvent.OnMobileNumberChange(mobile_number = it.toLong())
+                                )
+                            }
+                            else{
+                                registerViewModel.onEvent(
+                                    RegisterEvent.OnMobileNumberChange(mobile_number = 65)
+                                )
+                            }
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))

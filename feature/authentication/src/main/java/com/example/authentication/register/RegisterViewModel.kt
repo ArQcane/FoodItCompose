@@ -52,7 +52,8 @@ class RegisterViewModel @Inject constructor(
                 _registerState.update { state ->
                     state.copy(
                         user_pass = event.user_pass,
-                        userPassError = null
+                        userPassError = null,
+                        confirmUserPassError = null,
                     )
                 }
             }
@@ -112,6 +113,7 @@ class RegisterViewModel @Inject constructor(
         val last_name = _registerState.value.last_name
         val username = _registerState.value.username
         val user_pass = _registerState.value.user_pass
+        val confirmUserPass = _registerState.value.confirmUserPass
         val gender = _registerState.value.gender
         val mobile_number = _registerState.value.mobile_number
         val email = _registerState.value.email
@@ -122,8 +124,9 @@ class RegisterViewModel @Inject constructor(
             last_name = last_name,
             username = username,
             user_pass = user_pass,
+            confirmUserPass= confirmUserPass,
             gender = gender,
-            mobile_number = mobile_number,
+            mobile_number = mobile_number.toLong(),
             email = email,
             address = address,
             profile_pic = profile_pic,
@@ -166,6 +169,7 @@ class RegisterViewModel @Inject constructor(
                 lastNameError = fieldError.errors.find { it.field == "last_name" }?.error,
                 usernameError = fieldError.errors.find { it.field == "username" }?.error,
                 userPassError = fieldError.errors.find { it.field == "user_pass" }?.error,
+                confirmUserPassError = fieldError.errors.find { it.field == "confirmUserPass" }?.error,
                 genderError = fieldError.errors.find { it.field == "gender" }?.error,
                 mobileNumberError = fieldError.errors.find { it.field == "mobile_number" }?.error,
                 emailError = fieldError.errors.find { it.field == "email" }?.error,

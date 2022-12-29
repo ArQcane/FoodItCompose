@@ -8,7 +8,7 @@ data class RegisterDto(
     val username: String,
     val user_pass: String,
     val email: String,
-    val mobile_number: Int,
+    val mobile_number: Long,
     val gender: String,
     val address: String,
     val profile_pic: String? = null,

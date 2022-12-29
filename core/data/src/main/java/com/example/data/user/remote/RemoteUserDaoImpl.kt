@@ -241,6 +241,14 @@ class RemoteUserDaoImpl @Inject constructor(
                         object : TypeToken<TokenDto>() {}.type
                     ).result
                 )
+                201 -> Resource.Failure(
+                    ResourceError.Default(
+                        gson.fromJson<DefaultMessageDto>(
+                            json,
+                            object : TypeToken<DefaultMessageDto>() {}.type
+                        ).message
+                    )
+                )
                 400 -> Resource.Failure(
                     gson.fromJson<ResourceError.Field>(
                         json,

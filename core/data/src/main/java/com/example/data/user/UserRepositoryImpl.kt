@@ -78,7 +78,7 @@ class UserRepositoryImpl @Inject constructor(
         username: String,
         user_pass: String,
         email: String,
-        mobile_number: Int,
+        mobile_number: Long,
         gender: String,
         address: String,
         profile_pic: String?,
