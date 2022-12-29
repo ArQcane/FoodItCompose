@@ -34,6 +34,7 @@ import com.example.authentication.login.LoginEvent
 import com.example.authentication.navigationArgs.loginScreenRoute
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
+import com.example.common.components.CltDropDownMenu
 import com.example.common.components.CltInput
 import com.example.common.utils.Screen
 import kotlinx.coroutines.flow.collect
@@ -54,9 +55,10 @@ fun RegisterScreen(
     LaunchedEffect(state.isCreated) {
         if (!state.isCreated) return@LaunchedEffect
         scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-        scaffoldState.snackbarHostState.showSnackbar("Successfully created account!", "Dismiss").also {
-            navController.navigateToAuthScreen()
-        }
+        scaffoldState.snackbarHostState.showSnackbar("Successfully created account!", "Dismiss")
+            .also {
+                navController.navigateToAuthScreen()
+            }
     }
 
     LaunchedEffect(true) {
@@ -111,7 +113,14 @@ fun RegisterScreen(
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.primaryVariant
                     )
-                    Spacer(modifier = Modifier.padding(16.dp))
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Text(
+                        text = "Please fill up all fields",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Spacer(modifier = Modifier.padding(12.dp))
                     CltInput(
                         value = state.first_name,
                         label = "First Name",
@@ -172,6 +181,11 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
+                    Text(
+                        text = "Password must contain atleast one uppercase, one lowercase, one numeral, and a special character",
+                        Modifier.padding(4.dp),
+                        fontSize = 12.sp,
+                    )
                     CltInput(
                         value = state.user_pass,
                         label = "User Password",
@@ -193,28 +207,10 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
-                        value = state.gender,
-                        label = "User Gender",
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        error = state.genderError,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                        ),
-                        onValueChange = {
-                            registerViewModel.onEvent(
-                                RegisterEvent.OnGenderChange(gender = it)
-                            )
-                        }
-                    )
+                    CltDropDownMenu(listOf("M", "F"),"Gender")
                     Spacer(modifier = Modifier.padding(4.dp))
                     CltInput(
-                        value = state.mobile_number,
+                        value = state.mobile_number.toString(),
                         label = "User Mobile Number",
                         modifier = Modifier
                             .fillMaxWidth(),

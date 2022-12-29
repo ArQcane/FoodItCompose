@@ -7,7 +7,7 @@ data class RegisterState(
     val user_pass: String = "",
     val confirmUserPass: String = "",
     val gender: String = "",
-    val mobile_number: String = "",
+    val mobile_number: Int = 0,
     val email: String = "",
     val address: String = "",
     val profile_pic: String = "",

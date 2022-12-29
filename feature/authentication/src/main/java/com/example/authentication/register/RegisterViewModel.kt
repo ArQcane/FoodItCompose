@@ -75,7 +75,7 @@ class RegisterViewModel @Inject constructor(
             is RegisterEvent.OnMobileNumberChange -> {
                 _registerState.update { state ->
                     state.copy(
-                        mobile_number = event.mobile_number.toString(),
+                        mobile_number = event.mobile_number,
                         mobileNumberError = null
                     )
                 }
@@ -113,7 +113,7 @@ class RegisterViewModel @Inject constructor(
         val username = _registerState.value.username
         val user_pass = _registerState.value.user_pass
         val gender = _registerState.value.gender
-        val mobile_number = _registerState.value.mobile_number.toInt()
+        val mobile_number = _registerState.value.mobile_number
         val email = _registerState.value.email
         val address = _registerState.value.address
         val profile_pic = _registerState.value.profile_pic
