@@ -3,6 +3,7 @@ package com.example.fooditcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -25,15 +26,17 @@ import com.example.common.theme.FoodItComposeTheme
 import com.example.fooditcompose.navUtils.BottomNavItem
 import com.example.fooditcompose.navUtils.BottomNavigationBar
 import com.example.fooditcompose.ui.NavGraph
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FoodItComposeTheme {
-                val navController = rememberNavController()
+                val navController = rememberAnimatedNavController()
                 // A surface container using the 'background' color from the theme
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),

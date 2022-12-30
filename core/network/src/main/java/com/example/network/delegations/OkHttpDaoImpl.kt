@@ -179,6 +179,7 @@ class OkHttpDaoImpl(
             object : TypeToken<HashMap<String, Any>>() {}.type
         )
         val multipartBuilder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
         map.forEach { (key, value) ->
             multipartBuilder.addFormDataPart(key, value.toString())
         }

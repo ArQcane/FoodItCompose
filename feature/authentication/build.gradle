@@ -95,4 +95,5 @@ dependencies {
     implementation project(":feature:common")
 
     implementation "dev.chrisbanes.accompanist:accompanist-glide:0.4.2"
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.23.0"
 }
