@@ -3,7 +3,6 @@ package com.example.fooditcompose.ui
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.navigation.*
 import com.example.authentication.navigationArgs.authScreenComposable
 import com.example.authentication.navigationArgs.splashScreenRoute
@@ -37,7 +36,6 @@ fun NavGraph(navController: NavHostController) {
                         )
                     }
                 }
-
             },
             exitTransition = {
                 slideOutOfContainer(

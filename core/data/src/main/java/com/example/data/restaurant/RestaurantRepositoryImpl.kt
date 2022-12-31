@@ -11,7 +11,7 @@ class RestaurantRepositoryImpl @Inject constructor(
     private val restaurantDao: RemoteRestaurantDao
 ) : RestaurantRepository {
     override suspend fun getAllRestaurants() = restaurantDao.getAllRestaurants()
-    override suspend fun getRestaurantById(id: String): Resource<com.example.domain.restaurant.Restaurant> =
+    override suspend fun getRestaurantById(id: String): Resource<Restaurant> =
         restaurantDao.getRestaurantById(id = id)
 
     override suspend fun filterRestaurant(

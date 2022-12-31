@@ -1,13 +1,9 @@
 package com.example.authentication.navigationArgs
 
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.example.authentication.forgetPassword.ResetPasswordWithEmailScreen
 import com.example.authentication.login.LoginScreen
 import com.example.authentication.register.RegisterScreen
@@ -19,6 +15,7 @@ const val splashScreenRoute = "/splash"
 internal const val loginScreenRoute = "/login"
 internal const val resetPasswordFromEmailRoute = "/resetPassword"
 internal const val registerScreenRoute = "/register"
+internal const val homeScreenRoute = "/home"
 private const val TransitionDurationMillis = 500
 
 fun NavHostController.navigateToAuthScreen(
