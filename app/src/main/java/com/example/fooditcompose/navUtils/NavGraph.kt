@@ -28,6 +28,7 @@ fun NavGraph(navController: NavHostController) {
             enterTransition = {
                 when(initialState.destination.route){
                     splashScreenRoute -> expandIn(animationSpec = tween(500))
+                    "login" -> expandIn(animationSpec = tween(500))
                     Screen.HomeScreen.route -> EnterTransition.None
                     else -> {
                         slideIntoContainer(
