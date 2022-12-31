@@ -6,6 +6,7 @@ import com.example.domain.utils.Resource
 interface RestaurantRepository {
     suspend fun getAllRestaurants(): Resource<List<Restaurant>>
     suspend fun getRestaurantById(id: String): Resource<Restaurant>
+    suspend fun getExpensiveRestaurant(): Resource<List<Restaurant>>
     suspend fun filterRestaurant(
         region: String? = null,
         cuisine: String? = null,

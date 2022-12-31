@@ -1,5 +1,6 @@
 package com.example.domain.restaurant.usecases
 
+import android.util.Log
 import com.example.domain.favourites.FavouritesRepository
 import com.example.domain.restaurant.RestaurantRepository
 import com.example.domain.restaurant.TransformedRestaurant
@@ -10,11 +11,9 @@ import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
-
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
-class GetAllRestaurantsUseCase @Inject constructor(
+class GetExpensiveRestaurantsUseCase @Inject constructor(
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUser,
     private val favouriteRepository: FavouritesRepository,
     private val reviewRepository: ReviewRepository,
@@ -33,7 +32,7 @@ class GetAllRestaurantsUseCase @Inject constructor(
         if (favouriteRestaurants !is Resource.Success) return@flow emit(
             Resource.Failure((favouriteRestaurants as Resource.Failure).error)
         )
-        val restaurants = restaurantRepository.getAllRestaurants()
+        val restaurants = restaurantRepository.getExpensiveRestaurant()
         if (restaurants !is Resource.Success) return@flow emit(
             Resource.Failure((restaurants as Resource.Failure).error)
         )

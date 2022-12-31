@@ -6,8 +6,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -27,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -38,13 +38,14 @@ import androidx.navigation.NavHostController
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
 import com.example.common.utils.Screen
+import com.example.fooditcompose.ui.screens.home.components.RestaurantCard
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
@@ -55,7 +56,12 @@ fun HomeScreen(
     val scrollState = rememberScrollState()
 
     val lifecycleOwner = LocalLifecycleOwner.current
-    val state by homeViewModel.state.collectAsState()
+    val restaurantState by homeViewModel.restaurantState.collectAsState()
+
+    val expensiveRestaurantState by homeViewModel.expensiveRestaurantState.collectAsState()
+
+
+
 
     LaunchedEffect(true) {
         lifecycleOwner.lifecycleScope.launch {
@@ -70,11 +76,11 @@ fun HomeScreen(
 
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().scrollable(scrollState, orientation = Orientation.Vertical),
+        modifier = Modifier
+            .fillMaxSize(),
         scaffoldState = scaffoldState,
     ) { padding ->
-        Column(
-        ) {
+        Column() {
             StackedSearchBar(navController) //SearchBarFunctionality
             Box(
                 modifier = Modifier
@@ -82,7 +88,7 @@ fun HomeScreen(
                     .padding(padding)
             ) {
                 AnimatedContent(
-                    targetState = state.isLoading,
+                    targetState = restaurantState.isLoading && expensiveRestaurantState.isLoading,
                     transitionSpec = {
                         fadeIn() with fadeOut()
                     }
@@ -94,53 +100,72 @@ fun HomeScreen(
                         ) {
                             CircularProgressIndicator()
                         }
-                    if (!isLoading)
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
-                            items(state.restaurantList) { restaurant ->
-                                Column(modifier = Modifier.clickable { }) {
-                                    Text(
-                                        text = restaurant.name,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
-                                    Divider(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(2.dp)
-                                    )
-                                }
-                            }
-                            item {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
+                    if (!isLoading){
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                Text(
+                                    text = "All Restaurants",
+                                    style = MaterialTheme.typography.h5,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.primary,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 10.dp)
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(0.5f),
                                 ) {
-                                    CltButton(
-                                        modifier = Modifier.fillMaxWidth(0.5f),
-                                        text = "Log Out",
-                                        withLoading = true,
-                                        enabled = true,
-                                        onClick = {
-                                            homeViewModel.logout()
-                                            navController.navigateToAuthScreen(
-                                                popUpTo = Screen.HomeScreen.route
-                                            )
+                                    LazyRow {
+                                        items(restaurantState.restaurantList) {
+                                            RestaurantCard(restaurant = it)
                                         }
-                                    )
+                                    }
                                 }
+                                Text(
+                                    text = "Featured Restaurants",
+                                    style = MaterialTheme.typography.h5,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.primary,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 10.dp, start = 10.dp)
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(0.5f),
+                                ) {
+                                    LazyRow {
+                                        items(expensiveRestaurantState.restaurantList) {
+                                            RestaurantCard(restaurant = it)
+                                        }
+                                    }
+                                }
+                                Spacer(modifier = Modifier.padding(28.dp))
                             }
                         }
+                    }
                 }
             }
         }
     }
-
 }
 
 @Composable
 fun StackedSearchBar(navController: NavHostController) {
     Box(
         modifier = Modifier
-            .height(200.dp),
+            .fillMaxHeight(0.2f),
         contentAlignment = Alignment.TopCenter
     ) {
         Box(
@@ -171,16 +196,7 @@ fun StackedSearchBar(navController: NavHostController) {
                     fontSize = 24.sp,
                     modifier = Modifier.align(CenterVertically),
                 )
-                Spacer(Modifier.weight(1f))
-                Icon(
-                    Icons.Filled.Settings, "Settings Icon", modifier = Modifier
-                        .size(50.dp),
-                    tint = Color(
-                        parseColor("#5B3256")
-                    )
-                )
             }
-
         }
         OutlinedButton(
             onClick = { navController.navigate(Screen.SearchScreen.route) },
@@ -189,14 +205,12 @@ fun StackedSearchBar(navController: NavHostController) {
             modifier = Modifier
                 .align(alignment = Alignment.Center)
                 .fillMaxWidth(0.85f)
-                .fillMaxHeight(0.45f)
-                .zIndex(2f)
-                .clip(RoundedCornerShape(25.dp))
+                .fillMaxHeight(0.55f)
+                .zIndex(3f)
                 .graphicsLayer {
-                    translationY = 0f
+                    translationY = 40f
                     shadowElevation = 100f
-                }
-                .background(Color.White),
+                },
         ) {
             Row {
                 Icon(
@@ -207,7 +221,7 @@ fun StackedSearchBar(navController: NavHostController) {
                 Spacer(Modifier.weight(0.5f))
                 Text(
                     "Search your Restaurants Here!",
-                    modifier = Modifier.align(Alignment.CenterVertically)
+                    modifier = Modifier.align(CenterVertically)
                 )
                 Spacer(Modifier.weight(1f))
                 Text("")

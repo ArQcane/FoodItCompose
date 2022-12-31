@@ -52,7 +52,7 @@ class RemoteRestaurantDaoImpl @Inject constructor(
 
     override suspend fun getRestaurantById(id: String): Resource<Restaurant> =
         tryWithIoHandling {
-            val (json, code) = get(endpoint = "/$id")
+            val (json, code) = get(endpoint = "/id/$id")
             json ?: return@tryWithIoHandling Resource.Failure(
                 ResourceError.Default(NO_RESPONSE)
             )
@@ -71,6 +71,28 @@ class RemoteRestaurantDaoImpl @Inject constructor(
                 )
             }
         }
+
+    override suspend fun getExpensiveRestaurants(): Resource<List<Restaurant>> =
+        tryWithIoHandling {
+            val (json, code) = get(endpoint = "/expensive")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
+                200 -> Resource.Success(
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<List<Restaurant>>() {}.type
+                    )
+                )
+                else -> Resource.Failure(
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
+                )
+            }
+    }
 
     override suspend fun filterRestaurant(
         filterRestaurantDto: FilterRestaurantDto,

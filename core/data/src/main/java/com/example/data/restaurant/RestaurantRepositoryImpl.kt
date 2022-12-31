@@ -14,12 +14,16 @@ class RestaurantRepositoryImpl @Inject constructor(
     override suspend fun getRestaurantById(id: String): Resource<Restaurant> =
         restaurantDao.getRestaurantById(id = id)
 
+    override suspend fun getExpensiveRestaurant(): Resource<List<Restaurant>> =
+        restaurantDao.getExpensiveRestaurants()
+
+
     override suspend fun filterRestaurant(
         region: String?,
         cuisine: String?,
         average_price_range: Int?,
         average_rating: Int?
-    ): Resource<List<com.example.domain.restaurant.Restaurant>> =
+    ): Resource<List<Restaurant>> =
         restaurantDao.filterRestaurant(
             filterRestaurantDto = FilterRestaurantDto(
                 region = region,
