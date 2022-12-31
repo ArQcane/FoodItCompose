@@ -33,6 +33,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.common.utils.Screen
 import com.example.restaurant.home.components.RestaurantCard
+import com.example.restaurant.home.components.ShimmerLoadingCardPlaceholder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -79,19 +80,63 @@ fun HomeScreen(
                     .padding(padding)
             ) {
                 AnimatedContent(
-                    targetState = restaurantState.isLoading && expensiveRestaurantState.isLoading,
+                    targetState = restaurantState.isLoading,
                     transitionSpec = {
                         fadeIn() with fadeOut()
                     }
                 ) { isLoading ->
                     if (isLoading)
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
+                            modifier = Modifier.fillMaxSize()
+                        ){
+                            Column(modifier = Modifier
+                                .verticalScroll(rememberScrollState())) {
+                                Text(
+                                    text = "All Restaurants",
+                                    style = MaterialTheme.typography.h5,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.primary,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 10.dp)
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(0.5f),
+                                ) {
+                                    LazyRow {
+                                        items(10) {
+                                            ShimmerLoadingCardPlaceholder()
+                                        }
+                                    }
+                                }
+                                Text(
+                                    text = "Featured Restaurants",
+                                    style = MaterialTheme.typography.h5,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colors.primary,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 10.dp, start = 10.dp)
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(0.5f),
+                                ) {
+                                    LazyRow {
+                                        items(10) {
+                                            ShimmerLoadingCardPlaceholder()
+                                        }
+                                    }
+                                }
+                                Spacer(modifier = Modifier.padding(28.dp))
+                            }
                         }
-                    if (!isLoading){
+                    if (!isLoading) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()

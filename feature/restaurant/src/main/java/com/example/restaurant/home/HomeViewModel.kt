@@ -10,6 +10,7 @@ import com.example.domain.utils.ResourceError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -37,6 +38,7 @@ class HomeViewModel @Inject constructor(
         getAllRestaurantsUseCase().onEach {
             when (it) {
                 is Resource.Success -> _restaurantState.update { state ->
+                    delay(1000L)
                     state.copy(
                         restaurantList = it.result,
                         isLoading = false
@@ -60,6 +62,7 @@ class HomeViewModel @Inject constructor(
         getExpensiveRestaurantsUseCase().onEach {
             when (it) {
                 is Resource.Success -> _expensiveRestaurantState.update { state ->
+                    delay(1000L)
                     state.copy(
                         restaurantList = it.result,
                         isLoading = false
