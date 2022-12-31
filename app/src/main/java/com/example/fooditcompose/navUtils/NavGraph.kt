@@ -5,9 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import com.example.authentication.navigationArgs.authScreenComposable
-import com.example.authentication.navigationArgs.splashScreenRoute
+import com.example.common.navigation.splashScreenRoute
 import com.example.common.utils.Screen
-import com.example.fooditcompose.ui.screens.home.HomeScreen
+import com.example.restaurant.home.HomeScreen
 import com.example.fooditcompose.ui.screens.profile.ProfileScreen
 import com.example.fooditcompose.ui.screens.search.SearchScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -51,7 +51,7 @@ fun NavGraph(navController: NavHostController) {
                 )
             },
         ) {
-            HomeScreen(navController = navController)
+            com.example.restaurant.home.HomeScreen(navController = navController)
         }
         composable(
             Screen.SearchScreen.route,

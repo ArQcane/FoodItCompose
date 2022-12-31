@@ -45,10 +45,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.authentication.R
-import com.example.authentication.navigationArgs.loginScreenRoute
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput
+import com.example.common.navigation.loginScreenRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

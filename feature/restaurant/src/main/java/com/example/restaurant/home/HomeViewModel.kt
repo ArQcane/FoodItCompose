@@ -1,4 +1,4 @@
-package com.example.fooditcompose.ui.screens.home
+package com.example.restaurant.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -40,9 +40,11 @@ dependencies {
     // for json conversion
     implementation 'com.google.code.gson:gson:2.8.0'
 
-    // for dagger hilt
-    implementation "com.google.dagger:hilt-android:2.38.1"
-    kapt "com.google.dagger:hilt-android-compiler:2.37"
+    //hilt
+    implementation 'com.google.dagger:hilt-android:2.42'
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    kapt 'com.google.dagger:hilt-compiler:2.42'
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'

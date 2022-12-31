@@ -40,26 +40,24 @@ class GetExpensiveRestaurantsUseCase @Inject constructor(
         if (reviews !is Resource.Success) return@flow emit(
             Resource.Failure((reviews as Resource.Failure).error)
         )
-        val transformedRestaurants = restaurants.result.map {
+        val transformedRestaurants = restaurants.result.map { restaurant ->
             val reviewsOfRestaurant = reviews.result.filter { review ->
-                review.idrestaurant == it.restaurant_id
+                review.idrestaurant == restaurant.restaurant_id
             }
-            val isFavourited = favouriteRestaurants.result.map { restaurant ->
-                restaurant.restaurant_id
-            }.contains(it.restaurant_id)
+            val isFavourited = favouriteRestaurants.result.map { it.restaurant_id }.contains(restaurant.restaurant_id)
             TransformedRestaurant(
-                id = it.restaurant_id,
-                name = it.restaurant_name,
-                avg_price = it.average_price_range,
-                cuisine = it.cuisine,
-                biography = it.biography,
-                opening_hours = it.opening_hours,
-                region = it.region,
-                restaurant_logo = it.restaurant_logo,
-                location_lat = it.location_lat,
-                location_long = it.location_long,
-                location = it.location,
-                restaurant_banner = it.restaurant_banner,
+                id = restaurant.restaurant_id,
+                name = restaurant.restaurant_name,
+                avg_price = restaurant.average_price_range,
+                cuisine = restaurant.cuisine,
+                biography = restaurant.biography,
+                opening_hours = restaurant.opening_hours,
+                region = restaurant.region,
+                restaurant_logo = restaurant.restaurant_logo,
+                location_lat = restaurant.location_lat,
+                location_long = restaurant.location_long,
+                location = restaurant.location,
+                restaurant_banner = restaurant.restaurant_banner,
                 reviews = reviewsOfRestaurant,
                 isFavouriteByCurrentUser = isFavourited,
                 averageRating = getAverageRating(reviewsOfRestaurant),

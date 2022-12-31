@@ -8,22 +8,15 @@ import com.example.authentication.forgetPassword.ResetPasswordWithEmailScreen
 import com.example.authentication.login.LoginScreen
 import com.example.authentication.register.RegisterScreen
 import com.example.authentication.splashAnims.SplashScreen
+import com.example.common.navigation.*
 import com.example.common.utils.Screen
 import com.google.accompanist.navigation.animation.composable
 
-const val splashScreenRoute = "/splash"
-internal const val loginScreenRoute = "/login"
-internal const val resetPasswordFromEmailRoute = "/resetPassword"
-internal const val registerScreenRoute = "/register"
-internal const val homeScreenRoute = "/home"
-private const val TransitionDurationMillis = 500
-
 fun NavHostController.navigateToAuthScreen(
-    shouldPopBackStack: Boolean = false,
-    popUpTo: String = splashScreenRoute
+    popUpTo: String? = null
 ) {
     navigate(loginScreenRoute) {
-        if (!shouldPopBackStack) return@navigate
+        popUpTo ?: return@navigate
         popUpTo(popUpTo) {
             inclusive = true
         }

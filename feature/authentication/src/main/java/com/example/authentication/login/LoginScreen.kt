@@ -39,10 +39,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.authentication.R
-import com.example.authentication.navigationArgs.registerScreenRoute
-import com.example.authentication.navigationArgs.resetPasswordFromEmailRoute
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput
+import com.example.common.navigation.registerScreenRoute
+import com.example.common.navigation.resetPasswordFromEmailRoute
 import com.example.common.utils.Screen
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect

@@ -39,7 +39,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.authentication.R
 import com.example.authentication.login.LoginEvent
-import com.example.authentication.navigationArgs.loginScreenRoute
+
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput

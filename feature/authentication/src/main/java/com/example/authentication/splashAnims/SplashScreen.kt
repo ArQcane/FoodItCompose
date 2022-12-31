@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.authentication.R
-import com.example.authentication.navigationArgs.loginScreenRoute
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.utils.Screen
 import kotlinx.coroutines.delay
@@ -46,7 +45,7 @@ internal fun SplashScreen(
         startAnimation = true
         delay(4000)
         navController.popBackStack()
-        if(!isLoggedIn) navController.navigateToAuthScreen(shouldPopBackStack = true)
+        if(!isLoggedIn) navController.navigateToAuthScreen()
         else return@LaunchedEffect navController.navigate(Screen.HomeScreen.route)
     }
 

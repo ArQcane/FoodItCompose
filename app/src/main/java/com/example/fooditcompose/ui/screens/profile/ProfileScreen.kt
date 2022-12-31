@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.authentication.navigationArgs.navigateToAuthScreen
+import com.example.common.navigation.homeScreenRoute
+import com.example.common.navigation.loginScreenRoute
 import com.example.common.utils.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -28,8 +30,7 @@ fun ProfileScreen(
             Button(onClick = {
                 profileViewModel.logout()
                 navController.navigateToAuthScreen(
-                    shouldPopBackStack = true,
-                    popUpTo = "/login"
+                    popUpTo = loginScreenRoute
                 )
             }) {
                 Text(text = "Log Out")
