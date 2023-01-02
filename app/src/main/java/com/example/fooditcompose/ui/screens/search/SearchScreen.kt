@@ -1,15 +1,13 @@
 package com.example.fooditcompose.ui.screens.search
 
 import android.graphics.Color.parseColor
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -41,7 +39,9 @@ import androidx.navigation.NavHostController
 import com.example.authentication.login.LoginEvent
 import com.example.common.components.CltInput
 import com.example.common.utils.Screen
+import com.example.fooditcompose.ui.screens.search.components.CardElevation
 import com.example.fooditcompose.ui.screens.search.components.SearchedRestaurantGridCard
+import com.example.fooditcompose.ui.screens.search.components.ShimmerSearchPlaceholder
 import com.example.restaurant.home.components.RestaurantCard
 import com.example.restaurant.home.components.ShimmerLoadingCardPlaceholder
 import kotlinx.coroutines.flow.collect
@@ -127,25 +127,30 @@ fun SearchScreen(
                     }
                 }
             }
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
+                    .padding(padding),
+                verticalArrangement = Arrangement.spacedBy(26.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+
             ) {
-                LazyVerticalGrid(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .scrollable(state = rememberScrollState(), orientation = Orientation.Vertical),
-                    cells = GridCells.Fixed(2),
+                        .scrollable(
+                            state = rememberScrollState(),
+                            orientation = Orientation.Vertical
+                        ),
                     contentPadding = PaddingValues(5.dp)
                 ) {
                     if (state.isLoading)
                         items(10) {
-                            ShimmerLoadingCardPlaceholder()
+                            ShimmerSearchPlaceholder()
                         }
                     if (!state.isLoading)
                         items(state.searchedRestaurantList) {
-                            RestaurantCard(
+                            SearchedRestaurantGridCard(
                                 restaurant = it,
                             )
                         }

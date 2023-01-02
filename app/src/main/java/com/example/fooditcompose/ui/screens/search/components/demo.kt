@@ -1,5 +1,8 @@
 package com.example.fooditcompose.ui.screens.search.components
 
+
+import android.graphics.Color.parseColor
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -15,20 +18,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.common.components.CltImageFromNetwork
 import com.example.domain.restaurant.TransformedRestaurant
+import com.example.fooditcompose.R
 
 @Composable
-fun SearchedRestaurantGridCard(
+fun CardElevation(
     restaurant: TransformedRestaurant,
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = Color(android.graphics.Color.parseColor("#FFE2E2")),
+        color = Color(parseColor("#FFE2E2")),
         modifier = Modifier
             .height(260.dp)
             .padding(10.dp),
@@ -47,7 +53,7 @@ fun SearchedRestaurantGridCard(
                 Surface(
                     shape = RoundedCornerShape(24.dp),
                     modifier = Modifier.wrapContentSize(),
-                    color = Color(android.graphics.Color.parseColor("#CCD4E5"))
+                    color = Color(parseColor("#CCD4E5"))
                 ) {
                     Text(
                         text = restaurant.location,
@@ -104,8 +110,8 @@ fun SearchedRestaurantGridCard(
                     OutlinedButton(
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            contentColor = androidx.compose.ui.graphics.Color.Black,
-                            backgroundColor = androidx.compose.ui.graphics.Color.White
+                            contentColor = Color.Black,
+                            backgroundColor = Color.White
                         ),
                         onClick = { /*TODO*/ }
                     ) {

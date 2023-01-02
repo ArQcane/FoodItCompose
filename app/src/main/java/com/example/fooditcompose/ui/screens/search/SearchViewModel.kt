@@ -41,6 +41,10 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.OnSearch -> searchQuery()
         }
     }
+
+    init {
+        searchQuery()
+    }
     private fun searchQuery() {
         val searchedQuery = _searchState.value.searchedQuery
         if(searchedQuery != "" || searchedQuery != null) {
@@ -94,6 +98,4 @@ class SearchViewModel @Inject constructor(
             }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
         }
     }
-
-
 }
