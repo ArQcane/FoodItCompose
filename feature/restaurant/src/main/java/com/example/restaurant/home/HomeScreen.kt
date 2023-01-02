@@ -162,7 +162,10 @@ fun HomeScreen(
                                 ) {
                                     LazyRow {
                                         items(restaurantState.restaurantList) {
-                                            RestaurantCard(restaurant = it)
+                                            RestaurantCard(restaurant = it,
+                                                toggleFavourite = { restaurantId ->
+                                                    homeViewModel.toggleFavorite(restaurantId)
+                                                })
                                         }
                                     }
                                 }
@@ -183,7 +186,10 @@ fun HomeScreen(
                                 ) {
                                     LazyRow {
                                         items(expensiveRestaurantState.restaurantList) {
-                                            RestaurantCard(restaurant = it)
+                                            RestaurantCard(restaurant = it,
+                                                toggleFavourite = { restaurantId ->
+                                                    homeViewModel.toggleFavorite(restaurantId)
+                                                })
                                         }
                                     }
                                 }

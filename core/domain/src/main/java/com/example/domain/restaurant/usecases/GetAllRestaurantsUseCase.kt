@@ -1,5 +1,6 @@
 package com.example.domain.restaurant.usecases
 
+import android.util.Log
 import com.example.domain.favourites.FavouritesRepository
 import com.example.domain.restaurant.RestaurantRepository
 import com.example.domain.restaurant.TransformedRestaurant
@@ -22,6 +23,7 @@ class GetAllRestaurantsUseCase @Inject constructor(
 ) {
     operator fun invoke() = flow<Resource<List<TransformedRestaurant>>> {
         emit(Resource.Loading(isLoading = true))
+
         val userId = getUserId() ?: return@flow emit(
             Resource.Failure(
                 ResourceError.Default("Must be logged in to do this action")
@@ -45,7 +47,9 @@ class GetAllRestaurantsUseCase @Inject constructor(
             val reviewsOfRestaurant = reviews.result.filter { review ->
                 review.idrestaurant == restaurant.restaurant_id
             }
-            val isFavourited = favouriteRestaurants.result.map { it.restaurant_id }.contains(restaurant.restaurant_id)
+            val isFavourited = favouriteRestaurants.result.map {
+                it.restaurantID
+            }.contains(restaurant.restaurant_id)
             TransformedRestaurant(
                 id = restaurant.restaurant_id,
                 name = restaurant.restaurant_name,
@@ -70,7 +74,8 @@ class GetAllRestaurantsUseCase @Inject constructor(
 
     private fun getAverageRating(reviews: List<Review>): Double {
         if (reviews.isEmpty()) return 0.0
-        return Math.round((reviews.sumOf { review -> review.rating } / reviews.size.toDouble()) * 100).toDouble()/100
+        return Math.round((reviews.sumOf { review -> review.rating } / reviews.size.toDouble()) * 100)
+            .toDouble() / 100
     }
 
     private suspend fun getUserId(): String? {

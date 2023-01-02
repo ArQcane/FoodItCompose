@@ -2,6 +2,7 @@ package com.example.restaurant.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.favourites.usecases.ToggleFavouritesUseCase
 import com.example.domain.restaurant.usecases.GetAllRestaurantsUseCase
 import com.example.domain.restaurant.usecases.GetExpensiveRestaurantsUseCase
 import com.example.domain.user.UserRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,6 +21,7 @@ class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val getAllRestaurantsUseCase: GetAllRestaurantsUseCase,
     private val getExpensiveRestaurantsUseCase: GetExpensiveRestaurantsUseCase,
+    private val toggleFavouritesUseCase: ToggleFavouritesUseCase,
 ) : ViewModel() {
     private val _restaurantState = MutableStateFlow(HomeState())
     val restaurantState = _restaurantState.asStateFlow()
@@ -83,7 +86,33 @@ class HomeViewModel @Inject constructor(
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
 
-    fun logout() {
-        userRepository.deleteToken()
+    fun toggleFavorite(restaurantId: String) {
+        viewModelScope.launch {
+            val index = _restaurantState.value.restaurantList.map { it.id }.indexOf(restaurantId.toInt())
+            val restaurant = _restaurantState.value.restaurantList[index]
+            lateinit var oldState: HomeState
+            _restaurantState.update { state ->
+                oldState = state
+                state.copy(
+                    restaurantList = state.restaurantList.toMutableList().apply {
+                        set(
+                            index,
+                            restaurant.copy(
+                                isFavouriteByCurrentUser = !restaurant.isFavouriteByCurrentUser
+                            )
+                        )
+                    }
+                )
+            }
+            when (val resource = toggleFavouritesUseCase(restaurant)) {
+                is Resource.Failure -> {
+                    _restaurantState.value = oldState
+                    if (resource.error !is ResourceError.Default) return@launch
+                    val defaultError = resource.error as ResourceError.Default
+                    _errorChannel.send(defaultError.error)
+                }
+                else -> Unit
+            }
+        }
     }
 }

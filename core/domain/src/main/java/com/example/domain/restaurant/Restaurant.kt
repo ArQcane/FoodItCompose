@@ -3,7 +3,7 @@ package com.example.domain.restaurant
 data class Restaurant(
     val restaurant_id: Int,
     val restaurant_name: String,
-    val  average_price_range: Float,
+    val average_price_range: Float,
     val average_rating: Float,
     val cuisine: String,
     val biography: String,

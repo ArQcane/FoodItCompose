@@ -44,7 +44,7 @@ class GetExpensiveRestaurantsUseCase @Inject constructor(
             val reviewsOfRestaurant = reviews.result.filter { review ->
                 review.idrestaurant == restaurant.restaurant_id
             }
-            val isFavourited = favouriteRestaurants.result.map { it.restaurant_id }.contains(restaurant.restaurant_id)
+            val isFavourited = favouriteRestaurants.result.map { it.restaurantID }.contains(restaurant.restaurant_id)
             TransformedRestaurant(
                 id = restaurant.restaurant_id,
                 name = restaurant.restaurant_name,

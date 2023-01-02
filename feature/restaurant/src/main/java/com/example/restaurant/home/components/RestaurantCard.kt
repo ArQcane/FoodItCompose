@@ -22,7 +22,8 @@ import com.example.domain.restaurant.TransformedRestaurant
 
 @Composable
 fun RestaurantCard(
-    restaurant: TransformedRestaurant
+    restaurant: TransformedRestaurant,
+    toggleFavourite: (String) -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -67,7 +68,7 @@ fun RestaurantCard(
                             .offset(x = 5.dp)
                             .clip(CircleShape)
                             .size(40.dp),
-                        onClick = { /*TODO*/ }
+                        onClick = { toggleFavourite(restaurant.id.toString()) }
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),

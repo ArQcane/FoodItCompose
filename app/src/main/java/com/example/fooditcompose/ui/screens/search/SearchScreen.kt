@@ -39,7 +39,6 @@ import androidx.navigation.NavHostController
 import com.example.authentication.login.LoginEvent
 import com.example.common.components.CltInput
 import com.example.common.utils.Screen
-import com.example.fooditcompose.ui.screens.search.components.CardElevation
 import com.example.fooditcompose.ui.screens.search.components.SearchedRestaurantGridCard
 import com.example.fooditcompose.ui.screens.search.components.ShimmerSearchPlaceholder
 import com.example.restaurant.home.components.RestaurantCard

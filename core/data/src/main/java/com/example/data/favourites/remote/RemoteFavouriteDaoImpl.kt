@@ -3,6 +3,7 @@ package com.example.data.favourites.remote
 import com.example.data.common.DefaultMessageDto
 import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
+import com.example.domain.favourites.Favourite
 import com.example.domain.restaurant.Restaurant
 import com.example.domain.user.User
 import com.example.domain.utils.Resource
@@ -29,7 +30,7 @@ class RemoteFavoriteDaoImpl @Inject constructor(
         path = "/favourites"
     ) {
 
-    override suspend fun getFavoriteRestaurantsOfUser(userId: String): Resource<List<Restaurant>> =
+    override suspend fun getFavoriteRestaurantsOfUser(userId: String): Resource<List<Favourite>> =
         tryWithIoHandling {
             val (json, code) = get(endpoint = "/user/$userId")
             json ?: return@tryWithIoHandling Resource.Failure(
@@ -39,7 +40,7 @@ class RemoteFavoriteDaoImpl @Inject constructor(
                 200 -> Resource.Success(
                     gson.fromJson(
                         json,
-                        object : TypeToken<List<Restaurant>>() {}.type
+                        object : TypeToken<List<Favourite>>() {}.type
                     )
                 )
                 else -> Resource.Failure(
@@ -51,7 +52,7 @@ class RemoteFavoriteDaoImpl @Inject constructor(
             }
         }
 
-    override suspend fun getUsersWhoFavoriteRestaurant(restaurantId: String): Resource<List<com.example.domain.user.User>> =
+    override suspend fun getUsersWhoFavoriteRestaurant(restaurantId: String): Resource<List<User>> =
         tryWithIoHandling {
             val (json, code) = get(endpoint = "/restaurant/$restaurantId")
             json ?: return@tryWithIoHandling Resource.Failure(
@@ -106,7 +107,7 @@ class RemoteFavoriteDaoImpl @Inject constructor(
     ): Resource<String> = tryWithIoHandling {
         val (json,code) = delete(
             endpoint = "/deleteFav",
-            body = mapOf("userID" to userId, "restaurantID" to restaurantId),
+            body = mapOf("userID" to userId.toInt(), "restaurantID" to restaurantId.toInt()),
         )
         json ?: return@tryWithIoHandling Resource.Failure(
             ResourceError.Default(NO_RESPONSE)
