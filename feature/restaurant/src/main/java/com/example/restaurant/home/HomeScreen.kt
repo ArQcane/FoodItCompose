@@ -198,7 +198,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun StackedSearchBar(navController: NavHostController) {
+private fun StackedSearchBar(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxHeight(0.2f),
