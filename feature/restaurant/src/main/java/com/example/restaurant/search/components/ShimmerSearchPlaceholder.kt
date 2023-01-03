@@ -1,4 +1,4 @@
-package com.example.fooditcompose.ui.screens.search.components
+package com.example.restaurant.search.components
 
 
 import android.graphics.Color.parseColor

@@ -1,14 +1,11 @@
-package com.example.fooditcompose.ui.screens.search
+package com.example.restaurant.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.authentication.login.LoginEvent
-import com.example.authentication.login.LoginState
 import com.example.domain.restaurant.usecases.GetAllRestaurantsUseCase
 import com.example.domain.restaurant.usecases.SearchRestaurantUseCase
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.restaurant.home.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

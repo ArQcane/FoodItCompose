@@ -1,6 +1,5 @@
-package com.example.fooditcompose.ui.screens.search.components
+package com.example.restaurant.search.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +15,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.common.components.CltImageFromNetwork
@@ -25,6 +23,7 @@ import com.example.domain.restaurant.TransformedRestaurant
 @Composable
 fun SearchedRestaurantGridCard(
     restaurant: TransformedRestaurant,
+
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),

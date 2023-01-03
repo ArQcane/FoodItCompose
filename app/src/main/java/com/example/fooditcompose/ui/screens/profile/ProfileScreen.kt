@@ -13,7 +13,6 @@ import androidx.navigation.NavHostController
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.loginScreenRoute
-import com.example.common.utils.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable

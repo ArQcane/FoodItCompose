@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -32,7 +33,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.example.common.utils.Screen
+import com.example.common.navigation.searchScreenRoute
 import com.example.restaurant.home.components.RestaurantCard
 import com.example.restaurant.home.components.ShimmerLoadingCardPlaceholder
 import kotlinx.coroutines.flow.collect
@@ -258,7 +259,7 @@ private fun StackedSearchBar(navController: NavHostController) {
             }
         }
         OutlinedButton(
-            onClick = { navController.navigate(Screen.SearchScreen.route) },
+            onClick = { navController.navigate(searchScreenRoute) },
             border = BorderStroke(1.dp, color = Color.Black),
             shape = RoundedCornerShape(25.dp),
             modifier = Modifier

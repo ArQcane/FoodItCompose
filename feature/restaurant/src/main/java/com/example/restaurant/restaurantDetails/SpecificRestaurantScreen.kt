@@ -1,9 +1,7 @@
-package com.example.restaurant.individualScreen
+package com.example.restaurant.restaurantDetails
 
 import android.graphics.BitmapFactory
-import android.graphics.Color.parseColor
 import android.os.Build
-import android.text.TextUtils.replace
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*

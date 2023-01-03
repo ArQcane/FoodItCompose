@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -41,9 +42,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.authentication.R
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput
+import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.registerScreenRoute
 import com.example.common.navigation.resetPasswordFromEmailRoute
-import com.example.common.utils.Screen
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
 
@@ -60,7 +61,7 @@ fun LoginScreen(
 
     LaunchedEffect(state.isLoggedIn) {
         if (!state.isLoggedIn) return@LaunchedEffect
-        navController.navigate(Screen.HomeScreen.route)
+        navController.navigate(homeScreenRoute)
     }
 
     LaunchedEffect(true) {

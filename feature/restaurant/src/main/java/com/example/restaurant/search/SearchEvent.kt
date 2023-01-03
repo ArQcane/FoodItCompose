@@ -1,4 +1,4 @@
-package com.example.fooditcompose.ui.screens.search
+package com.example.restaurant.search
 
 sealed class SearchEvent{
     class OnSearchedQueryChanged(val searchedQuery: String): SearchEvent()

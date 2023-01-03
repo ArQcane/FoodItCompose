@@ -1,9 +1,6 @@
-package com.example.restaurant.individualScreen
+package com.example.restaurant.restaurantDetails
 
-import com.example.domain.restaurant.TransformedRestaurant
 import com.example.domain.restaurant.TransformedRestaurantAndReview
-import com.example.domain.user.ReviewUser
-import com.example.domain.user.User
 
 data class SpecificRestaurantState(
     val transformedRestaurant: TransformedRestaurantAndReview = TransformedRestaurantAndReview(

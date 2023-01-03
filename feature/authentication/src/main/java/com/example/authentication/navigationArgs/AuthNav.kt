@@ -9,7 +9,6 @@ import com.example.authentication.login.LoginScreen
 import com.example.authentication.register.RegisterScreen
 import com.example.authentication.splashAnims.SplashScreen
 import com.example.common.navigation.*
-import com.example.common.utils.Screen
 import com.google.accompanist.navigation.animation.composable
 
 fun NavHostController.navigateToAuthScreen(

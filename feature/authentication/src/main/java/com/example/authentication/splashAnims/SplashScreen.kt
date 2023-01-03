@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -23,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.authentication.R
 import com.example.authentication.navigationArgs.navigateToAuthScreen
-import com.example.common.utils.Screen
+import com.example.common.navigation.homeScreenRoute
 import kotlinx.coroutines.delay
 
 @Composable
@@ -46,7 +47,7 @@ internal fun SplashScreen(
         delay(4000)
         navController.popBackStack()
         if(!isLoggedIn) navController.navigateToAuthScreen()
-        else return@LaunchedEffect navController.navigate(Screen.HomeScreen.route)
+        else return@LaunchedEffect navController.navigate(homeScreenRoute)
     }
 
 

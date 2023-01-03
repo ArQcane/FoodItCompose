@@ -43,7 +43,6 @@ import com.example.authentication.login.LoginEvent
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput
-import com.example.common.utils.Screen
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

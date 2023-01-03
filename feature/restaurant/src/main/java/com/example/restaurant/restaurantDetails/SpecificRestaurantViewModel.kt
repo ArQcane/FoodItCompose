@@ -1,24 +1,18 @@
-package com.example.restaurant.individualScreen
+package com.example.restaurant.restaurantDetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
-import com.example.domain.restaurant.usecases.GetAllRestaurantsUseCase
 import com.example.domain.restaurant.usecases.GetSpecificRestaurantUseCase
 import com.example.domain.user.UserRepository
 import com.example.domain.user.usecases.GetCurrentLoggedInUser
-import com.example.domain.user.usecases.GetUserByIdUseCase
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.restaurant.home.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import java.lang.reflect.Array.set
 import javax.inject.Inject
 
 @HiltViewModel
