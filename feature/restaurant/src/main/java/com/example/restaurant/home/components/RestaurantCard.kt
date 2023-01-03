@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -48,7 +49,7 @@ fun RestaurantCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .border(width = 2.dp, color = MaterialTheme.colors.primary)
+                    .border(width = 2.dp, color = MaterialTheme.colors.primary, shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             )
             Column(
                 modifier = Modifier

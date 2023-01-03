@@ -1,9 +1,12 @@
 package com.example.restaurant.individualScreen
 
 import com.example.domain.restaurant.TransformedRestaurant
+import com.example.domain.restaurant.TransformedRestaurantAndReview
+import com.example.domain.user.ReviewUser
+import com.example.domain.user.User
 
 data class SpecificRestaurantState(
-    val transformedRestaurant: TransformedRestaurant = TransformedRestaurant(
+    val transformedRestaurant: TransformedRestaurantAndReview = TransformedRestaurantAndReview(
         id = 0,
         name = "",
         biography = "",

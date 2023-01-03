@@ -7,6 +7,8 @@ import com.bumptech.glide.Glide.init
 import com.example.domain.restaurant.usecases.GetAllRestaurantsUseCase
 import com.example.domain.restaurant.usecases.GetSpecificRestaurantUseCase
 import com.example.domain.user.UserRepository
+import com.example.domain.user.usecases.GetCurrentLoggedInUser
+import com.example.domain.user.usecases.GetUserByIdUseCase
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import com.example.restaurant.home.HomeState
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class SpecificRestaurantViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val getSpecificRestaurantUseCase: GetSpecificRestaurantUseCase,
+    private val getCurrentLoggedInUser: GetCurrentLoggedInUser,
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
     private val _specificRestaurantState = MutableStateFlow(SpecificRestaurantState())

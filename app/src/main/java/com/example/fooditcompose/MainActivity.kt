@@ -26,6 +26,7 @@ import com.example.common.theme.FoodItComposeTheme
 import com.example.fooditcompose.navUtils.BottomNavItem
 import com.example.fooditcompose.navUtils.BottomNavigationBar
 import com.example.fooditcompose.ui.NavGraph
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,42 +37,44 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FoodItComposeTheme {
-                val navController = rememberAnimatedNavController()
-                // A surface container using the 'background' color from the theme
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    backgroundColor = MaterialTheme.colors.background,
-                    bottomBar = {
-                        when(currentRoute(navController)){
-                            "/home", "/search", "/users" -> {
-                                BottomNavigationBar(
-                                    items = listOf(
-                                        BottomNavItem(
-                                            name = "Home",
-                                            route = "/home",
-                                            icon = Icons.Default.Home,
+                ProvideWindowInsets {
+                    val navController = rememberAnimatedNavController()
+                    // A surface container using the 'background' color from the theme
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        backgroundColor = MaterialTheme.colors.background,
+                        bottomBar = {
+                            when(currentRoute(navController)){
+                                "/home", "/search", "/users" -> {
+                                    BottomNavigationBar(
+                                        items = listOf(
+                                            BottomNavItem(
+                                                name = "Home",
+                                                route = "/home",
+                                                icon = Icons.Default.Home,
+                                            ),
+                                            BottomNavItem(
+                                                name = "Search",
+                                                route = "/search",
+                                                icon = Icons.Default.Search,
+                                            ),
+                                            BottomNavItem(
+                                                name = "Profile",
+                                                route = "/users",
+                                                icon = Icons.Default.Settings,
+                                            ),
                                         ),
-                                        BottomNavItem(
-                                            name = "Search",
-                                            route = "/search",
-                                            icon = Icons.Default.Search,
-                                        ),
-                                        BottomNavItem(
-                                            name = "Profile",
-                                            route = "/users",
-                                            icon = Icons.Default.Settings,
-                                        ),
-                                    ),
-                                    navController = navController,
-                                    onItemClick ={
-                                        navController.navigate(it.route)
-                                    }
-                                )
+                                        navController = navController,
+                                        onItemClick ={
+                                            navController.navigate(it.route)
+                                        }
+                                    )
+                                }
                             }
                         }
+                    ) {
+                        NavGraph(navController = navController)
                     }
-                ) {
-                    NavGraph(navController = navController)
                 }
             }
         }

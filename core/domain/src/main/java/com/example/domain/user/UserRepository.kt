@@ -9,7 +9,7 @@ interface UserRepository {
     fun deleteToken()
 
     suspend fun getAllUsers(): Resource<List<User>>
-    suspend fun getUserById(id: String): Resource<User>
+    suspend fun getUserById(id: String): Resource<ReviewUser>
     suspend fun validateToken(token: String): Resource<User>
     suspend fun forgotPassword(email: String): Resource<String>
     suspend fun updateAccount(

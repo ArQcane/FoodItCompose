@@ -6,6 +6,7 @@ import com.example.data.common.DefaultMessageDto
 import com.example.data.user.remote.dto.*
 import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
+import com.example.domain.user.ReviewUser
 import com.example.domain.user.User
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
@@ -58,18 +59,26 @@ class RemoteUserDaoImpl @Inject constructor(
             }
         }
 
-    override suspend fun getUserById(id: String): Resource<User> =
+    override suspend fun getUserById(id: String): Resource<ReviewUser> =
         tryWithIoHandling {
             val (json, code) = get(endpoint = "/id/$id")
             json ?: return@tryWithIoHandling Resource.Failure(
                 ResourceError.Default("No user with id $id found")
             )
-            return@tryWithIoHandling Resource.Success(
-                gson.fromJson(
-                    json,
-                    object : TypeToken<User>() {}.type
+            return@tryWithIoHandling when (code) {
+                200 -> Resource.Success(
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<ReviewUser>() {}.type
+                    )
                 )
-            )
+                else -> Resource.Failure(
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
+                )
+            }
         }
 
     override suspend fun validateToken(token: String): Resource<User> =

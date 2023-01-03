@@ -3,7 +3,7 @@ package com.example.domain.restaurant
 import com.example.domain.review.Review
 import com.example.domain.review.TransformedReview
 
-data class TransformedRestaurant(
+data class TransformedRestaurantAndReview(
     val id: Int,
     val name: String,
     val avg_price: Float,
@@ -16,7 +16,7 @@ data class TransformedRestaurant(
     val location_long: Float,
     val location: String,
     val restaurant_banner: String,
-    val reviews: List<Review>,
+    val reviews: List<TransformedReview>,
     val isFavouriteByCurrentUser: Boolean,
     val averageRating: Double,
     val ratingCount: Int,

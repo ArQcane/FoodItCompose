@@ -5,6 +5,7 @@ import com.example.data.user.remote.RemoteUserDao
 import com.example.data.user.remote.dto.LoginDto
 import com.example.data.user.remote.dto.RegisterDto
 import com.example.data.user.remote.dto.UpdateAccountDto
+import com.example.domain.user.ReviewUser
 import com.example.domain.user.User
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
@@ -27,7 +28,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getAllUsers(): Resource<List<User>> =
         remoteUserDao.getAllUsers()
 
-    override suspend fun getUserById(id: String): Resource<User> =
+    override suspend fun getUserById(id: String): Resource<ReviewUser> =
         remoteUserDao.getUserById(id = id)
 
     override suspend fun validateToken(token: String): Resource<User> =
