@@ -139,6 +139,12 @@ fun SearchScreen(
                         items(state.searchedRestaurantList) {
                             SearchedRestaurantGridCard(
                                 restaurant = it,
+                                toggleFavourite = { restaurantId ->
+                                    searchViewModel.toggleFavorite(restaurantId)
+                                },
+                                navigateToRestaurant = { restaurantId ->
+                                    navController.navigate("restaurant/$restaurantId")
+                                }
                             )
                         }
                 }

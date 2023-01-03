@@ -1,5 +1,6 @@
 package com.example.restaurant.search.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,14 +24,16 @@ import com.example.domain.restaurant.TransformedRestaurant
 @Composable
 fun SearchedRestaurantGridCard(
     restaurant: TransformedRestaurant,
-
+    navigateToRestaurant: (String) -> Unit,
+    toggleFavourite: (String) -> Unit,
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = Color(android.graphics.Color.parseColor("#FFE2E2")),
         modifier = Modifier
             .height(260.dp)
-            .padding(10.dp),
+            .padding(10.dp)
+            .clickable { navigateToRestaurant(restaurant.id.toString()) },
         elevation = 10.dp
     ) {
         Row(
@@ -106,7 +109,7 @@ fun SearchedRestaurantGridCard(
                             contentColor = androidx.compose.ui.graphics.Color.Black,
                             backgroundColor = androidx.compose.ui.graphics.Color.White
                         ),
-                        onClick = { /*TODO*/ }
+                        onClick = { navigateToRestaurant(restaurant.id.toString()) }
                     ) {
                         Text(
                             text = "Read More",
@@ -120,7 +123,7 @@ fun SearchedRestaurantGridCard(
                             .offset(x = 5.dp)
                             .clip(CircleShape)
                             .size(40.dp),
-                        onClick = {  }
+                        onClick = { toggleFavourite(restaurant.id.toString()) }
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),

@@ -172,11 +172,9 @@ fun HomeScreen(
                                             RestaurantCard(
                                                 restaurant = it,
                                                 toggleFavourite = { restaurantId ->
-                                                    print("restaurantId: $restaurantId")
                                                     homeViewModel.toggleFavorite(restaurantId)
                                                 },
                                                 navigateToRestaurantScreen = { restaurantId ->
-                                                    Log.d("restaurantId:", restaurantId)
                                                     navController.navigate("restaurant/$restaurantId")
                                                 }
                                             )

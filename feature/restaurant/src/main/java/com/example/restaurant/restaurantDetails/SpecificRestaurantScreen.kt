@@ -91,7 +91,7 @@ fun SpecificRestaurantScreen(
         ) { isLoading ->
             if (!isLoading) {
                 Content(restaurantState.transformedRestaurant, scrollState)
-                ParallaxToolbar(navController, restaurantState.transformedRestaurant, scrollState)
+                ParallaxToolbar(navController, specificRestaurantViewModel, restaurantState.transformedRestaurant, scrollState)
             }
             if (isLoading) {
                 ShimmerLoadingCardPlaceholder()
@@ -103,9 +103,12 @@ fun SpecificRestaurantScreen(
 @Composable
 fun ParallaxToolbar(
     navController: NavHostController,
+    specificRestaurantViewModel: SpecificRestaurantViewModel = hiltViewModel(),
     transformedRestaurant: TransformedRestaurantAndReview,
     scrollState: LazyListState
 ) {
+    val restaurantState by specificRestaurantViewModel.specificRestaurantState.collectAsState()
+
     val imageHeight = AppBarExpendedHeight - AppBarCollapsedHeight
 
     val maxOffset =
@@ -205,7 +208,7 @@ fun ParallaxToolbar(
             .padding(horizontal = 16.dp)
     ) {
         CircularButton(R.drawable.ic_arrow_back, onClick = { navController.popBackStack() })
-        CircularButton(R.drawable.ic_favourite)
+        CircularButton(if (!restaurantState.transformedRestaurant.isFavouriteByCurrentUser) R.drawable.ic_favourite else R.drawable.ic_baseline_favorite_24, onClick = { specificRestaurantViewModel.toggleFavorite(restaurantState.transformedRestaurant.id.toString()) })
     }
 }
 
@@ -226,7 +229,7 @@ fun CircularButton(
             .width(38.dp)
             .height(38.dp)
     ) {
-        Icon(painterResource(id = iconResouce), null)
+        Icon(painterResource(id = iconResouce),tint= MaterialTheme.colors.primary, contentDescription =  null)
     }
 }
 
