@@ -1,6 +1,7 @@
 package com.example.restaurant.home
 
 import android.graphics.Color.parseColor
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -66,6 +67,9 @@ fun HomeScreen(
         }
     }
 
+    fun navigateToRestaurantScreen(restaurantId: String) {
+        navController.navigate("restaurant/$restaurantId")
+    }
 
     Scaffold(
         modifier = Modifier
@@ -88,9 +92,11 @@ fun HomeScreen(
                     if (isLoading)
                         Box(
                             modifier = Modifier.fillMaxSize()
-                        ){
-                            Column(modifier = Modifier
-                                .verticalScroll(rememberScrollState())) {
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState())
+                            ) {
                                 Text(
                                     text = "All Restaurants",
                                     style = MaterialTheme.typography.h5,
@@ -162,10 +168,17 @@ fun HomeScreen(
                                 ) {
                                     LazyRow {
                                         items(restaurantState.restaurantList) {
-                                            RestaurantCard(restaurant = it,
+                                            RestaurantCard(
+                                                restaurant = it,
                                                 toggleFavourite = { restaurantId ->
+                                                    print("restaurantId: $restaurantId")
                                                     homeViewModel.toggleFavorite(restaurantId)
-                                                })
+                                                },
+                                                navigateToRestaurantScreen = { restaurantId ->
+                                                    Log.d("restaurantId:", restaurantId)
+                                                    navController.navigate("restaurant/$restaurantId")
+                                                }
+                                            )
                                         }
                                     }
                                 }
@@ -189,7 +202,11 @@ fun HomeScreen(
                                             RestaurantCard(restaurant = it,
                                                 toggleFavourite = { restaurantId ->
                                                     homeViewModel.toggleFavorite(restaurantId)
-                                                })
+                                                },
+                                                navigateToRestaurantScreen = { restaurantId ->
+                                                    navigateToRestaurantScreen(restaurantId.toString())
+                                                }
+                                            )
                                         }
                                     }
                                 }

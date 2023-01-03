@@ -2,7 +2,10 @@ package com.example.restaurant.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.domain.favourites.usecases.ToggleFavouritesUseCase
+import com.example.domain.restaurant.Restaurant
+import com.example.domain.restaurant.TransformedRestaurant
 import com.example.domain.restaurant.usecases.GetAllRestaurantsUseCase
 import com.example.domain.restaurant.usecases.GetExpensiveRestaurantsUseCase
 import com.example.domain.user.UserRepository

@@ -10,6 +10,7 @@ import com.example.common.utils.Screen
 import com.example.restaurant.home.HomeScreen
 import com.example.fooditcompose.ui.screens.profile.ProfileScreen
 import com.example.fooditcompose.ui.screens.search.SearchScreen
+import com.example.restaurant.individualScreen.SpecificRestaurantScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 
@@ -51,7 +52,15 @@ fun NavGraph(navController: NavHostController) {
                 )
             },
         ) {
-            com.example.restaurant.home.HomeScreen(navController = navController)
+            HomeScreen(navController = navController)
+        }
+        composable(
+            Screen.SpecificRestaurantScreen.route,
+            arguments = listOf(navArgument("restaurantId") { type = NavType.StringType })
+        ){ backStackEntry ->
+            backStackEntry?.arguments?.getString("restaurantId")?.let{ restaurantId ->
+                SpecificRestaurantScreen(navController = navController)
+            }
         }
         composable(
             Screen.SearchScreen.route,

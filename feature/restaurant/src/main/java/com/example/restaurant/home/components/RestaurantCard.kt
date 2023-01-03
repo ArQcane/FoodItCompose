@@ -1,6 +1,7 @@
 package com.example.restaurant.home.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -24,11 +25,15 @@ import com.example.domain.restaurant.TransformedRestaurant
 fun RestaurantCard(
     restaurant: TransformedRestaurant,
     toggleFavourite: (String) -> Unit,
+    navigateToRestaurantScreen: (String) -> Unit,
 ) {
+
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(5.dp)
+            .clickable(onClick = { navigateToRestaurantScreen(restaurant.id.toString()) }),
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.width(175.dp)) {

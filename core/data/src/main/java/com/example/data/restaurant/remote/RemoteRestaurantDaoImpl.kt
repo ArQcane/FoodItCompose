@@ -1,6 +1,7 @@
 package com.example.data.restaurant.remote
 
 
+import android.util.Log
 import com.example.data.restaurant.remote.dto.FilterRestaurantDto
 import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
@@ -52,6 +53,7 @@ class RemoteRestaurantDaoImpl @Inject constructor(
 
     override suspend fun getRestaurantById(id: String): Resource<Restaurant> =
         tryWithIoHandling {
+            Log.d("crash:", id)
             val (json, code) = get(endpoint = "/id/$id")
             json ?: return@tryWithIoHandling Resource.Failure(
                 ResourceError.Default(NO_RESPONSE)
