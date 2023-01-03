@@ -25,7 +25,7 @@ class SpecificRestaurantViewModel @Inject constructor(
     private val getCurrentLoggedInUser: GetCurrentLoggedInUser,
     private val toggleFavouritesUseCase: ToggleFavouritesUseCase,
     savedStateHandle: SavedStateHandle,
-): ViewModel() {
+) : ViewModel() {
     private val _specificRestaurantState = MutableStateFlow(SpecificRestaurantState())
     val specificRestaurantState = _specificRestaurantState.asStateFlow()
 
@@ -72,11 +72,9 @@ class SpecificRestaurantViewModel @Inject constructor(
             _specificRestaurantState.update { state ->
                 oldState = state
                 state.copy(
-                    transformedRestaurant = state.transformedRestaurant.apply {
-                        mutableListOf(this)[0] = restaurant.copy(
-                            isFavouriteByCurrentUser = !restaurant.isFavouriteByCurrentUser
-                        )
-                    }
+                    transformedRestaurant = restaurant.copy(
+                        isFavouriteByCurrentUser = !restaurant.isFavouriteByCurrentUser
+                    )
                 )
             }
             when (val resource = toggleFavouritesUseCase.togglingFavouriteInDetails(restaurant)) {

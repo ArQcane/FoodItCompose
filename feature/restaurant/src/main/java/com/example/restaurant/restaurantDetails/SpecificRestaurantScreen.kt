@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,6 +27,7 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -40,6 +44,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.common.components.CltImageFromNetwork
+import com.example.common.navigation.homeScreenRoute
+import com.example.common.navigation.restaurantDetailRoute
 import com.example.common.theme.Shapes
 import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.review.TransformedReview
@@ -103,11 +109,10 @@ fun SpecificRestaurantScreen(
 @Composable
 fun ParallaxToolbar(
     navController: NavHostController,
-    specificRestaurantViewModel: SpecificRestaurantViewModel = hiltViewModel(),
+    specificRestaurantViewModel: SpecificRestaurantViewModel,
     transformedRestaurant: TransformedRestaurantAndReview,
     scrollState: LazyListState
 ) {
-    val restaurantState by specificRestaurantViewModel.specificRestaurantState.collectAsState()
 
     val imageHeight = AppBarExpendedHeight - AppBarCollapsedHeight
 
@@ -197,7 +202,7 @@ fun ParallaxToolbar(
             }
         }
     }
-
+    val previousScreen = navController.previousBackStackEntry?.destination?.route
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -207,9 +212,39 @@ fun ParallaxToolbar(
             .height(AppBarCollapsedHeight)
             .padding(horizontal = 16.dp)
     ) {
-        CircularButton(R.drawable.ic_arrow_back, onClick = { navController.popBackStack() })
-        CircularButton(if (!restaurantState.transformedRestaurant.isFavouriteByCurrentUser) R.drawable.ic_favourite else R.drawable.ic_baseline_favorite_24, onClick = { specificRestaurantViewModel.toggleFavorite(restaurantState.transformedRestaurant.id.toString()) })
+        CircularButton(R.drawable.ic_arrow_back, onClick = { navController.navigate(previousScreen
+            ?: homeScreenRoute) })
+        FavouriteButton(transformedRestaurant= transformedRestaurant, toggleFavourite = { specificRestaurantViewModel.toggleFavorite(transformedRestaurant.id.toString()) })
     }
+}
+
+@Composable
+fun FavouriteButton(
+    transformedRestaurant: TransformedRestaurantAndReview,
+    color: Color = Gray,
+    elevation: ButtonElevation? = ButtonDefaults.elevation(),
+    toggleFavourite: (String) -> Unit,
+) {
+    TextButton(
+        onClick = { toggleFavourite(transformedRestaurant.id.toString()) },
+        contentPadding = PaddingValues(),
+        shape = Shapes.small,
+        colors = ButtonDefaults.buttonColors(backgroundColor = White, contentColor = color),
+        elevation = elevation,
+        modifier = Modifier
+            .width(38.dp)
+            .height(38.dp)
+    ) {
+        Icon(
+            imageVector = getFavoriteIcon(transformedRestaurant.isFavouriteByCurrentUser),
+            contentDescription = null,
+            tint = MaterialTheme.colors.primary,
+        )
+    }
+}
+private fun getFavoriteIcon(isFavourited: Boolean): ImageVector {
+    if (isFavourited) return Icons.Default.Favorite
+    return Icons.Default.FavoriteBorder
 }
 
 @Composable
@@ -219,7 +254,7 @@ fun CircularButton(
     elevation: ButtonElevation? = ButtonDefaults.elevation(),
     onClick: () -> Unit = {}
 ) {
-    Button(
+    TextButton(
         onClick = onClick,
         contentPadding = PaddingValues(),
         shape = Shapes.small,
@@ -229,7 +264,7 @@ fun CircularButton(
             .width(38.dp)
             .height(38.dp)
     ) {
-        Icon(painterResource(id = iconResouce),tint= MaterialTheme.colors.primary, contentDescription =  null)
+        Icon(painterResource(id = iconResouce),tint= colors.primary, contentDescription =  null)
     }
 }
 

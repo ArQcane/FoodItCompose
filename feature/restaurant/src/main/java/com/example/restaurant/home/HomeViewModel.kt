@@ -35,6 +35,7 @@ class HomeViewModel @Inject constructor(
     private val _errorChannel = Channel<String>()
     val errorChannel = _errorChannel.receiveAsFlow()
 
+
     init {
         getRestaurants()
         getExpensiveRestaurants()
