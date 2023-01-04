@@ -2,6 +2,7 @@ package com.example.restaurant.restaurantDetails
 
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.util.EventLogTags
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
@@ -47,14 +48,23 @@ import com.example.common.components.CltImageFromNetwork
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.restaurantDetailRoute
 import com.example.common.theme.Shapes
+import com.example.common.theme.primary
+import com.example.common.theme.secondary
 import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.review.TransformedReview
 import com.example.restaurant.R
 import com.example.restaurant.home.components.ShimmerLoadingCardPlaceholder
 import com.example.restaurant.home.utils.AppBarCollapsedHeight
 import com.example.restaurant.home.utils.AppBarExpendedHeight
+import com.example.restaurant.restaurantDetails.components.MoreRestaurauntDetailsSection
+import com.example.restaurant.restaurantDetails.components.Reviews
+import com.example.restaurant.restaurantDetails.utils.TabItem
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Float.max
@@ -97,7 +107,12 @@ fun SpecificRestaurantScreen(
         ) { isLoading ->
             if (!isLoading) {
                 Content(restaurantState.transformedRestaurant, scrollState)
-                ParallaxToolbar(navController, specificRestaurantViewModel, restaurantState.transformedRestaurant, scrollState)
+                ParallaxToolbar(
+                    navController,
+                    specificRestaurantViewModel,
+                    restaurantState.transformedRestaurant,
+                    scrollState
+                )
             }
             if (isLoading) {
                 ShimmerLoadingCardPlaceholder()
@@ -178,7 +193,7 @@ fun ParallaxToolbar(
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
                             .clip(Shapes.small)
-                            .background(MaterialTheme.colors.secondary)
+                            .background(colors.secondary)
                             .padding(vertical = 6.dp, horizontal = 16.dp)
                     )
                 }
@@ -193,7 +208,7 @@ fun ParallaxToolbar(
                     transformedRestaurant.name,
                     fontSize = 26.sp,
                     fontWeight = Bold,
-                    color= MaterialTheme.colors.primary,
+                    color = MaterialTheme.colors.primary,
                     modifier = Modifier
                         .padding(horizontal = (16 + 28 * offsetProgress).dp)
                         .scale(1f - 0.25f * offsetProgress)
@@ -212,9 +227,15 @@ fun ParallaxToolbar(
             .height(AppBarCollapsedHeight)
             .padding(horizontal = 16.dp)
     ) {
-        CircularButton(R.drawable.ic_arrow_back, onClick = { navController.navigate(previousScreen
-            ?: homeScreenRoute) })
-        FavouriteButton(transformedRestaurant= transformedRestaurant, toggleFavourite = { specificRestaurantViewModel.toggleFavorite(transformedRestaurant.id.toString()) })
+        CircularButton(R.drawable.ic_arrow_back, onClick = {
+            navController.navigate(
+                previousScreen
+                    ?: homeScreenRoute
+            )
+        })
+        FavouriteButton(
+            transformedRestaurant = transformedRestaurant,
+            toggleFavourite = { specificRestaurantViewModel.toggleFavorite(transformedRestaurant.id.toString()) })
     }
 }
 
@@ -242,6 +263,7 @@ fun FavouriteButton(
         )
     }
 }
+
 private fun getFavoriteIcon(isFavourited: Boolean): ImageVector {
     if (isFavourited) return Icons.Default.Favorite
     return Icons.Default.FavoriteBorder
@@ -264,7 +286,7 @@ fun CircularButton(
             .width(38.dp)
             .height(38.dp)
     ) {
-        Icon(painterResource(id = iconResouce),tint= colors.primary, contentDescription =  null)
+        Icon(painterResource(id = iconResouce), tint = colors.primary, contentDescription = null)
     }
 }
 
@@ -279,103 +301,9 @@ fun Content(
             BasicInfo(transformedRestaurantAndReview)
             Description(transformedRestaurantAndReview)
 //            ServingCalculator()
-            TabHeader()
+            TabHeader(transformedRestaurantAndReview)
 //            IngredientsList(transformedRestaurant)
 //            ShoppingListButton()
-            Reviews(transformedRestaurantAndReview)
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun Reviews(transformedRestaurant: TransformedRestaurantAndReview) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(
-        ) {
-            Text(
-                text = "Reviews",
-                fontWeight = Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)
-            )
-            for (items in transformedRestaurant.reviews) {
-                reviewCard(items)
-                Spacer(modifier = Modifier.padding(16.dp))
-            }
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun reviewCard(review: TransformedReview) {
-    val cleanImage: String =
-        review.user.profile_pic.replace("data:image/png;base64,", "")
-            .replace("data:image/jpeg;base64,", "")
-    val decodedString: ByteArray = Base64.getDecoder().decode(cleanImage)
-    val decodedByte =
-        BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size).asImageBitmap()
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .background(color = White)
-    )
-    {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Image(
-                    contentScale = ContentScale.Fit,
-                    bitmap = decodedByte,
-                    contentDescription = "User Profile Picture",
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(
-                            CircleShape
-                        )
-                )
-                Text(
-                    review.user.username,
-                    fontSize = 18.sp,
-                    fontWeight = Bold,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(
-                    text = review.rating.toString(),
-                    fontWeight = Medium,
-                )
-                Icon(
-                    imageVector = Icons.Filled.Star,
-                    contentDescription = "Rating",
-                    tint = MaterialTheme.colors.primary
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(
-                    text = review.review,
-                    fontWeight = Medium,
-                )
-            }
         }
     }
 }
@@ -397,39 +325,92 @@ fun reviewCard(review: TransformedReview) {
 //    }
 //}
 
+@OptIn(ExperimentalPagerApi::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TabHeader() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 16.dp)
-            .clip(Shapes.medium)
-            .background(LightGray)
-            .fillMaxWidth()
-            .height(44.dp)
-    ) {
-        TabButton("Ratings", true, Modifier.weight(1f))
-        TabButton("Tools", false, Modifier.weight(1f))
-    }
-}
+fun TabHeader(transformedRestaurant: TransformedRestaurantAndReview) {
+    val pagerState = rememberPagerState()
 
-@Composable
-fun TabButton(text: String, active: Boolean, modifier: Modifier) {
-    Button(
-        onClick = { /*TODO*/ },
-        shape = Shapes.medium,
-        modifier = modifier.fillMaxHeight(),
-        elevation = null,
-        colors = if (active) ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = White
-        ) else ButtonDefaults.buttonColors(
-            backgroundColor = LightGray,
-            contentColor = DarkGray
-        )
-    ) {
-        Text(text)
+    val tabs = listOf(
+        TabItem.MoreRestaurantDetailScreen() {
+            MoreRestaurauntDetailsSection(
+                transformedRestaurant
+            )
+        },
+        TabItem.Reviews() {
+            Reviews(
+                transformedRestaurant = transformedRestaurant
+            )
+        }
+    )
+
+    val coroutineScope = rememberCoroutineScope()
+    Column {
+        TabRow(
+            modifier = Modifier
+                .clip(Shapes.medium)
+                .background(Transparent),
+            selectedTabIndex = pagerState.currentPage,
+            backgroundColor = secondary,
+            contentColor = colors.primary
+        ) {
+            tabs.forEachIndexed { index, tabItem ->
+                val color = remember {
+                    Animatable(primary)
+                }
+                LaunchedEffect(key1 = pagerState.currentPage == index) {
+                    color.animateTo(if (pagerState.currentPage == index) Color.White else secondary)
+                }
+
+                Tab(
+                    modifier = Modifier
+                        .height(48.dp)
+                        .background(
+                            color = color.value,
+                            shape = Shapes.medium
+                        ),
+                    selected = pagerState.currentPage == index,
+                    selectedContentColor = colors.primary,
+                    unselectedContentColor = colors.primary.copy(
+                        alpha = 0.5f
+                    ),
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    }
+                ) {
+                    Text(
+                        text = tabItem.title,
+                        style = MaterialTheme.typography.h6
+                    )
+                }
+            }
+        }
+        HorizontalPager(
+            verticalAlignment = Alignment.Top,
+            count = tabs.size,
+            state = pagerState,
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+        ) { page ->
+            tabs[page].composable()
+        }
+//        tabs[selectedTab].composable()
     }
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = Modifier
+//            .padding(horizontal = 16.dp, vertical = 16.dp)
+//            .clip(Shapes.medium)
+//            .background(LightGray)
+//            .fillMaxWidth()
+//            .height(44.dp)
+//    ) {
+//        TabButton("Ratings", true, Modifier.weight(1f))
+//        TabButton("Tools", false, Modifier.weight(1f))
+//    }
 }
 
 @Composable
@@ -439,11 +420,6 @@ fun Description(transformedRestaurant: TransformedRestaurantAndReview) {
         fontWeight = Medium,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
     )
-}
-
-@Composable
-fun googleMap() {
-    TODO()
 }
 
 @Composable
@@ -460,7 +436,7 @@ fun BasicInfo(transformedRestaurant: TransformedRestaurantAndReview) {
         )
         InfoColumn(
             R.drawable.ic_baseline_speaker_notes_24,
-            transformedRestaurant.ratingCount.toString() ,
+            transformedRestaurant.ratingCount.toString(),
             "Ratings made"
         )
         InfoColumn(
@@ -481,6 +457,6 @@ fun InfoColumn(@DrawableRes iconResouce: Int, mainText: String, subText: String)
             modifier = Modifier.height(24.dp)
         )
         Text(text = mainText, fontWeight = Bold)
-        Text(text = subText, fontSize= 12.sp, fontWeight = Medium, color = Gray)
+        Text(text = subText, fontSize = 12.sp, fontWeight = Medium, color = Gray)
     }
 }
