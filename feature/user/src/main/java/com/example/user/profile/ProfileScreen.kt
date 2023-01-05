@@ -1,4 +1,4 @@
-package com.example.fooditcompose.ui.screens.profile
+package com.example.user.profile
 
 import android.util.Log
 import androidx.compose.animation.*
@@ -22,9 +22,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.loginScreenRoute
+import com.example.common.navigation.navigateToAuthScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 

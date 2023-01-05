@@ -8,9 +8,10 @@ import com.example.authentication.navigationArgs.authScreenComposable
 import com.example.common.navigation.profileScreenRoute
 import com.example.common.navigation.restaurantDetailRoute
 import com.example.common.navigation.splashScreenRoute
-import com.example.fooditcompose.ui.screens.profile.ProfileScreen
+import com.example.user.profile.ProfileScreen
 import com.example.restaurant.navigation.logInNavComposable
 import com.example.restaurant.restaurantDetails.SpecificRestaurantScreen
+import com.example.user.navigation.profileNavComposable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 
@@ -25,33 +26,6 @@ fun NavGraph(navController: NavHostController) {
     ) {
         authScreenComposable(navController = navController)
         logInNavComposable(navController = navController)
-        composable(
-            profileScreenRoute,
-            enterTransition = {
-                when(initialState.destination.route){
-                    profileScreenRoute -> EnterTransition.None
-                    else -> {
-                        slideIntoContainer(
-                            towards = AnimatedContentScope.SlideDirection.Left,
-                            animationSpec = tween(durationMillis = com.example.common.navigation.TransitionDurationMillis)
-                        )
-                    }
-                }
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    towards = AnimatedContentScope.SlideDirection.Right,
-                    animationSpec = tween(durationMillis = com.example.common.navigation.TransitionDurationMillis)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    towards = AnimatedContentScope.SlideDirection.Right,
-                    animationSpec = tween(durationMillis = com.example.common.navigation.TransitionDurationMillis)
-                )
-            },
-        ){
-            ProfileScreen(navController = navController)
-        }
+        profileNavComposable(navController = navController)
     }
 }

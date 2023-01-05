@@ -1,4 +1,4 @@
-package com.example.fooditcompose.ui.screens.profile
+package com.example.user.profile
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,6 @@ import com.example.domain.user.UserRepository
 import com.example.domain.user.usecases.GetCurrentLoggedInUser
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.restaurant.home.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/feature/authentication" />
             <option value="$PROJECT_DIR$/feature/common" />
             <option value="$PROJECT_DIR$/feature/restaurant" />
+            <option value="$PROJECT_DIR$/feature/user" />
           </set>
         </option>
       </GradleProjectSettings>

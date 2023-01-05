@@ -1,4 +1,4 @@
-package com.example.fooditcompose.ui.screens.profile
+package com.example.user.profile
 
 import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.user.User
