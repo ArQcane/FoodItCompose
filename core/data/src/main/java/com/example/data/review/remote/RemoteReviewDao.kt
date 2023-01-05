@@ -3,6 +3,7 @@ package com.example.data.review.remote
 import com.example.data.review.remote.dto.CreateReviewDto
 import com.example.data.review.remote.dto.UpdateReviewDto
 import com.example.domain.review.Review
+import com.example.domain.review.TotalReviews
 import com.example.domain.utils.Resource
 interface RemoteReviewDao {
     suspend fun getAllReviews(): Resource<List<Review>>
@@ -10,6 +11,8 @@ interface RemoteReviewDao {
     suspend fun getReviewsByUser(userId: String): Resource<List<Review>>
 
     suspend fun getReviewsByRestaurant(restaurantId: String): Resource<List<Review>>
+
+    suspend fun getTotalCountReviewsByUser(userId: String): Resource<TotalReviews>
 
     suspend fun createReview(
         userId: Int,

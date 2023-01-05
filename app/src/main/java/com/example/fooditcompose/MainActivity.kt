@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                         backgroundColor = MaterialTheme.colors.background,
                         bottomBar = {
                             when(currentRoute(navController)){
-                                "/home", "/search", "/users" -> {
+                                "/home", "/search", "/profile" -> {
                                     BottomNavigationBar(
                                         items = listOf(
                                             BottomNavItem(
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                                             ),
                                             BottomNavItem(
                                                 name = "Profile",
-                                                route = "/users",
+                                                route = "/profile",
                                                 icon = Icons.Default.Settings,
                                             ),
                                         ),

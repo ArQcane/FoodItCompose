@@ -1,5 +1,6 @@
 package com.example.domain.user.usecases
 
+import android.util.Log
 import com.example.domain.user.User
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
@@ -18,6 +19,7 @@ class GetCurrentLoggedInUser @Inject constructor(
                 (tokenResource as Resource.Failure).error
             )
         )
+        Log.d("token", tokenResource.result)
         val userResource = userRepository.validateToken(token = tokenResource.result)
         if (userResource !is Resource.Success) return@flow emit(
             Resource.Failure(

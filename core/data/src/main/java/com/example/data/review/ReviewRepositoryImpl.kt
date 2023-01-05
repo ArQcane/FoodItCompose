@@ -5,6 +5,7 @@ import com.example.data.review.remote.dto.CreateReviewDto
 import com.example.data.review.remote.dto.UpdateReviewDto
 import com.example.domain.review.Review
 import com.example.domain.review.ReviewRepository
+import com.example.domain.review.TotalReviews
 import com.example.domain.utils.Resource
 import javax.inject.Inject
 
@@ -20,6 +21,10 @@ class ReviewRepositoryImpl @Inject constructor(
 
     override suspend fun getReviewsByRestaurant(restaurantId: String): Resource<List<com.example.domain.review.Review>> =
         remoteReviewDao.getReviewsByRestaurant(restaurantId)
+
+    override suspend fun getTotalReviewsByUser(userId: String): Resource<TotalReviews> =
+        remoteReviewDao.getTotalCountReviewsByUser(userId)
+
 
     override suspend fun createReview(
         userId: Int,

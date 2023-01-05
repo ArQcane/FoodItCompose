@@ -7,6 +7,7 @@ import com.example.data.review.remote.dto.UpdateReviewDto
 import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
 import com.example.domain.review.Review
+import com.example.domain.review.TotalReviews
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 
@@ -97,6 +98,29 @@ class RemoteReviewDaoImpl @Inject constructor(
                 )
             }
         }
+
+    override suspend fun getTotalCountReviewsByUser(userId: String): Resource<TotalReviews> =
+        tryWithIoHandling {
+            val (json,code) = get(endpoint = "/totalReviewsCount/$userId")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
+                200 -> Resource.Success(
+                    gson.fromJson(
+                        json,
+                        object : TypeToken<TotalReviews>() {}.type
+                    )
+                )
+                else -> Resource.Failure(
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
+                )
+            }
+        }
+
 
     override suspend fun createReview(
         userId: Int,
