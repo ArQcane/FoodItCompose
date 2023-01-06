@@ -115,7 +115,9 @@ fun SpecificRestaurantScreen(
                 )
             }
             if (isLoading) {
-                ShimmerLoadingCardPlaceholder()
+                Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }
