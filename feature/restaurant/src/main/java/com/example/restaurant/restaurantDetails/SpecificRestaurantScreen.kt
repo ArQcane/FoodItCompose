@@ -417,6 +417,7 @@ fun TabHeader(transformedRestaurant: TransformedRestaurantAndReview) {
 fun Description(transformedRestaurant: TransformedRestaurantAndReview) {
     Text(
         text = transformedRestaurant.biography,
+        fontSize = 16.sp,
         fontWeight = Medium,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
     )

@@ -3,6 +3,7 @@ package com.example.restaurant.home.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,7 +28,7 @@ fun ShimmerLoadingCardPlaceholder(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .border(width = 2.dp, color = MaterialTheme.colors.primary)
+                    .border(width = 2.dp, color = MaterialTheme.colors.primary, shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             )
             Column(
                 modifier = Modifier

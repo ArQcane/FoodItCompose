@@ -11,6 +11,7 @@ import com.example.domain.utils.ResourceError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -65,6 +66,7 @@ class ProfileViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Success -> _profileState.update { state ->
+                    delay(1000L)
                     state.copy(
                         isLoading = false,
                         totalReviews = result.result.countofreviews

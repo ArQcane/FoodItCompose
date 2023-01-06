@@ -1,22 +1,34 @@
 package com.example.user.profile
 
+import android.graphics.BitmapFactory
+import android.graphics.Color.parseColor
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha.medium
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -25,9 +37,12 @@ import androidx.navigation.NavHostController
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.loginScreenRoute
 import com.example.common.navigation.navigateToAuthScreen
+import com.example.common.theme.Shapes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ProfileScreen(
@@ -54,30 +69,223 @@ fun ProfileScreen(
         scaffoldState = scaffoldState,
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier
+                .fillMaxHeight(),
+            contentAlignment = Alignment.TopCenter
         ) {
-            AnimatedContent(
-                targetState = profileState.isLoading,
-                transitionSpec = {
-                    fadeIn() with fadeOut()
-                }
-            ) { isLoading ->
-                    Column() {
-                        Text("Profile Screen")
-                        Button(onClick = {
-                            profileViewModel.logout()
-                            navController.navigateToAuthScreen(
-                                popUpTo = loginScreenRoute
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight(0.1f),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .background(
+                                Brush.horizontalGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colors.primary,
+                                        MaterialTheme.colors.secondary
+                                    )
+                                )
                             )
-                        }) {
-                            Text(text = "Log Out")
+                    ) {
+                        Row(verticalAlignment = Alignment.Top) {
+                            Icon(
+                                Icons.Filled.VerifiedUser, "Home Icon", modifier = Modifier
+                                    .size(50.dp),
+                                tint = Color(
+                                    parseColor("#5B3256")
+                                )
+                            )
+                            Text(
+                                text = "Profile",
+                                color = Color(parseColor("#5B3256")),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 24.sp,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                            )
                         }
-                        Log.d("user", profileState.user.user_id.toString())
-                        Text(text = profileState.user.username)
-                        Text(text = profileState.totalReviews.toString())
                     }
+                }
+                AnimatedContent(
+                    targetState = profileState.isLoading,
+                    transitionSpec = {
+                        fadeIn() with fadeOut()
+                    }
+                ) { isLoading ->
+                    if (isLoading)
+                        Column(verticalArrangement = Arrangement.Center) {
+                            CircularProgressIndicator(color = MaterialTheme.colors.primary)
+                        }
+
+                    if (!isLoading) {
+                        profileScreenContent(navController, profileViewModel, profileState)
+                    }
+                }
             }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun profileScreenContent(
+    navController: NavHostController,
+    profileViewModel: ProfileViewModel,
+    profileState: ProfileState
+) {
+    val cleanImage: String =
+        profileState.user.profile_pic.replace("data:image/png;base64,", "")
+            .replace("data:image/jpeg;base64,", "")
+    val decodedString: ByteArray = Base64.getDecoder().decode(cleanImage)
+    val decodedByte =
+        BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+            .asImageBitmap()
+    Column() {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight(0.25f)
+                .fillMaxWidth()
+                .background(Color.White)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    modifier = Modifier.padding(top = 24.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        contentScale = ContentScale.Fit,
+                        bitmap = decodedByte,
+                        contentDescription = "User Profile Picture",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(
+                                CircleShape
+                            )
+                    )
+                    Text(
+                        profileState.user.username,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(horizontal = 32.dp, vertical = 12.dp)
+                    )
+                }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.1f)
+                .border(width = 1.dp, color = Color.LightGray)
+                .background(Color.White)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Total Reviews Made: ${profileState.totalReviews}",
+                    color = MaterialTheme.colors.primary,
+
+                    )
+                OutlinedButton(
+                    onClick = { /*TODO*/ },
+                    shape = Shapes.medium,
+                    border = BorderStroke(1.dp, color = MaterialTheme.colors.primary),
+                    modifier = Modifier.width(150.dp),
+                ) {
+                    Text("Edit Profile")
+                }
+            }
+        }
+        Spacer(modifier = Modifier.padding(16.dp))
+        UtilsActionBox(
+            navController,
+            profileViewModel,
+            Icons.Filled.DeleteForever,
+            "Deactivate Account?",
+            "Note all data will be wiped upon confirmation",
+            onClick = {
+
+            }
+        )
+        UtilsActionBox(
+            navController,
+            profileViewModel,
+            Icons.Filled.Password,
+            "Reset Password?",
+            "Follow the neccessary steps given to you later",
+            onClick = {}
+        )
+        UtilsActionBox(
+            navController,
+            profileViewModel,
+            Icons.Filled.Logout,
+            "Log Out?",
+            "Log out of the current account on this device",
+            onClick = {
+                profileViewModel.logout()
+                navController.navigateToAuthScreen(
+                    popUpTo = loginScreenRoute
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun UtilsActionBox(
+    navController: NavHostController,
+    profileViewModel: ProfileViewModel,
+    icon: ImageVector,
+    mainText: String,
+    subText: String,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.2f)
+            .background(Color.White)
+            .clickable { onClick() }
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = "Delete Forever",
+                modifier = Modifier.size(30.dp)
+            )
+            Column() {
+                Text(
+                    mainText,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                )
+                Text(
+                    subText,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                )
+            }
+            Icon(imageVector = Icons.Filled.ArrowForwardIos, contentDescription = "Arrow")
         }
     }
 }
