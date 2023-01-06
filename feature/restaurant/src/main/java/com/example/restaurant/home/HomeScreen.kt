@@ -85,7 +85,7 @@ fun HomeScreen(
                     .padding(padding)
             ) {
                 AnimatedContent(
-                    targetState = restaurantState.isLoading && expensiveRestaurantState.isLoading,
+                    targetState = expensiveRestaurantState.isLoading,
                     transitionSpec = {
                         fadeIn() with fadeOut()
                     }
@@ -299,3 +299,4 @@ fun StackedRestaurantDisplayItems() {
     ) {
     }
 }
+

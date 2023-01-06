@@ -1,23 +1,21 @@
 package com.example.user.profile
 
+import android.app.Activity
 import android.graphics.BitmapFactory
 import android.graphics.Color.parseColor
 import android.os.Build
-import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -25,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,11 +33,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.loginScreenRoute
 import com.example.common.navigation.navigateToAuthScreen
 import com.example.common.theme.Shapes
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.user.profile.components.dialogs.CustomAlertDialog
+import com.example.user.profile.components.dialogs.InputAlertDialog
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -132,6 +131,7 @@ fun ProfileScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun profileScreenContent(
@@ -139,6 +139,7 @@ fun profileScreenContent(
     profileViewModel: ProfileViewModel,
     profileState: ProfileState
 ) {
+
     val cleanImage: String =
         profileState.user.profile_pic.replace("data:image/png;base64,", "")
             .replace("data:image/jpeg;base64,", "")
@@ -146,6 +147,14 @@ fun profileScreenContent(
     val decodedByte =
         BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
             .asImageBitmap()
+
+    val context = LocalContext.current
+    var showAlertDialog by remember {
+        mutableStateOf(false)
+    }
+    var showInputDialog by remember {
+        mutableStateOf(false)
+    }
     Column() {
         Box(
             modifier = Modifier
@@ -160,7 +169,7 @@ fun profileScreenContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Crop,
                         bitmap = decodedByte,
                         contentDescription = "User Profile Picture",
                         modifier = Modifier
@@ -214,7 +223,7 @@ fun profileScreenContent(
             "Deactivate Account?",
             "Note all data will be wiped upon confirmation",
             onClick = {
-
+                showAlertDialog = !showAlertDialog
             }
         )
         UtilsActionBox(
@@ -223,7 +232,9 @@ fun profileScreenContent(
             Icons.Filled.Password,
             "Reset Password?",
             "Follow the neccessary steps given to you later",
-            onClick = {}
+            onClick = {
+                showInputDialog = !showInputDialog
+            }
         )
         UtilsActionBox(
             navController,
@@ -236,6 +247,33 @@ fun profileScreenContent(
                 navController.navigateToAuthScreen(
                     popUpTo = loginScreenRoute
                 )
+            }
+        )
+    }
+    if (showAlertDialog) {
+        CustomAlertDialog({
+            showAlertDialog = !showAlertDialog
+        }, {
+            profileViewModel.deleteUser()
+            navController.navigateToAuthScreen(
+                popUpTo = loginScreenRoute
+            )
+        })
+    }
+    if (showInputDialog) {
+        InputAlertDialog(
+            {
+                showInputDialog = !showInputDialog
+            },
+            { email ->
+                if (email == profileState.user.email) {
+                    profileViewModel.resetPassword(email)
+                    Toast.makeText(context, "Successfully sent a request", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(context, "Entered wrong email address", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         )
     }

@@ -179,6 +179,7 @@ class RemoteUserDaoImpl @Inject constructor(
         json ?: return@tryWithIoHandling Resource.Failure(
             ResourceError.Default(NO_RESPONSE)
         )
+        Log.d("delete", "delete")
         return@tryWithIoHandling when (code) {
             200 -> Resource.Success(
                 gson.fromJson<DefaultMessageDto>(

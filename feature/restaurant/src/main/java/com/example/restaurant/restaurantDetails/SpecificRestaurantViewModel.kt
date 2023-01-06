@@ -44,7 +44,7 @@ class SpecificRestaurantViewModel @Inject constructor(
         ).onEach {
             when (it) {
                 is Resource.Success -> _specificRestaurantState.update { state ->
-                    delay(1000L)
+                    delay(500L)
                     state.copy(
                         transformedRestaurant = it.result,
                         isLoading = false

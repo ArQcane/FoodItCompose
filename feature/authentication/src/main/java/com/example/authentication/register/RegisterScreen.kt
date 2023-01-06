@@ -8,9 +8,6 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
-import android.util.Base64.DEFAULT
-import android.util.Base64.encodeToString
-import android.util.Base64OutputStream
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,12 +46,10 @@ import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput
 import com.example.common.navigation.loginScreenRoute
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
+import java.net.URLDecoder
 import java.util.*
 
 
@@ -428,8 +423,8 @@ fun pickImage(
             Text(text = "Load Image", fontSize = 30.sp, color = Color.White)
         }
     }
-
-    registerViewModel.base64ProfilePic.value = encodeImage(result.value)!!
+    val cleanedBase64 = encodeImage(result.value)!!.replace("\n","");
+    registerViewModel.base64ProfilePic.value = cleanedBase64
 }
 
 private fun encodeImage(bm: Bitmap): String? {
