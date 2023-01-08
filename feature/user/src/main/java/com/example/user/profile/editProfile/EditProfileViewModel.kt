@@ -1,6 +1,10 @@
 package com.example.user.profile.editProfile
 
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.review.usecases.GetTotalReviewsMadeByUserUseCase
@@ -16,8 +20,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import java.util.*
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
@@ -80,7 +86,7 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    private fun editProfile(){
+    private fun editProfile() {
         val first_name = _editProfileState.value.first_name
         val last_name = _editProfileState.value.last_name
         val mobile_number = _editProfileState.value.mobile_number
@@ -96,6 +102,7 @@ class EditProfileViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Success -> _editProfileState.update { state ->
+                    Log.d("Success", "success!")
                     state.copy(
                         isLoading = false,
                         isUpdated = true
@@ -115,7 +122,7 @@ class EditProfileViewModel @Inject constructor(
                     state.copy(isLoading = result.isLoading)
                 }
             }
-        }.launchIn(viewModelScope)
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
 
     private fun getCurrentLoggedInUser() {
@@ -124,6 +131,12 @@ class EditProfileViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> _editProfileState.update { state ->
                     Log.d("stateUser", state.user_id.toString())
+                    val cleanImage: String =
+                        result.result.profile_pic.replace("data:image/png;base64,", "")
+                            .replace("data:image/jpeg;base64,", "")
+                    val decodedString: ByteArray = Base64.getDecoder().decode(cleanImage)
+                    val decodedByte =
+                        BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
                     state.copy(
                         user_id = result.result.user_id,
                         first_name = result.result.first_name,
@@ -133,7 +146,7 @@ class EditProfileViewModel @Inject constructor(
                         mobile_number = result.result.mobile_number,
                         email = result.result.email,
                         address = result.result.address,
-                        profile_pic = result.result.profile_pic,
+                        profile_pic = decodedByte,
                         isLoading = false,
                     )
                 }

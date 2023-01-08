@@ -145,10 +145,11 @@ class RemoteUserDaoImpl @Inject constructor(
         }
 
     override suspend fun updateAccount(
+        userId: String,
         updateAccountDto: UpdateAccountDto
     ): Resource<String> = tryWithIoHandling {
         val (json, code) = put(
-            endpoint = "/updateUserMobile",
+            endpoint = "/updateUserMobile/$userId",
             body = updateAccountDto.copy(),
         )
         json ?: return@tryWithIoHandling Resource.Failure(

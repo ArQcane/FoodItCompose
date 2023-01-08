@@ -1,11 +1,21 @@
 package com.example.domain.user.usecases
 
+import android.graphics.Bitmap
+import android.os.Build
+import android.text.TextUtils.replace
+import android.util.Base64
+import android.util.Base64.encodeToString
+import androidx.annotation.RequiresApi
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import com.example.domain.validation.usecases.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class CreateAccountUseCase @Inject constructor(
@@ -18,8 +28,10 @@ class CreateAccountUseCase @Inject constructor(
     private val validateFirstName: ValidateFirstName,
     private val validateLastName: ValidateLastName,
     private val validateUserAddress: ValidateAddress,
+    private val validateProfilePic: ValidateProfilePic,
     private val validateGender: ValidateGender,
 ) {
+    @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke(
         first_name: String,
         last_name: String,
@@ -30,12 +42,14 @@ class CreateAccountUseCase @Inject constructor(
         mobile_number: Long,
         email: String,
         address: String,
-        profile_pic: String? = null,
+        profile_pic: Bitmap? = null,
     ): Flow<Resource<Unit>> = flow {
-        when (val error = validateFields(first_name, last_name, gender, mobile_number, address, username, email, user_pass, confirmUserPass)) {
+        when (val error = validateFields(first_name, last_name, gender, mobile_number, address, username, email, user_pass, confirmUserPass, profile_pic)) {
             is Resource.Failure -> return@flow emit(error)
             else -> emit(Resource.Loading(isLoading = true))
         }
+        val byteArrayProfilePic = convertBitmapToByteArray(profile_pic!!)
+        val base64ProfilePic = encodeToString(byteArrayProfilePic, Base64.DEFAULT).replace("\n", "")
         val registerResult = userRepository.register(
             first_name = first_name,
             last_name = last_name,
@@ -45,7 +59,7 @@ class CreateAccountUseCase @Inject constructor(
             mobile_number = mobile_number,
             gender = gender,
             address = address,
-            profile_pic = profile_pic
+            profile_pic = base64ProfilePic
         )
         when (registerResult) {
             is Resource.Success -> {
@@ -58,6 +72,16 @@ class CreateAccountUseCase @Inject constructor(
             else -> Unit
         }
     }
+    private suspend fun convertBitmapToByteArray(
+        bitmap: Bitmap
+    ): ByteArray = coroutineScope {
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        baos.toByteArray().also {
+            launch(Dispatchers.IO) { baos.close() }
+        }
+    }
+
     private fun validateFields(
         first_name: String,
         last_name: String,
@@ -67,7 +91,8 @@ class CreateAccountUseCase @Inject constructor(
         username: String,
         email: String,
         user_pass: String,
-        confirmUserPassword: String
+        confirmUserPassword: String,
+        profile_pic: Bitmap?,
     ): Resource<Unit> {
         val usernameValidationError = validateUsername(
             value = username
@@ -98,6 +123,9 @@ class CreateAccountUseCase @Inject constructor(
             value = confirmUserPassword,
             user_pass = user_pass
         )
+        val profilePicValidationError = validateProfilePic(
+            value = profile_pic
+        )
         if (
             emailValidationError != null ||
             passwordValidationError != null ||
@@ -107,7 +135,8 @@ class CreateAccountUseCase @Inject constructor(
             mobileNumberValidationError != null ||
             genderValidationError != null ||
             addressValidationError != null ||
-            confirmPasswordValidationError != null
+            confirmPasswordValidationError != null ||
+            profilePicValidationError != null
         ) {
             return Resource.Failure(
                 ResourceError.Field(
@@ -121,7 +150,8 @@ class CreateAccountUseCase @Inject constructor(
                         usernameValidationError,
                         emailValidationError,
                         passwordValidationError,
-                        confirmPasswordValidationError
+                        confirmPasswordValidationError,
+                        profilePicValidationError
                     )
                 )
             )

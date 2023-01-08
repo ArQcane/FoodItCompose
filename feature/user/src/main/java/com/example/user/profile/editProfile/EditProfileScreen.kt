@@ -13,10 +13,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -48,7 +46,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.common.components.CltButton
+import com.example.common.components.CltImagePicker
 import com.example.common.components.CltInput
+import com.example.common.navigation.homeScreenRoute
+import com.example.common.navigation.profileScreenRoute
 import com.example.user.profile.ProfileViewModel
 import com.example.user.profile.profileScreenContent
 import kotlinx.coroutines.launch
@@ -76,16 +77,22 @@ fun EditProfileScreen(
             }
         }
     }
-    Scaffold() {
-        Column() {
+    LaunchedEffect(editProfileState.isUpdated) {
+        if (!editProfileState.isUpdated) return@LaunchedEffect
+        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+        scaffoldState.snackbarHostState.showSnackbar("Successfully Updated account!", "Dismiss")
+            .also {
+                navController.navigate(profileScreenRoute)
+            }
+    }
+    Scaffold(
+        scaffoldState = scaffoldState
+    ) {
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
+        ) {
             CustomAppBar(navController, editProfileViewModel, editProfileState)
-            EditProfileScreenContent(
-                navController = navController,
-                editProfileViewModel = editProfileViewModel,
-                editProfileState = editProfileState
-            )
         }
-
     }
 }
 
@@ -96,6 +103,7 @@ fun CustomAppBar(
     editProfileViewModel: EditProfileViewModel,
     editProfileState: EditProfileState
 ) {
+    val previousScreen = navController.previousBackStackEntry?.destination?.route
     Box(
         modifier = Modifier
             .fillMaxHeight(),
@@ -128,7 +136,12 @@ fun CustomAppBar(
                     ) {
                         TextButton(
                             modifier = Modifier.padding(start = 16.dp),
-                            onClick = { navController.popBackStack() }) {
+                            onClick = {
+                                navController.navigate(
+                                    previousScreen
+                                        ?: homeScreenRoute
+                                )
+                            }) {
                             Icon(
                                 Icons.Filled.ArrowBackIos, "Home Icon", modifier = Modifier
                                     .size(30.dp),
@@ -145,25 +158,12 @@ fun CustomAppBar(
                     }
                 }
             }
-            AnimatedContent(
-                targetState = editProfileState.isLoading,
-                transitionSpec = {
-                    fadeIn() with fadeOut()
-                }
-            ) { isLoading ->
-                if (isLoading)
-                    Column(verticalArrangement = Arrangement.Center) {
-                        CircularProgressIndicator(color = MaterialTheme.colors.primary)
-                    }
-
-                if (!isLoading) {
-                    EditProfileScreenContent(navController, editProfileViewModel, editProfileState)
-                }
-            }
+            EditProfileScreenContent(navController, editProfileViewModel, editProfileState)
         }
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun EditProfileScreenContent(
     navController: NavHostController,
@@ -177,7 +177,6 @@ fun EditProfileScreenContent(
             .fillMaxWidth()
             .fillMaxHeight()
             .clip(shape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
-            .background(Color.White),
     ) {
         Column(
             modifier = Modifier
@@ -199,6 +198,22 @@ fun EditProfileScreenContent(
                 color = MaterialTheme.colors.primary
             )
             Spacer(modifier = Modifier.padding(12.dp))
+            CltImagePicker(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .wrapContentHeight()
+                    .fillMaxWidth(0.6f)
+                    .aspectRatio(1f)
+                    .border(width = 2.dp, color = MaterialTheme.colors.primary),
+                value = editProfileState.profile_pic,
+                onValueChange = {
+                    editProfileViewModel.onEvent(
+                        event = EditProfileEvent.OnProfilePicChange(profile_pic = it)
+                    )
+                },
+                error = editProfileState.profilePicError
+            )
+            Spacer(modifier = Modifier.padding(4.dp))
             CltInput(
                 value = editProfileState.first_name,
                 label = "First Name",
@@ -285,56 +300,23 @@ fun EditProfileScreenContent(
                 }
             )
             Spacer(modifier = Modifier.padding(4.dp))
-//            pickImage()
+            CltButton(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !editProfileState.isLoading,
+                onClick = {
+                    focusManager.clearFocus()
+                    editProfileViewModel.onEvent(EditProfileEvent.OnSubmit)
+                }
+            ) {
+                AnimatedContent(targetState = editProfileState.isLoading) { isLoading ->
+                    if (isLoading)
+                        return@AnimatedContent CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 3.dp
+                        )
+                    Text(text = "Update!", color = Color.White)
+                }
+            }
         }
     }
 }
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@SuppressLint("StateFlowValueCalledInComposition")
-//@Composable
-//fun pickImage(
-//    editProfileViewModel: EditProfileViewModel = hiltViewModel()
-//) {
-//    val cleanImage: String =
-//        editProfileViewModel.editProfileState.value.profile_pic.replace("data:image/png;base64,", "")
-//            .replace("data:image/jpeg;base64,", "")
-//    val decodedString: ByteArray = java.util.Base64.getDecoder().decode(cleanImage)
-//    val decodedByte =
-//        BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-//            .asImageBitmap()
-//
-//    Column(
-//        modifier = Modifier.fillMaxWidth(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        Image(
-//            contentScale = ContentScale.Crop,
-//            bitmap = decodedByte,
-//            contentDescription = "User Profile Picture",
-//            modifier = Modifier
-//                .size(100.dp)
-//                .clip(
-//                    CircleShape
-//                )
-//        )
-//        CltButton(
-//            modifier = Modifier.fillMaxWidth(),
-//            onClick = {
-//                loadImage.launch("image/*")
-//            }
-//        ) {
-//            Text(text = "Load Image", fontSize = 30.sp, color = Color.White)
-//        }
-//    }
-//    val cleanedBase64 = encodeImage(result.value)!!.replace("\n","");
-//    editProfileViewModel.editProfileState. = cleanedBase64
-//}
-//
-//private fun encodeImage(bm: Bitmap): String? {
-//    val baos = ByteArrayOutputStream()
-//    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-//    val b = baos.toByteArray()
-//    return Base64.encodeToString(b, Base64.DEFAULT)
-//}

@@ -1,5 +1,6 @@
 package com.example.user.profile.editProfile
 
+import android.graphics.Bitmap
 import com.example.domain.user.User
 
 data class EditProfileState(
@@ -11,7 +12,7 @@ data class EditProfileState(
     val mobile_number: Long = 0,
     val email: String = "",
     val address: String = "",
-    val profile_pic: String = "",
+    val profile_pic: Bitmap? = null,
     val firstNameError: String? = null,
     val lastNameError: String? = null,
     val mobileNumberError: String? = null,

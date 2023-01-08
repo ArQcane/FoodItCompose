@@ -1,5 +1,6 @@
 package com.example.authentication.register
 
+import android.graphics.Bitmap
 import com.example.authentication.login.LoginEvent
 import java.math.BigInteger
 
@@ -13,6 +14,6 @@ sealed class RegisterEvent{
     class OnMobileNumberChange(val mobile_number: Long): RegisterEvent()
     class OnEmailChange(val email: String): RegisterEvent()
     class OnAddressChange(val address: String): RegisterEvent()
-    class OnProfilePicChange(val profile_pic: String): RegisterEvent()
+    class OnProfilePicChange(val profile_pic: Bitmap): RegisterEvent()
     object OnSubmit: RegisterEvent()
 }

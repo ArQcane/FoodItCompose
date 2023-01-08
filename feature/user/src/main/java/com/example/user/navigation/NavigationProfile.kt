@@ -2,9 +2,8 @@ package com.example.user.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -30,14 +29,19 @@ fun NavHostController.navigateToAuthScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.profileNavComposable(navController: NavHostController){
+fun NavGraphBuilder.profileNavComposable(navController: NavHostController) {
     composable(
         profileScreenRoute,
         enterTransition = {
-            when(initialState.destination.route){
+            when (initialState.destination.route) {
                 profileScreenRoute -> EnterTransition.None
+                editProfileScreenRoute -> {
+                    slideIntoContainer(
+                        towards = AnimatedContentScope.SlideDirection.Right,
+                        animationSpec = tween(durationMillis = TransitionDurationMillis)
+                    )
+                }
                 else -> {
                     slideIntoContainer(
                         towards = AnimatedContentScope.SlideDirection.Left,
@@ -58,35 +62,16 @@ fun NavGraphBuilder.profileNavComposable(navController: NavHostController){
                 animationSpec = tween(durationMillis = TransitionDurationMillis)
             )
         },
-    ){
+    ) {
         ProfileScreen(navController = navController)
     }
     composable(
         editProfileScreenRoute,
-        enterTransition = {
-            when(initialState.destination.route){
-                editProfileScreenRoute -> EnterTransition.None
-                else -> {
-                    slideIntoContainer(
-                        towards = AnimatedContentScope.SlideDirection.Left,
-                        animationSpec = tween(durationMillis = TransitionDurationMillis)
-                    )
-                }
-            }
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentScope.SlideDirection.Right,
-                animationSpec = tween(durationMillis = TransitionDurationMillis)
-            )
-        },
-        popExitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentScope.SlideDirection.Right,
-                animationSpec = tween(durationMillis = TransitionDurationMillis)
-            )
-        },
-    ){
+        enterTransition = { slideIntoContainer(
+            towards = AnimatedContentScope.SlideDirection.Left,
+            animationSpec = tween(durationMillis = TransitionDurationMillis)
+        ) },
+    ) {
         EditProfileScreen(navController = navController)
     }
 }

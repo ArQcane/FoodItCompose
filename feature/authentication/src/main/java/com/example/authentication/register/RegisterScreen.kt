@@ -44,6 +44,7 @@ import androidx.navigation.NavHostController
 import com.example.authentication.R
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
+import com.example.common.components.CltImagePicker
 import com.example.common.components.CltInput
 import com.example.common.navigation.loginScreenRoute
 import kotlinx.coroutines.flow.collect
@@ -327,26 +328,20 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    pickImage()
-//                    CltInput(
-//                        value = state.profile_pic,
-//                        label = "User Profile Picture",
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        error = state.profilePicError,
-//                        keyboardOptions = KeyboardOptions(
-//                            keyboardType = KeyboardType.Text,
-//                            imeAction = ImeAction.Next
-//                        ),
-//                        keyboardActions = KeyboardActions(
-//                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-//                        ),
-//                        onValueChange = {
-//                            registerViewModel.onEvent(
-//                                RegisterEvent.OnProfilePicChange(profile_pic = it)
-//                            )
-//                        }
-//                    )
+                    CltImagePicker(
+                        modifier = Modifier
+                            .fillMaxWidth(0.6f)
+                            .aspectRatio(1f)
+                            .align(Alignment.CenterHorizontally)
+                            .border(width = 2.dp, color = MaterialTheme.colors.primary),
+                        value = state.profile_pic,
+                        onValueChange = {
+                            registerViewModel.onEvent(
+                                event = RegisterEvent.OnProfilePicChange(profile_pic = it)
+                            )
+                        },
+                        error = state.profilePicError
+                    )
                     Spacer(modifier = Modifier.padding(4.dp))
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
@@ -379,57 +374,4 @@ fun RegisterScreen(
             }
         }
     }
-}
-
-@SuppressLint("StateFlowValueCalledInComposition")
-@Composable
-fun pickImage(
-    registerViewModel: RegisterViewModel = hiltViewModel()
-) {
-
-    val context = LocalContext.current
-    val myImage: Bitmap =
-        BitmapFactory.decodeResource(Resources.getSystem(), android.R.mipmap.sym_def_app_icon)
-    val result = remember {
-        mutableStateOf<Bitmap>(myImage)
-    }
-    val loadImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        if (Build.VERSION.SDK_INT < 29) {
-            result.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-        }
-        else {
-            val source = ImageDecoder.createSource(context.contentResolver, it)
-            result.value = ImageDecoder.decodeBitmap(source)
-        }
-    }
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(
-            result.value.asImageBitmap(), contentDescription = "image",
-            modifier = Modifier
-                .size(300.dp)
-                .padding(10.dp)
-        )
-        CltButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                loadImage.launch("image/*")
-            }
-        ) {
-            Text(text = "Load Image", fontSize = 30.sp, color = Color.White)
-        }
-    }
-    val cleanedBase64 = encodeImage(result.value)!!.replace("\n","");
-    registerViewModel.base64ProfilePic.value = cleanedBase64
-}
-
-private fun encodeImage(bm: Bitmap): String? {
-    val baos = ByteArrayOutputStream()
-    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-    val b = baos.toByteArray()
-    return Base64.encodeToString(b, Base64.DEFAULT)
 }

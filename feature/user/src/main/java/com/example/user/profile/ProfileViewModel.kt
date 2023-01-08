@@ -48,6 +48,7 @@ class ProfileViewModel @Inject constructor(
                 is Resource.Success -> _profileState.update { state ->
                     Log.d("stateUser", state.user.user_id.toString())
                     state.copy(
+                        isLoading = false,
                         user = result.result
                     )
                 }

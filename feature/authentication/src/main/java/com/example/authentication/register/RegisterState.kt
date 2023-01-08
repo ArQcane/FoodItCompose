@@ -1,5 +1,7 @@
 package com.example.authentication.register
 
+import android.graphics.Bitmap
+
 data class RegisterState(
     val first_name: String = "",
     val last_name: String = "",
@@ -10,7 +12,7 @@ data class RegisterState(
     val mobile_number: Long = 65,
     val email: String = "",
     val address: String = "",
-    val profile_pic: String = "",
+    val profile_pic: Bitmap? = null,
     val firstNameError: String? = null,
     val lastNameError: String? = null,
     val usernameError: String? = null,

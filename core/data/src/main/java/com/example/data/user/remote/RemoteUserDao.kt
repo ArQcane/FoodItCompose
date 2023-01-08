@@ -14,7 +14,7 @@ interface RemoteUserDao {
     suspend fun getUserById(id: String): Resource<ReviewUser>
     suspend fun validateToken(token: String): Resource<User>
     suspend fun forgotPassword(email: String): Resource<String>
-    suspend fun updateAccount(updateAccountDto: UpdateAccountDto): Resource<String>
+    suspend fun updateAccount(userId: String, updateAccountDto: UpdateAccountDto): Resource<String>
     suspend fun deleteAccount(userId: String): Resource<String>
     suspend fun login(loginDto: LoginDto): Resource<String>
     suspend fun register(registerDto: RegisterDto): Resource<String>

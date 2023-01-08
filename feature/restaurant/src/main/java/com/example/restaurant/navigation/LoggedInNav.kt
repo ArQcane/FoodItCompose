@@ -120,5 +120,4 @@ fun NavGraphBuilder.logInNavComposable(navController: NavHostController){
     ){
         SearchScreen(navController = navController)
     }
-
 }

@@ -46,13 +46,13 @@ class UserRepositoryImpl @Inject constructor(
         profile_pic: String?,
         deleteImage: Boolean?,
     ): Resource<String> = remoteUserDao.updateAccount(
+        userId = userId!!,
         updateAccountDto = UpdateAccountDto(
             firstName = firstName,
             lastName = lastName,
             phoneNumber = phoneNumber,
             address = address,
             profile_pic = profile_pic,
-            deleteImage = deleteImage
         )
     )
 
