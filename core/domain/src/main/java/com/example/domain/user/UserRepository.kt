@@ -13,13 +13,10 @@ interface UserRepository {
     suspend fun validateToken(token: String): Resource<User>
     suspend fun forgotPassword(email: String): Resource<String>
     suspend fun updateAccount(
+        userId: String? = null,
         firstName: String? = null,
         lastName: String? = null,
-        username: String? = null,
-        password: String? = null,
-        email: String? = null,
-        phoneNumber: Int? = null,
-        gender: String? = null,
+        phoneNumber: Long? = null,
         address: String? = null,
         profile_pic: String? = null,
         deleteImage: Boolean? = null,

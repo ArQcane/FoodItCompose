@@ -9,6 +9,7 @@ const val registerScreenRoute = "/register"
 const val homeScreenRoute = "/home"
 const val searchScreenRoute = "/search"
 const val profileScreenRoute = "/profile"
+const val editProfileScreenRoute = "/editProfile"
 const val restaurantDetailRoute = "restaurant/{restaurantId}"
 const val TransitionDurationMillis = 500
 

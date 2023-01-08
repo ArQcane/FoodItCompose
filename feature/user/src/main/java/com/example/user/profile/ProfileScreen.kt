@@ -33,6 +33,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
+import com.example.common.navigation.editProfileScreenRoute
 import com.example.common.navigation.loginScreenRoute
 import com.example.common.navigation.navigateToAuthScreen
 import com.example.common.theme.Shapes
@@ -206,7 +207,7 @@ fun profileScreenContent(
 
                     )
                 OutlinedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(editProfileScreenRoute) },
                     shape = Shapes.medium,
                     border = BorderStroke(1.dp, color = MaterialTheme.colors.primary),
                     modifier = Modifier.width(150.dp),

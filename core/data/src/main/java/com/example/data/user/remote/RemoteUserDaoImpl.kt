@@ -148,7 +148,7 @@ class RemoteUserDaoImpl @Inject constructor(
         updateAccountDto: UpdateAccountDto
     ): Resource<String> = tryWithIoHandling {
         val (json, code) = put(
-            endpoint = "/updateuser",
+            endpoint = "/updateUserMobile",
             body = updateAccountDto.copy(),
         )
         json ?: return@tryWithIoHandling Resource.Failure(

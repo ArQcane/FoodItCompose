@@ -38,13 +38,10 @@ class UserRepositoryImpl @Inject constructor(
         remoteUserDao.forgotPassword(email = email)
 
     override suspend fun updateAccount(
+        userId: String?,
         firstName: String?,
         lastName: String?,
-        username: String?,
-        password: String?,
-        email: String?,
-        phoneNumber: Int?,
-        gender: String?,
+        phoneNumber: Long?,
         address: String?,
         profile_pic: String?,
         deleteImage: Boolean?,
@@ -52,11 +49,7 @@ class UserRepositoryImpl @Inject constructor(
         updateAccountDto = UpdateAccountDto(
             firstName = firstName,
             lastName = lastName,
-            username = username,
-            password = password,
-            email = email,
             phoneNumber = phoneNumber,
-            gender = gender,
             address = address,
             profile_pic = profile_pic,
             deleteImage = deleteImage
