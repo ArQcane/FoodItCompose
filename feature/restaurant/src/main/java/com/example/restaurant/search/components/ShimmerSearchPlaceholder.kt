@@ -54,57 +54,65 @@ fun ShimmerSearchPlaceholder() {
                     )
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                CltShimmerAnimation(
+                    modifier = Modifier
+                        .fillMaxWidth(0.7f)
+                        .height(25.dp)
+                )
+
                 Spacer(modifier = Modifier.height(4.dp))
 
                 CltShimmerAnimation(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
+                        .fillMaxWidth(0.6f)
                         .height(20.dp)
                 )
 
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 CltShimmerAnimation(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
+                        .fillMaxWidth(0.6f)
                         .height(20.dp)
                 )
 
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 CltShimmerAnimation(
                     modifier = Modifier
+                        .height(25.dp)
                         .fillMaxWidth(0.5f)
-                        .height(20.dp)
                 )
-
-                Spacer(modifier = Modifier.height(2.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     CltShimmerAnimation(
                         modifier = Modifier
-                            .weight(1f)
+                            .background(color = Color.White)
+                            .width(75.dp)
                             .height(25.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    CltShimmerAnimation(
+                        modifier = Modifier
+                            .fillMaxWidth(0.3f)
+                            .aspectRatio(1f)
+                            .clip(CircleShape)
                     )
                 }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                CltShimmerAnimation(
-                    modifier = Modifier
-                        .background(color = Color.White)
-                        .width(75.dp)
-                        .height(25.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                )
             }
-
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.size(width = 140.dp, height = 140.dp)
             ) {
                 CltShimmerAnimation(
                     modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
                         .fillMaxWidth()
                         .aspectRatio(1f)
                 )

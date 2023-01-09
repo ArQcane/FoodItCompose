@@ -105,7 +105,6 @@ fun SearchScreen(
                                     searchViewModel.onEvent(
                                         SearchEvent.OnSearchedQueryChanged(searchedQuery = it)
                                     )
-                                    searchViewModel.onEvent(SearchEvent.OnSearch)
                                 }
                             )
                             Spacer(Modifier.weight(1f))
