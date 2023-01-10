@@ -1,7 +1,6 @@
 package com.example.domain.user
 
 import com.example.domain.utils.Resource
-import java.io.File
 
 interface UserRepository {
     fun getToken(): Resource<String>

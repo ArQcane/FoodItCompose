@@ -1,13 +1,10 @@
 package com.example.domain.user.usecases
 
 import com.example.domain.user.ReviewUser
-import com.example.domain.user.User
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
-import com.example.domain.utils.ResourceError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.last
 import javax.inject.Inject
 
 class GetUserByIdUseCase @Inject constructor(

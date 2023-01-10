@@ -3,8 +3,6 @@ package com.example.data.favourites
 import com.example.data.favourites.remote.RemoteFavoriteDao
 import com.example.domain.favourites.Favourite
 import com.example.domain.favourites.FavouritesRepository
-import com.example.domain.restaurant.Restaurant
-import com.example.domain.user.User
 import com.example.domain.utils.Resource
 import javax.inject.Inject
 

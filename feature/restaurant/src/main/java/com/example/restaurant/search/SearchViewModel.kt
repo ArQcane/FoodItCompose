@@ -7,7 +7,6 @@ import com.example.domain.restaurant.usecases.GetAllRestaurantsUseCase
 import com.example.domain.restaurant.usecases.SearchRestaurantUseCase
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.restaurant.home.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

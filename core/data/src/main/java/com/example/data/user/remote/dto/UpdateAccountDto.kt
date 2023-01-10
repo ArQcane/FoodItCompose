@@ -1,7 +1,6 @@
 package com.example.data.user.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import java.io.File
 
 data class UpdateAccountDto(
     @SerializedName("first_name")

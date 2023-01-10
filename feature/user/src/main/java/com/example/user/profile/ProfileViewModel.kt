@@ -1,6 +1,5 @@
 package com.example.user.profile
 
-import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

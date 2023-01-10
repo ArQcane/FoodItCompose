@@ -1,6 +1,5 @@
 package com.example.user.profile
 
-import android.app.Activity
 import android.graphics.BitmapFactory
 import android.graphics.Color.parseColor
 import android.os.Build

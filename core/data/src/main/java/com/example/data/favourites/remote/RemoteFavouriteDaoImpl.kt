@@ -4,7 +4,6 @@ import com.example.data.common.DefaultMessageDto
 import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
 import com.example.domain.favourites.Favourite
-import com.example.domain.restaurant.Restaurant
 import com.example.domain.user.User
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
@@ -12,8 +11,6 @@ import com.example.network.Authorization
 import com.example.network.OkHttpDao
 import com.example.network.delegations.AuthorizationImpl
 import com.example.network.delegations.OkHttpDaoImpl
-import com.example.network.utils.Constants.Companion.UNABLE_GET_BODY_ERROR_MESSAGE
-import com.example.network.utils.toJson
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient

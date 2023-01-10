@@ -1,12 +1,15 @@
 package com.example.restaurant.search
 
 import android.graphics.Color.parseColor
-import androidx.compose.animation.*
-import androidx.compose.foundation.*
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -31,7 +34,6 @@ import androidx.navigation.NavHostController
 import com.example.common.components.CltInput
 import com.example.restaurant.search.components.SearchedRestaurantGridCard
 import com.example.restaurant.search.components.ShimmerSearchPlaceholder
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)

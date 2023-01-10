@@ -27,30 +27,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.domain.restaurant.TransformedRestaurant
 import com.example.domain.restaurant.TransformedRestaurantAndReview
-import com.example.domain.review.Review
 import com.example.domain.review.TransformedReview
-import org.w3c.dom.Comment
+import com.example.restaurant.restaurantDetails.SpecificRestaurantViewModel
+import com.example.restaurant.restaurantDetails.reviews.CreateReviewScreen
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Reviews(transformedRestaurant: TransformedRestaurantAndReview) {
+fun Reviews(specificRestaurantViewModel: SpecificRestaurantViewModel, transformedRestaurant: TransformedRestaurantAndReview) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-        ) {
+        Column {
             Text(
                 text = "Reviews",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)
             )
+            CreateReviewScreen(specificRestaurantViewModel)
             if(transformedRestaurant.reviews.isEmpty()){
                 EmptyReviews()
             }
@@ -133,7 +132,7 @@ fun reviewCard(review: TransformedReview) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .heightIn(min=150.dp)
+            .heightIn(min = 150.dp)
             .background(color = Color.White)
     )
     {
@@ -284,7 +283,7 @@ private fun buildAnnotatedString(restaurant: TransformedRestaurantAndReview) =
                     )
                 )
             ) {
-                append(restaurant.averageRating.toString())
+                append(String.format("%.2f", restaurant.averageRating))
                 append("\n")
             }
             withStyle(

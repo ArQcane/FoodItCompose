@@ -1,6 +1,5 @@
 package com.example.domain.restaurant.usecases
 
-import android.util.Log
 import com.example.domain.favourites.FavouritesRepository
 import com.example.domain.restaurant.RestaurantRepository
 import com.example.domain.restaurant.TransformedRestaurant
@@ -11,9 +10,7 @@ import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
-
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 class GetAllRestaurantsUseCase @Inject constructor(
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUser,

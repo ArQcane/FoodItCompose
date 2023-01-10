@@ -2,7 +2,6 @@ package com.example.domain.restaurant.usecases
 
 import com.example.domain.favourites.FavouritesRepository
 import com.example.domain.restaurant.RestaurantRepository
-import com.example.domain.restaurant.TransformedRestaurant
 import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.review.Review
 import com.example.domain.review.ReviewRepository

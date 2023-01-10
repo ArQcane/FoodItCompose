@@ -4,13 +4,12 @@ import android.util.Log
 import com.example.domain.favourites.FavouritesRepository
 import com.example.domain.restaurant.TransformedRestaurant
 import com.example.domain.restaurant.TransformedRestaurantAndReview
-import com.example.domain.user.UserRepository
 import com.example.domain.user.usecases.GetCurrentLoggedInUser
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import kotlinx.coroutines.flow.last
 import javax.inject.Inject
-import kotlin.reflect.*
+import kotlin.reflect.KSuspendFunction2
 
 class ToggleFavouritesUseCase @Inject constructor(
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUser,

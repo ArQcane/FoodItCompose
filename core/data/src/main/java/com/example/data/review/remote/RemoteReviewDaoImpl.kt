@@ -1,5 +1,6 @@
 package com.example.data.review.remote
 
+import android.util.Log
 import com.example.data.common.DefaultMessageDto
 import com.example.data.common.EntityCreatedDto
 import com.example.data.review.remote.dto.CreateReviewDto
@@ -8,6 +9,7 @@ import com.example.data.utils.Constants.NO_RESPONSE
 import com.example.data.utils.tryWithIoHandling
 import com.example.domain.review.Review
 import com.example.domain.review.TotalReviews
+import com.example.domain.review.TransformedReview
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 
@@ -19,6 +21,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 import okhttp3.OkHttpClient
+import org.w3c.dom.Comment
 
 import javax.inject.Inject
 
@@ -99,6 +102,28 @@ class RemoteReviewDaoImpl @Inject constructor(
             }
         }
 
+    override suspend fun getReviewById(reviewId: String): Resource<Review> =
+        tryWithIoHandling {
+            val (json, code) = get("/id/$reviewId")
+            json ?: return@tryWithIoHandling Resource.Failure(
+                ResourceError.Default(NO_RESPONSE)
+            )
+            return@tryWithIoHandling when (code) {
+                200 -> Resource.Success(
+                    gson.fromJson<Review>(
+                        json,
+                        object : TypeToken<Review>() {}.type
+                    )
+                )
+                else -> Resource.Failure(
+                    gson.fromJson<ResourceError.Default>(
+                        json,
+                        object : TypeToken<ResourceError.Default>() {}.type
+                    )
+                )
+            }
+        }
+
     override suspend fun getTotalCountReviewsByUser(userId: String): Resource<TotalReviews> =
         tryWithIoHandling {
             val (json,code) = get(endpoint = "/totalReviewsCount/$userId")
@@ -123,13 +148,11 @@ class RemoteReviewDaoImpl @Inject constructor(
 
 
     override suspend fun createReview(
-        userId: Int,
-        restaurantId: Int,
         CreateReviewDto: CreateReviewDto
     ): Resource<String> = tryWithIoHandling {
         val (json,code) = post(
             endpoint = "/addreview",
-            body = CreateReviewDto.copy(idRestaurant = restaurantId, idUser = userId),
+            body = CreateReviewDto,
         )
         json ?: return@tryWithIoHandling Resource.Failure(
             ResourceError.Default(NO_RESPONSE)

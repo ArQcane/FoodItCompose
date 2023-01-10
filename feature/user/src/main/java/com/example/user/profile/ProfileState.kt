@@ -1,6 +1,5 @@
 package com.example.user.profile
 
-import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.user.User
 
 data class ProfileState(

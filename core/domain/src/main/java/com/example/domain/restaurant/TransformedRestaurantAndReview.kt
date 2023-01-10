@@ -1,6 +1,5 @@
 package com.example.domain.restaurant
 
-import com.example.domain.review.Review
 import com.example.domain.review.TransformedReview
 
 data class TransformedRestaurantAndReview(

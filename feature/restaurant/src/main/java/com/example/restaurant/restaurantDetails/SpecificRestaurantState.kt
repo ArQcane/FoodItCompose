@@ -22,4 +22,11 @@ data class SpecificRestaurantState(
         reviews = emptyList(),
     ),
     val isLoading: Boolean = true,
+    val isAnimationDone: Boolean = false,
+    val review: String = "",
+    val rating: Int = 0,
+    val reviewError: String? = null,
+    val ratingError: String? = null,
+    val isUpdated: Boolean = false,
+    val isSubmitting: Boolean = false,
 )

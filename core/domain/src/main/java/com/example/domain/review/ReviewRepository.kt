@@ -9,13 +9,13 @@ interface ReviewRepository {
 
     suspend fun getReviewsByRestaurant(restaurantId: String): Resource<List<Review>>
 
+    suspend fun getReviewsById(reviewId: String): Resource<Review>
+
     suspend fun getTotalReviewsByUser(userId: String): Resource<TotalReviews>
 
     suspend fun createReview(
         userId: Int,
         restaurantId: Int,
-        idRestaurant: Int? = null,
-        idUser: Int? = null,
         review: String,
         rating: Int,
     ): Resource<String>

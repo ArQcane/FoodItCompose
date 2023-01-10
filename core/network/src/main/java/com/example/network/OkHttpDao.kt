@@ -2,7 +2,6 @@ package com.example.network
 
 import com.example.network.models.TransformedResponse
 import com.google.gson.Gson
-import okhttp3.Response
 import java.io.File
 
 interface OkHttpDao {

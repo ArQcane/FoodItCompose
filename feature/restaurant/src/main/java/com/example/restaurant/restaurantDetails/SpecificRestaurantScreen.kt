@@ -1,31 +1,24 @@
 package com.example.restaurant.restaurantDetails
 
-import android.graphics.BitmapFactory
 import android.os.Build
-import android.util.EventLogTags
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -46,14 +39,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.common.components.CltImageFromNetwork
 import com.example.common.navigation.homeScreenRoute
-import com.example.common.navigation.restaurantDetailRoute
 import com.example.common.theme.Shapes
 import com.example.common.theme.primary
 import com.example.common.theme.secondary
 import com.example.domain.restaurant.TransformedRestaurantAndReview
-import com.example.domain.review.TransformedReview
 import com.example.restaurant.R
-import com.example.restaurant.home.components.ShimmerLoadingCardPlaceholder
 import com.example.restaurant.home.utils.AppBarCollapsedHeight
 import com.example.restaurant.home.utils.AppBarExpendedHeight
 import com.example.restaurant.restaurantDetails.components.MoreRestaurauntDetailsSection
@@ -63,9 +53,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Float.max
 import java.lang.Integer.min
@@ -106,7 +94,7 @@ fun SpecificRestaurantScreen(
             }
         ) { isLoading ->
             if (!isLoading) {
-                Content(restaurantState.transformedRestaurant, scrollState)
+                Content(specificRestaurantViewModel, restaurantState.transformedRestaurant, scrollState)
                 ParallaxToolbar(
                     navController,
                     specificRestaurantViewModel,
@@ -295,6 +283,7 @@ fun CircularButton(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Content(
+    specificRestaurantViewModel: SpecificRestaurantViewModel,
     transformedRestaurantAndReview: TransformedRestaurantAndReview,
     scrollState: LazyListState
 ) {
@@ -303,7 +292,7 @@ fun Content(
             BasicInfo(transformedRestaurantAndReview)
             Description(transformedRestaurantAndReview)
 //            ServingCalculator()
-            TabHeader(transformedRestaurantAndReview)
+            TabHeader(specificRestaurantViewModel, transformedRestaurantAndReview)
 //            IngredientsList(transformedRestaurant)
 //            ShoppingListButton()
         }
@@ -330,7 +319,9 @@ fun Content(
 @OptIn(ExperimentalPagerApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TabHeader(transformedRestaurant: TransformedRestaurantAndReview) {
+fun TabHeader(
+    specificRestaurantViewModel: SpecificRestaurantViewModel,
+    transformedRestaurant: TransformedRestaurantAndReview) {
     val pagerState = rememberPagerState()
 
     val tabs = listOf(
@@ -341,6 +332,7 @@ fun TabHeader(transformedRestaurant: TransformedRestaurantAndReview) {
         },
         TabItem.Reviews() {
             Reviews(
+                specificRestaurantViewModel = specificRestaurantViewModel,
                 transformedRestaurant = transformedRestaurant
             )
         }
@@ -435,7 +427,7 @@ fun BasicInfo(transformedRestaurant: TransformedRestaurantAndReview) {
     ) {
         InfoColumn(
             R.drawable.ic_baseline_star_24,
-            transformedRestaurant.averageRating.toString(), "Stars"
+            String.format("%.2f", transformedRestaurant.averageRating), "Stars"
         )
         InfoColumn(
             R.drawable.ic_baseline_speaker_notes_24,

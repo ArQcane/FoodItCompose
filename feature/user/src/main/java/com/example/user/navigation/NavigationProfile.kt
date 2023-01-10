@@ -1,14 +1,9 @@
 package com.example.user.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
 import com.example.common.navigation.TransitionDurationMillis
 import com.example.common.navigation.editProfileScreenRoute
 import com.example.common.navigation.loginScreenRoute

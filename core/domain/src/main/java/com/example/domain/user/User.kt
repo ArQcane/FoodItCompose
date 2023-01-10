@@ -1,7 +1,5 @@
 package com.example.domain.user
 
-import java.math.BigInteger
-
 data class User(
     val user_id: Int,
     val first_name: String,

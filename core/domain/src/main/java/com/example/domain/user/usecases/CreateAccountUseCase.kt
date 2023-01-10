@@ -2,7 +2,6 @@ package com.example.domain.user.usecases
 
 import android.graphics.Bitmap
 import android.os.Build
-import android.text.TextUtils.replace
 import android.util.Base64
 import android.util.Base64.encodeToString
 import androidx.annotation.RequiresApi

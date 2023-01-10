@@ -1,6 +1,5 @@
 package com.example.domain.restaurant.usecases
 
-import android.util.Log
 import com.example.domain.favourites.FavouritesRepository
 import com.example.domain.restaurant.RestaurantRepository
 import com.example.domain.restaurant.TransformedRestaurant

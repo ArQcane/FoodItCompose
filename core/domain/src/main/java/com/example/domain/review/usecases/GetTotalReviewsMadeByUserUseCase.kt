@@ -3,7 +3,6 @@ package com.example.domain.review.usecases
 import android.util.Log
 import com.example.domain.review.ReviewRepository
 import com.example.domain.review.TotalReviews
-import com.example.domain.user.ReviewUser
 import com.example.domain.user.usecases.GetCurrentLoggedInUser
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError

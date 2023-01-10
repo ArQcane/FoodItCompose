@@ -3,7 +3,6 @@ package com.example.domain.user.usecases
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.domain.validation.usecases.ValidateEmail
 import com.example.domain.validation.usecases.ValidatePassword
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

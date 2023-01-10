@@ -1,6 +1,5 @@
 package com.example.user.profile.components.dialogs
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.user.profile.ProfileState
-import com.example.user.profile.ProfileViewModel
 
 @Composable
 fun InputAlertDialog(onDismiss:() -> Unit, onSuccessful: (String) -> Unit) {

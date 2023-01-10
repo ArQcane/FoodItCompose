@@ -1,6 +1,5 @@
 package com.example.authentication.forgetPassword
 
-import android.media.Image
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -35,11 +34,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.authentication.R
-import com.example.authentication.login.LoginEvent
-
 import com.example.authentication.navigationArgs.navigateToAuthScreen
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput

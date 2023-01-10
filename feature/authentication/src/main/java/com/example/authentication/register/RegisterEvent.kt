@@ -1,8 +1,6 @@
 package com.example.authentication.register
 
 import android.graphics.Bitmap
-import com.example.authentication.login.LoginEvent
-import java.math.BigInteger
 
 sealed class RegisterEvent{
     class OnFirstNameChange(val first_name: String): RegisterEvent()

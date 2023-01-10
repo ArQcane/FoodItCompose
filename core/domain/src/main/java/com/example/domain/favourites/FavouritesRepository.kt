@@ -1,6 +1,5 @@
 package com.example.domain.favourites
 
-import com.example.domain.restaurant.Restaurant
 import com.example.domain.user.User
 import com.example.domain.utils.Resource
 

@@ -1,7 +1,6 @@
 package com.example.domain.review
 
 import com.example.domain.user.ReviewUser
-import com.example.domain.user.User
 import com.google.gson.annotations.SerializedName
 import java.util.*
 

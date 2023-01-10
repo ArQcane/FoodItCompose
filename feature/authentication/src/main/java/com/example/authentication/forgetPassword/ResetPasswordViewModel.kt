@@ -2,8 +2,6 @@ package com.example.authentication.forgetPassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.authentication.login.LoginEvent
-import com.example.authentication.login.LoginState
 import com.example.domain.user.usecases.ResetPasswordUseCase
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError

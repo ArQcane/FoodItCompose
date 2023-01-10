@@ -1,7 +1,6 @@
 package com.example.user.profile.editProfile
 
 import android.graphics.Bitmap
-import com.example.domain.user.User
 
 data class EditProfileState(
     val user_id: Int = 0,

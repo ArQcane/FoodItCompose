@@ -9,7 +9,6 @@ import com.example.domain.user.ReviewUser
 import com.example.domain.user.User
 import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
-import java.io.File
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
