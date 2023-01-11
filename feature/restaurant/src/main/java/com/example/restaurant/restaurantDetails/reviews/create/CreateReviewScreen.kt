@@ -1,4 +1,4 @@
-package com.example.restaurant.restaurantDetails.reviews
+package com.example.restaurant.restaurantDetails.reviews.create
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
@@ -26,7 +26,6 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.common.components.CltButton
 import com.example.common.components.CltInput
 import com.example.restaurant.restaurantDetails.SpecificRestaurantViewModel
@@ -64,7 +63,7 @@ fun CreateReviewScreen(
             ),
             onValueChange = {
                 specificRestaurantViewModel.onEvent(
-                    CreateReviewEvent.OnReviewChangedEvent(
+                    ReviewEvent.OnReviewChangedEvent(
                         review = it
                     )
                 )
@@ -86,7 +85,7 @@ fun CreateReviewScreen(
                     onClick = {
                         focusManager.clearFocus()
                         specificRestaurantViewModel.onEvent(
-                            CreateReviewEvent.OnRatingChangedEvent(
+                            ReviewEvent.OnRatingChangedEvent(
                                 rating = it + 1
                             )
                         )
@@ -112,7 +111,7 @@ fun CreateReviewScreen(
                 enabled = !state.isSubmitting,
                 onClick = {
                     specificRestaurantViewModel.onEvent(
-                        CreateReviewEvent.OnSubmit
+                        ReviewEvent.OnSubmit
                     )
                 }
             )

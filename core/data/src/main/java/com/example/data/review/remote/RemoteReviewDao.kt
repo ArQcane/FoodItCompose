@@ -22,8 +22,6 @@ interface RemoteReviewDao {
     ): Resource<String>
 
     suspend fun updateReview(
-        userId: Int,
-        restaurantId: Int,
         reviewId: String,
         UpdateReviewDto: UpdateReviewDto
     ): Resource<Review>

@@ -2,6 +2,7 @@ package com.example.restaurant.restaurantDetails.components
 
 import android.graphics.BitmapFactory
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,8 +12,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,15 +29,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.common.navigation.homeScreenRoute
 import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.review.TransformedReview
+import com.example.restaurant.restaurantDetails.SpecificRestaurantState
 import com.example.restaurant.restaurantDetails.SpecificRestaurantViewModel
-import com.example.restaurant.restaurantDetails.reviews.CreateReviewScreen
+import com.example.restaurant.restaurantDetails.reviews.create.CreateReviewScreen
+import com.example.restaurant.restaurantDetails.reviews.create.ReviewEvent
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Reviews(specificRestaurantViewModel: SpecificRestaurantViewModel, transformedRestaurant: TransformedRestaurantAndReview) {
+fun Reviews(
+    specificRestaurantViewModel: SpecificRestaurantViewModel,
+    specificRestaurantState: SpecificRestaurantState,
+    transformedRestaurant: TransformedRestaurantAndReview
+) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,7 +61,7 @@ fun Reviews(specificRestaurantViewModel: SpecificRestaurantViewModel, transforme
                 modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)
             )
             CreateReviewScreen(specificRestaurantViewModel)
-            if(transformedRestaurant.reviews.isEmpty()){
+            if (transformedRestaurant.reviews.isEmpty()) {
                 EmptyReviews()
             }
             if (transformedRestaurant.reviews.isNotEmpty()) {
@@ -110,8 +121,23 @@ fun Reviews(specificRestaurantViewModel: SpecificRestaurantViewModel, transforme
                         }
                     }
                     Spacer(modifier = Modifier.padding(16.dp))
-                    for (items in transformedRestaurant.reviews) {
-                        reviewCard(items)
+                    for (index in 0 until transformedRestaurant.reviews.size) {
+                        reviewCard(
+                            review = transformedRestaurant.reviews[index],
+                            currentUserId = specificRestaurantState.currentUserId.toString(),
+                            updateReview = {
+                                specificRestaurantViewModel.onEvent(
+                                    ReviewEvent.OpenEditCommentDialog(
+                                        index = index
+                                    )
+                                )
+                            },
+                            deleteReview = {
+                                specificRestaurantViewModel.onEvent(
+                                    ReviewEvent.DeleteComment(index = index)
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -121,7 +147,15 @@ fun Reviews(specificRestaurantViewModel: SpecificRestaurantViewModel, transforme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun reviewCard(review: TransformedReview) {
+fun reviewCard(
+    review: TransformedReview,
+    currentUserId: String,
+    updateReview: () -> Unit,
+    deleteReview: () -> Unit
+) {
+    var isMenuExpanded by remember {
+        mutableStateOf(false)
+    }
     val cleanImage: String =
         review.user.profile_pic.replace("data:image/png;base64,", "")
             .replace("data:image/jpeg;base64,", "")
@@ -139,7 +173,9 @@ fun reviewCard(review: TransformedReview) {
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
             ) {
                 Image(
                     contentScale = ContentScale.Fit,
@@ -158,6 +194,39 @@ fun reviewCard(review: TransformedReview) {
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                 )
+                if (currentUserId == review.iduser.toString()) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(contentAlignment = Alignment.Center) {
+                        IconButton(
+                            modifier = Modifier.offset(x = 10.dp),
+                            onClick = { isMenuExpanded = true }
+                        ) {
+                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                        }
+                        DropdownMenu(
+                            expanded = isMenuExpanded,
+                            onDismissRequest = { isMenuExpanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                onClick = {
+                                    isMenuExpanded = false
+                                    updateReview()
+                                }
+                            ) {
+                                Text(text = "Update Review")
+                            }
+                            Spacer(modifier = Modifier.height(10.dp))
+                            DropdownMenuItem(
+                                onClick = {
+                                    isMenuExpanded = false
+                                    deleteReview()
+                                }
+                            ) {
+                                Text(text = "Delete Review")
+                            }
+                        }
+                    }
+                }
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -168,7 +237,7 @@ fun reviewCard(review: TransformedReview) {
                     fontWeight = FontWeight.Medium,
                 )
                 Row() {
-                    repeat(review.rating.toInt()){
+                    repeat(review.rating.toInt()) {
                         Icon(
                             imageVector = Icons.Filled.Star,
                             contentDescription = "Rating",
@@ -196,45 +265,45 @@ private fun EmptyReviews() {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-            Surface(
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.8f),
+            shape = RoundedCornerShape(10.dp),
+            elevation = 10.dp
+        ) {
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f),
-                shape = RoundedCornerShape(10.dp),
-                elevation = 10.dp
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 10.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                            .background(
-                                color = MaterialTheme.colors.secondary.copy(
-                                    alpha = 0.9f
-                                )
+                        .size(30.dp)
+                        .clip(CircleShape)
+                        .background(
+                            color = MaterialTheme.colors.secondary.copy(
+                                alpha = 0.9f
                             )
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        repeat(2) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(if (it == 0) 1f else 0.7f)
-                                    .height(15.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        color = MaterialTheme.colors.secondary.copy(
-                                            alpha = 0.8f
-                                        )
+                        )
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    repeat(2) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(if (it == 0) 1f else 0.7f)
+                                .height(15.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(
+                                    color = MaterialTheme.colors.secondary.copy(
+                                        alpha = 0.8f
                                     )
-                            )
-                            if (it == 0) Spacer(modifier = Modifier.height(5.dp))
-                        }
+                                )
+                        )
+                        if (it == 0) Spacer(modifier = Modifier.height(5.dp))
                     }
                 }
+            }
         }
         Text(text = buildAnnotatedString {
             withStyle(ParagraphStyle(textAlign = TextAlign.Center)) {

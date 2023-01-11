@@ -45,21 +45,17 @@ class ReviewRepositoryImpl @Inject constructor(
     )
 
     override suspend fun updateReview(
-        userId: Int,
-        restaurantId: Int,
         reviewId: String,
         idRestaurant: Int?,
         idUser: Int?,
         review: String?,
         rating: Int?
-    ): Resource<com.example.domain.review.Review> =
+    ): Resource<Review> =
         remoteReviewDao.updateReview(
-            userId = userId,
-            restaurantId = restaurantId,
             reviewId = reviewId,
             UpdateReviewDto = UpdateReviewDto(
-                idRestaurant = idRestaurant,
-                idUser = idUser,
+                idrestaurant = idRestaurant,
+                iduser = idUser,
                 review = review,
                 rating = rating
             )

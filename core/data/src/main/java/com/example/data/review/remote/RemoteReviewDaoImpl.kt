@@ -180,21 +180,19 @@ class RemoteReviewDaoImpl @Inject constructor(
     }
 
     override suspend fun updateReview(
-        userId: Int,
-        restaurantId: Int,
         reviewId: String,
         UpdateReviewDto: UpdateReviewDto
     ): Resource<Review> = tryWithIoHandling {
         val (json,code) = put(
             endpoint = "/updatereview/$reviewId",
-            body = UpdateReviewDto.copy(idRestaurant = restaurantId, idUser = userId),
+            body = UpdateReviewDto,
         )
         json ?: return@tryWithIoHandling Resource.Failure(
             ResourceError.Default(NO_RESPONSE)
         )
         return@tryWithIoHandling when (code) {
             200 -> Resource.Success(
-                gson.fromJson(
+                gson.fromJson<Review>(
                     json,
                     object : TypeToken<Review>() {}.type
                 )

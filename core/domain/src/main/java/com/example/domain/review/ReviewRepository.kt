@@ -21,13 +21,11 @@ interface ReviewRepository {
     ): Resource<String>
 
     suspend fun updateReview(
-        userId: Int,
-        restaurantId: Int,
         reviewId: String,
-        idRestaurant: Int? = null,
-        idUser: Int? = null,
-        review: String? = null,
-        rating: Int? = null,
+        idRestaurant: Int?,
+        idUser: Int?,
+        review: String?,
+        rating: Int?
     ): Resource<Review>
 
     suspend fun deleteReview(reviewId: String): Resource<String>

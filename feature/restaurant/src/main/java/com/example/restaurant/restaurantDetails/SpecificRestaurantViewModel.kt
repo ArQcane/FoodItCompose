@@ -1,16 +1,17 @@
 package com.example.restaurant.restaurantDetails
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.favourites.usecases.ToggleFavouritesUseCase
 import com.example.domain.restaurant.usecases.GetSpecificRestaurantUseCase
-import com.example.domain.review.usecases.CreateReviewUseCase
+import com.example.domain.review.usecases.*
 import com.example.domain.user.UserRepository
 import com.example.domain.user.usecases.GetCurrentLoggedInUser
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.restaurant.restaurantDetails.reviews.CreateReviewEvent
+import com.example.restaurant.restaurantDetails.reviews.create.ReviewEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -27,6 +28,8 @@ class SpecificRestaurantViewModel @Inject constructor(
     private val getCurrentLoggedInUser: GetCurrentLoggedInUser,
     private val createReviewUseCase: CreateReviewUseCase,
     private val toggleFavouritesUseCase: ToggleFavouritesUseCase,
+    private val updateReviewUseCase: UpdateReviewsUseCase,
+    private val deleteReviewUseCase: DeleteReviewUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _specificRestaurantState = MutableStateFlow(SpecificRestaurantState())
@@ -39,6 +42,21 @@ class SpecificRestaurantViewModel @Inject constructor(
         savedStateHandle.get<String>("restaurantId")?.let {
             getSpecificRestaurant(it)
         }
+        getCurrentUser()
+    }
+
+    private fun getCurrentUser() {
+        getCurrentLoggedInUser().onEach {
+            when (it) {
+                is Resource.Success -> _specificRestaurantState.update { state ->
+                    state.copy(currentUserId = it.result.user_id.toString())
+                }
+                is Resource.Failure -> _errorChannel.send(
+                    (it.error as ResourceError.Default).error
+                )
+                else -> Unit
+            }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
 
     private fun getSpecificRestaurant(restaurantId: String) {
@@ -141,6 +159,83 @@ class SpecificRestaurantViewModel @Inject constructor(
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
 
+    private fun updateReview() {
+        updateReviewUseCase(
+            restaurantId = _specificRestaurantState.value.transformedRestaurant.id,
+            reviewId = _specificRestaurantState.value.commentBeingEdited!!.review_id.toString(),
+            review = _specificRestaurantState.value.editingReviewValue,
+            rating = _specificRestaurantState.value.editingRatingValue
+        ).onEach {
+            when (it) {
+                is Resource.Failure -> {
+                    when (it.error) {
+                        is ResourceError.Default -> {
+                            _specificRestaurantState.update { state -> state.copy(isEditSubmitting = false) }
+                            val defaultError = it.error as ResourceError.Default
+                            _errorChannel.send(defaultError.error)
+                        }
+                        is ResourceError.Field -> _specificRestaurantState.update { state ->
+                            val fieldError = (it.error as ResourceError.Field).errors
+                            state.copy(
+                                editingRatingError = fieldError.find { it.field == "rating" }?.error,
+                                editingReviewError = fieldError.find { it.field == "review" }?.error,
+                                isEditSubmitting = false
+                            )
+                        }
+                    }
+                }
+                is Resource.Loading -> _specificRestaurantState.update { state ->
+                    state.copy(isEditSubmitting = it.isLoading)
+                }
+                is Resource.Success -> _specificRestaurantState.update { state ->
+                    state.copy(
+                        commentBeingEdited = null,
+                        editingReviewError = null,
+                        editingRatingError = null,
+                        editingRatingValue = 0,
+                        editingReviewValue = "",
+                        isEditSubmitting = false,
+                        transformedRestaurant = state.transformedRestaurant.copy(
+                            reviews = state.transformedRestaurant.reviews.toMutableList().apply {
+                                val index = map { it.review_id }.indexOf(state.commentBeingEdited!!.review_id)
+                                set(index, it.result)
+                            }
+                        )
+                    )
+                }
+            }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+    }
+
+    private fun deleteReview(index: Int) {
+        val review = _specificRestaurantState.value.transformedRestaurant.reviews[index]
+        lateinit var oldState: SpecificRestaurantState
+        _specificRestaurantState.update { state ->
+            oldState = state
+            state.copy(
+                transformedRestaurant = state.transformedRestaurant.copy(
+                    reviews = state.transformedRestaurant.reviews.toMutableList().apply {
+                        removeAt(index)
+                    }
+                )
+            )
+        }
+        deleteReviewUseCase(reviewId = review.review_id.toString()).onEach {
+            when (it) {
+                is Resource.Failure -> {
+                    _specificRestaurantState.value = oldState
+                    if (it.error !is ResourceError.Default) return@onEach
+                    val error = (it.error as ResourceError.Default).error
+                    _errorChannel.send(error)
+                }
+                is Resource.Success -> _specificRestaurantState.update { state ->
+                    state.copy(isUpdated = true)
+                }
+                else -> Unit
+            }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+    }
+
     private fun setAnimationIsDone(isDone: Boolean) {
         _specificRestaurantState.update { state ->
             state.copy(isAnimationDone = isDone)
@@ -152,18 +247,18 @@ class SpecificRestaurantViewModel @Inject constructor(
         return newRating
     }
 
-    fun onEvent(event: CreateReviewEvent) {
+    fun onEvent(event: ReviewEvent) {
         when (event) {
-            is CreateReviewEvent.AnimationOverEvent -> {
+            is ReviewEvent.AnimationOverEvent -> {
                 setAnimationIsDone(isDone = event.isAnimationDone)
             }
-            is CreateReviewEvent.OnReviewChangedEvent -> _specificRestaurantState.update { state ->
+            is ReviewEvent.OnReviewChangedEvent -> _specificRestaurantState.update { state ->
                 state.copy(
                     review = event.review,
                     reviewError = null
                 )
             }
-            is CreateReviewEvent.OnRatingChangedEvent -> _specificRestaurantState.update { state ->
+            is ReviewEvent.OnRatingChangedEvent -> _specificRestaurantState.update { state ->
                 state.copy(
                     rating = getRating(
                         newRating = event.rating,
@@ -172,8 +267,43 @@ class SpecificRestaurantViewModel @Inject constructor(
                     ratingError = null
                 )
             }
-            is CreateReviewEvent.OnSubmit -> {
+            is ReviewEvent.OnSubmit -> {
                 createReview()
+            }
+            is ReviewEvent.DeleteComment -> {
+                deleteReview(index = event.index)
+            }
+            is ReviewEvent.OpenEditCommentDialog -> _specificRestaurantState.update { state ->
+                val review = state.transformedRestaurant.reviews[event.index]
+                state.copy(
+                    commentBeingEdited = review,
+                    editingReviewValue = review.review,
+                    editingRatingValue = review.rating.toInt(),
+                )
+            }
+            is ReviewEvent.OnEditReview -> _specificRestaurantState.update { state ->
+                state.copy(
+                    editingReviewValue = event.review,
+                    editingReviewError = null
+                )
+            }
+            is ReviewEvent.OnEditRating -> _specificRestaurantState.update { state ->
+                state.copy(
+                    editingRatingValue = getRating(event.rating, state.editingRatingValue),
+                    editingRatingError = null
+                )
+            }
+            is ReviewEvent.OnCloseEditCommentDialog -> _specificRestaurantState.update { state ->
+                state.copy(
+                    commentBeingEdited = null,
+                    editingReviewError = null,
+                    editingRatingError = null,
+                    editingRatingValue = 0,
+                    editingReviewValue = ""
+                )
+            }
+            is ReviewEvent.OnCompleteEdit -> {
+                updateReview()
             }
         }
     }

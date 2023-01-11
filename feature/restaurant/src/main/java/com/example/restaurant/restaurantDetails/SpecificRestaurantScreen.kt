@@ -4,14 +4,21 @@ import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,21 +30,28 @@ import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
+import com.example.common.components.CltButton
 import com.example.common.components.CltImageFromNetwork
+import com.example.common.components.CltInput
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.theme.Shapes
 import com.example.common.theme.primary
@@ -48,6 +62,7 @@ import com.example.restaurant.home.utils.AppBarCollapsedHeight
 import com.example.restaurant.home.utils.AppBarExpendedHeight
 import com.example.restaurant.restaurantDetails.components.MoreRestaurauntDetailsSection
 import com.example.restaurant.restaurantDetails.components.Reviews
+import com.example.restaurant.restaurantDetails.reviews.create.ReviewEvent
 import com.example.restaurant.restaurantDetails.utils.TabItem
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
@@ -72,6 +87,7 @@ fun SpecificRestaurantScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val restaurantState by specificRestaurantViewModel.specificRestaurantState.collectAsState()
 
+    val config = LocalConfiguration.current
 
     LaunchedEffect(true) {
         lifecycleOwner.lifecycleScope.launch {
@@ -94,7 +110,7 @@ fun SpecificRestaurantScreen(
             }
         ) { isLoading ->
             if (!isLoading) {
-                Content(specificRestaurantViewModel, restaurantState.transformedRestaurant, scrollState)
+                Content(specificRestaurantViewModel, restaurantState, restaurantState.transformedRestaurant, scrollState)
                 ParallaxToolbar(
                     navController,
                     specificRestaurantViewModel,
@@ -105,6 +121,111 @@ fun SpecificRestaurantScreen(
             if (isLoading) {
                 Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     CircularProgressIndicator()
+                }
+            }
+        }
+        if (restaurantState.commentBeingEdited != null) Dialog(
+            properties = DialogProperties(
+                dismissOnBackPress = !restaurantState.isEditSubmitting,
+                dismissOnClickOutside = !restaurantState.isEditSubmitting
+            ),
+            onDismissRequest = {
+                specificRestaurantViewModel.onEvent(
+                    ReviewEvent.OnCloseEditCommentDialog
+                )
+            }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height((config.screenHeightDp * 0.2).dp),
+                shape = RoundedCornerShape(10.dp),
+                elevation = 10.dp
+            ) {
+                val focusManager = LocalFocusManager.current
+                Column(
+                    modifier = Modifier.padding(10.dp),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CltInput(
+                        value = restaurantState.editingReviewValue,
+                        label = "Review",
+                        error = restaurantState.editingReviewError,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
+                        ),
+                        onValueChange = {
+                            specificRestaurantViewModel.onEvent(
+                                ReviewEvent.OnEditReview(
+                                    review = it
+                                )
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        repeat(5) {
+                            TextButton(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(35.dp),
+                                contentPadding = PaddingValues(5.dp),
+                                onClick = {
+                                    focusManager.clearFocus()
+                                    specificRestaurantViewModel.onEvent(
+                                        ReviewEvent.OnEditRating(
+                                            rating = it + 1
+                                        )
+                                    )
+                                }
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = if (it < restaurantState.editingRatingValue) {
+                                            Icons.Default.Star
+                                        } else {
+                                            Icons.Default.StarBorder
+                                        },
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colors.primary
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        CltButton(
+                            text = "Submit",
+                            withLoading = true,
+                            enabled = !restaurantState.isEditSubmitting,
+                            onClick = {
+                                focusManager.clearFocus()
+                                specificRestaurantViewModel.onEvent(
+                                    ReviewEvent.OnCompleteEdit
+                                )
+                            }
+                        )
+                        AnimatedVisibility(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp),
+                            visible = restaurantState.editingRatingError != null,
+                            enter = fadeIn() + slideInHorizontally(animationSpec = spring()),
+                        ) {
+                            restaurantState.editingRatingError?.let {
+                                Text(
+                                    text = it,
+                                    color = MaterialTheme.colors.error,
+                                    style = MaterialTheme.typography.body1,
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -284,6 +405,7 @@ fun CircularButton(
 @Composable
 fun Content(
     specificRestaurantViewModel: SpecificRestaurantViewModel,
+    specificRestaurantState: SpecificRestaurantState,
     transformedRestaurantAndReview: TransformedRestaurantAndReview,
     scrollState: LazyListState
 ) {
@@ -291,36 +413,17 @@ fun Content(
         item {
             BasicInfo(transformedRestaurantAndReview)
             Description(transformedRestaurantAndReview)
-//            ServingCalculator()
-            TabHeader(specificRestaurantViewModel, transformedRestaurantAndReview)
-//            IngredientsList(transformedRestaurant)
-//            ShoppingListButton()
+            TabHeader(specificRestaurantViewModel, specificRestaurantState = specificRestaurantState,transformedRestaurantAndReview)
         }
     }
 }
-
-//@Composable
-//fun ShoppingListButton() {
-//    Button(
-//        onClick = { /*TODO*/ },
-//        elevation = null,
-//        shape = Shapes.small,
-//        colors = ButtonDefaults.buttonColors(
-//            backgroundColor = LightGray,
-//            contentColor = Color.Black
-//        ), modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp)
-//    ) {
-//        Text(text = "Add to shopping list", modifier = Modifier.padding(8.dp))
-//    }
-//}
 
 @OptIn(ExperimentalPagerApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TabHeader(
     specificRestaurantViewModel: SpecificRestaurantViewModel,
+    specificRestaurantState: SpecificRestaurantState,
     transformedRestaurant: TransformedRestaurantAndReview) {
     val pagerState = rememberPagerState()
 
@@ -333,6 +436,7 @@ fun TabHeader(
         TabItem.Reviews() {
             Reviews(
                 specificRestaurantViewModel = specificRestaurantViewModel,
+                specificRestaurantState = specificRestaurantState,
                 transformedRestaurant = transformedRestaurant
             )
         }
@@ -391,20 +495,7 @@ fun TabHeader(
         ) { page ->
             tabs[page].composable()
         }
-//        tabs[selectedTab].composable()
     }
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically,
-//        modifier = Modifier
-//            .padding(horizontal = 16.dp, vertical = 16.dp)
-//            .clip(Shapes.medium)
-//            .background(LightGray)
-//            .fillMaxWidth()
-//            .height(44.dp)
-//    ) {
-//        TabButton("Ratings", true, Modifier.weight(1f))
-//        TabButton("Tools", false, Modifier.weight(1f))
-//    }
 }
 
 @Composable

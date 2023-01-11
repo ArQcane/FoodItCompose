@@ -1,6 +1,9 @@
 package com.example.restaurant.restaurantDetails
 
 import com.example.domain.restaurant.TransformedRestaurantAndReview
+import com.example.domain.review.Review
+import com.example.domain.review.TransformedReview
+import org.w3c.dom.Comment
 
 data class SpecificRestaurantState(
     val transformedRestaurant: TransformedRestaurantAndReview = TransformedRestaurantAndReview(
@@ -29,4 +32,11 @@ data class SpecificRestaurantState(
     val ratingError: String? = null,
     val isUpdated: Boolean = false,
     val isSubmitting: Boolean = false,
+    val currentUserId: String? = null,
+    val commentBeingEdited: TransformedReview? = null,
+    val editingReviewValue: String = "",
+    val editingRatingValue: Int = 0,
+    val editingReviewError: String? = null,
+    val editingRatingError: String? = null,
+    val isEditSubmitting: Boolean = false
 )
