@@ -33,10 +33,11 @@ data class SpecificRestaurantState(
     val isUpdated: Boolean = false,
     val isSubmitting: Boolean = false,
     val currentUserId: String? = null,
-    val commentBeingEdited: TransformedReview? = null,
+    val reviewBeingEdited: TransformedReview? = null,
     val editingReviewValue: String = "",
     val editingRatingValue: Int = 0,
     val editingReviewError: String? = null,
     val editingRatingError: String? = null,
-    val isEditSubmitting: Boolean = false
+    val isEditSubmitting: Boolean = false,
+    val isRefreshing: Boolean = false,
 )

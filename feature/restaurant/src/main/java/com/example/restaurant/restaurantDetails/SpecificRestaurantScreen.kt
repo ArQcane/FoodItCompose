@@ -15,10 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,6 +66,8 @@ import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 import java.lang.Float.max
 import java.lang.Integer.min
@@ -102,127 +101,141 @@ fun SpecificRestaurantScreen(
 
     Scaffold(
         scaffoldState = scaffoldState
-    ) {
-        AnimatedContent(
-            targetState = restaurantState.isLoading,
-            transitionSpec = {
-                fadeIn() with fadeOut()
-            }
-        ) { isLoading ->
-            if (!isLoading) {
-                Content(specificRestaurantViewModel, restaurantState, restaurantState.transformedRestaurant, scrollState)
-                ParallaxToolbar(
-                    navController,
-                    specificRestaurantViewModel,
-                    restaurantState.transformedRestaurant,
-                    scrollState
-                )
-            }
-            if (isLoading) {
-                Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    CircularProgressIndicator()
+    ) { padding ->
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing = restaurantState.isRefreshing),
+            onRefresh = { specificRestaurantViewModel.refreshPage() }
+        ) {
+            AnimatedContent(
+                targetState = restaurantState.isLoading,
+                transitionSpec = {
+                    fadeIn() with fadeOut()
+                }
+            ) { isLoading ->
+                if (!isLoading) {
+                    Content(
+                        specificRestaurantViewModel,
+                        restaurantState,
+                        restaurantState.transformedRestaurant,
+                        scrollState
+                    )
+                    ParallaxToolbar(
+                        navController,
+                        specificRestaurantViewModel,
+                        restaurantState.transformedRestaurant,
+                        scrollState
+                    )
+                }
+                if (isLoading) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
-        }
-        if (restaurantState.commentBeingEdited != null) Dialog(
-            properties = DialogProperties(
-                dismissOnBackPress = !restaurantState.isEditSubmitting,
-                dismissOnClickOutside = !restaurantState.isEditSubmitting
-            ),
-            onDismissRequest = {
-                specificRestaurantViewModel.onEvent(
-                    ReviewEvent.OnCloseEditCommentDialog
-                )
-            }
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height((config.screenHeightDp * 0.2).dp),
-                shape = RoundedCornerShape(10.dp),
-                elevation = 10.dp
-            ) {
-                val focusManager = LocalFocusManager.current
-                Column(
-                    modifier = Modifier.padding(10.dp),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CltInput(
-                        value = restaurantState.editingReviewValue,
-                        label = "Review",
-                        error = restaurantState.editingReviewError,
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = { focusManager.clearFocus() }
-                        ),
-                        onValueChange = {
-                            specificRestaurantViewModel.onEvent(
-                                ReviewEvent.OnEditReview(
-                                    review = it
-                                )
-                            )
-                        }
+            if (restaurantState.reviewBeingEdited != null) Dialog(
+                properties = DialogProperties(
+                    dismissOnBackPress = !restaurantState.isEditSubmitting,
+                    dismissOnClickOutside = !restaurantState.isEditSubmitting
+                ),
+                onDismissRequest = {
+                    specificRestaurantViewModel.onEvent(
+                        ReviewEvent.OnCloseEditCommentDialog
                     )
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                }
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height((config.screenHeightDp * 0.2).dp),
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 10.dp
+                ) {
+                    val focusManager = LocalFocusManager.current
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        repeat(5) {
-                            TextButton(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(35.dp),
-                                contentPadding = PaddingValues(5.dp),
-                                onClick = {
-                                    focusManager.clearFocus()
-                                    specificRestaurantViewModel.onEvent(
-                                        ReviewEvent.OnEditRating(
-                                            rating = it + 1
-                                        )
-                                    )
-                                }
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Icon(
-                                        imageVector = if (it < restaurantState.editingRatingValue) {
-                                            Icons.Default.Star
-                                        } else {
-                                            Icons.Default.StarBorder
-                                        },
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colors.primary
-                                    )
-                                }
-                            }
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        CltButton(
-                            text = "Submit",
-                            withLoading = true,
-                            enabled = !restaurantState.isEditSubmitting,
-                            onClick = {
-                                focusManager.clearFocus()
+                        CltInput(
+                            value = restaurantState.editingReviewValue,
+                            label = "Review",
+                            error = restaurantState.editingReviewError,
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = { focusManager.clearFocus() }
+                            ),
+                            onValueChange = {
                                 specificRestaurantViewModel.onEvent(
-                                    ReviewEvent.OnCompleteEdit
+                                    ReviewEvent.OnEditReview(
+                                        review = it
+                                    )
                                 )
                             }
                         )
-                        AnimatedVisibility(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp),
-                            visible = restaurantState.editingRatingError != null,
-                            enter = fadeIn() + slideInHorizontally(animationSpec = spring()),
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            restaurantState.editingRatingError?.let {
-                                Text(
-                                    text = it,
-                                    color = MaterialTheme.colors.error,
-                                    style = MaterialTheme.typography.body1,
-                                )
+                            repeat(5) {
+                                TextButton(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(35.dp),
+                                    contentPadding = PaddingValues(5.dp),
+                                    onClick = {
+                                        focusManager.clearFocus()
+                                        specificRestaurantViewModel.onEvent(
+                                            ReviewEvent.OnEditRating(
+                                                rating = it + 1
+                                            )
+                                        )
+                                    }
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(
+                                            imageVector = if (it < restaurantState.editingRatingValue) {
+                                                Icons.Default.Star
+                                            } else {
+                                                Icons.Default.StarBorder
+                                            },
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colors.primary
+                                        )
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            CltButton(
+                                text = "Submit",
+                                withLoading = true,
+                                enabled = !restaurantState.isEditSubmitting,
+                                onClick = {
+                                    focusManager.clearFocus()
+                                    specificRestaurantViewModel.onEvent(
+                                        ReviewEvent.OnCompleteEdit
+                                    )
+                                }
+                            )
+                            AnimatedVisibility(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp),
+                                visible = restaurantState.editingRatingError != null,
+                                enter = fadeIn() + slideInHorizontally(animationSpec = spring()),
+                            ) {
+                                restaurantState.editingRatingError?.let {
+                                    Text(
+                                        text = it,
+                                        color = MaterialTheme.colors.error,
+                                        style = MaterialTheme.typography.body1,
+                                    )
+                                }
                             }
                         }
                     }
@@ -292,21 +305,30 @@ fun ParallaxToolbar(
                             )
                         )
                 )
-
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    Text(
-                        transformedRestaurant.cuisine,
-                        fontWeight = FontWeight.Medium,
+                    Box(
                         modifier = Modifier
                             .clip(Shapes.small)
-                            .background(colors.secondary)
+                            .background(MaterialTheme.colors.secondary)
                             .padding(vertical = 6.dp, horizontal = 16.dp)
-                    )
+                    ) {
+                        Row(){
+                            Icon(
+                                Icons.Filled.RestaurantMenu,
+                                "Cuisine",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                transformedRestaurant.cuisine,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+                    }
                 }
             }
             Column(
@@ -413,7 +435,11 @@ fun Content(
         item {
             BasicInfo(transformedRestaurantAndReview)
             Description(transformedRestaurantAndReview)
-            TabHeader(specificRestaurantViewModel, specificRestaurantState = specificRestaurantState,transformedRestaurantAndReview)
+            TabHeader(
+                specificRestaurantViewModel,
+                specificRestaurantState = specificRestaurantState,
+                transformedRestaurantAndReview
+            )
         }
     }
 }
@@ -424,7 +450,8 @@ fun Content(
 fun TabHeader(
     specificRestaurantViewModel: SpecificRestaurantViewModel,
     specificRestaurantState: SpecificRestaurantState,
-    transformedRestaurant: TransformedRestaurantAndReview) {
+    transformedRestaurant: TransformedRestaurantAndReview
+) {
     val pagerState = rememberPagerState()
 
     val tabs = listOf(

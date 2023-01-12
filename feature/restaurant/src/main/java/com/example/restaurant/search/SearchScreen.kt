@@ -87,11 +87,12 @@ fun SearchScreen(
                         modifier = Modifier
                             .fillMaxWidth(0.85f)
                             .fillMaxHeight(0.7f)
-                            .background(Color(parseColor("#F3F3F3")), RoundedCornerShape(5.dp))
-                            .clip(shape = RoundedCornerShape(5.dp))
+                            .background(Color(parseColor("#F3F3F3")), RoundedCornerShape(25.dp))
+                            .clip(shape = RoundedCornerShape(25.dp))
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 12.dp)
                         ) {
                             IconButton(onClick = { searchViewModel.onEvent(SearchEvent.OnSearch) }, modifier = Modifier.size(30.dp)) {
                                 Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
@@ -136,7 +137,7 @@ fun SearchScreen(
                         items(10) {
                             ShimmerSearchPlaceholder()
                         }
-                    if (!state.isLoading)
+                    if (!state.isLoading) {
                         items(state.searchedRestaurantList) {
                             SearchedRestaurantGridCard(
                                 restaurant = it,
@@ -148,8 +149,12 @@ fun SearchScreen(
                                 }
                             )
                         }
+                        item(){
+                            Spacer(modifier = Modifier.padding(28.dp))
+                        }
+                    }
                 }
-                Spacer(modifier = Modifier.padding(28.dp))
+
             }
         }
     }

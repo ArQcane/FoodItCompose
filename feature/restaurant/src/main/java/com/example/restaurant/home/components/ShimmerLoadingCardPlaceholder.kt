@@ -59,6 +59,12 @@ fun ShimmerLoadingCardPlaceholder(
                         .fillMaxWidth(0.5f)
                         .height(20.dp)
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                CltShimmerAnimation(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(25.dp)
+                )
             }
         }
     }

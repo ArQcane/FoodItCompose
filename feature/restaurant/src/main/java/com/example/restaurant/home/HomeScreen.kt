@@ -83,7 +83,7 @@ fun HomeScreen(
                     .padding(padding)
             ) {
                 AnimatedContent(
-                    targetState = expensiveRestaurantState.isLoading,
+                    targetState = expensiveRestaurantState.isLoading || restaurantState.isLoading,
                     transitionSpec = {
                         fadeIn() with fadeOut()
                     }
@@ -283,18 +283,6 @@ private fun StackedSearchBar(navController: NavHostController) {
                 Text("")
             }
         }
-    }
-}
-
-@Composable
-fun StackedRestaurantDisplayItems() {
-    Box(
-        modifier = Modifier
-            .padding(top = 16.dp)
-            .fillMaxWidth()
-            .height(250.dp)
-            .background(Color.White)
-    ) {
     }
 }
 

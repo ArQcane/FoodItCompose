@@ -42,9 +42,9 @@ class HomeViewModel @Inject constructor(
         getAllRestaurantsUseCase().onEach {
             when (it) {
                 is Resource.Success -> _restaurantState.update { state ->
-                    delay(500L)
                     state.copy(
                         restaurantList = it.result,
+                        isLoading = false,
                     )
                 }
                 is Resource.Failure -> {

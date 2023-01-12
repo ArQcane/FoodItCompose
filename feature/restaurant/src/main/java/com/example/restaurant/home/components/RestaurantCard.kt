@@ -7,9 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +35,7 @@ fun RestaurantCard(
             .clickable(onClick = { navigateToRestaurantScreen(restaurant.id.toString()) }),
         elevation = 4.dp
     ) {
-        Column(modifier = Modifier.width(175.dp)) {
+        Column(modifier = Modifier.width(190.dp)) {
             CltImageFromNetwork(
                 url = restaurant.restaurant_logo,
                 placeholder = {
@@ -49,7 +47,11 @@ fun RestaurantCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .border(width = 2.dp, color = MaterialTheme.colors.primary, shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colors.primary,
+                        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                    )
             )
             Column(
                 modifier = Modifier
@@ -100,9 +102,21 @@ fun RestaurantCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(text = "/5")
-                    Text(text = "(${restaurant.ratingCount})")
+                    Text(text = "(${restaurant.ratingCount})", color = MaterialTheme.colors.primaryVariant, modifier = Modifier.padding(start = 4.dp))
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "Price:", fontWeight = FontWeight.Bold)
+                    repeat(restaurant.avg_price.toInt()) {
+                        Icon(
+                            imageVector = Icons.Filled.AttachMoney,
+                            contentDescription = "Rating",
+                            tint = MaterialTheme.colors.primaryVariant
+                        )
+                    }
                 }
             }
+
         }
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
@@ -69,12 +70,17 @@ fun SearchedRestaurantGridCard(
                 )
 
                 Spacer(modifier = Modifier.height(2.dp))
+                Row(){
+                    Text(
+                        text = "Price Cost:",
+                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.subtitle1,
+                    )
+                    repeat(restaurant.avg_price.toInt()){
+                        Icon(Icons.Filled.AttachMoney, "Cost")
+                    }
+                }
 
-                Text(
-                    text = "Average Price Point: $${restaurant.avg_price.toInt()}",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.subtitle1,
-                )
 
                 Spacer(modifier = Modifier.height(2.dp))
 

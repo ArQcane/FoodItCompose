@@ -45,6 +45,13 @@ class SpecificRestaurantViewModel @Inject constructor(
         getCurrentUser()
     }
 
+    fun refreshPage() {
+        _specificRestaurantState.update { state ->
+            state.copy(isRefreshing = true)
+        }
+        getSpecificRestaurant(_specificRestaurantState.value.transformedRestaurant.id.toString())
+    }
+
     private fun getCurrentUser() {
         getCurrentLoggedInUser().onEach {
             when (it) {
@@ -68,7 +75,8 @@ class SpecificRestaurantViewModel @Inject constructor(
                     delay(500L)
                     state.copy(
                         transformedRestaurant = it.result,
-                        isLoading = false
+                        isLoading = false,
+                        isRefreshing = false,
                     )
                 }
                 is Resource.Failure -> {
@@ -122,7 +130,7 @@ class SpecificRestaurantViewModel @Inject constructor(
                     state.copy(isSubmitting = it.isLoading)
                 }
                 is Resource.Success -> _specificRestaurantState.update { state ->
-                    val newCommentList = restaurant.reviews.toMutableList().apply {
+                    val newReviewList = restaurant.reviews.toMutableList().apply {
                         add(0, it.result)
                     }
                     state.copy(
@@ -131,9 +139,9 @@ class SpecificRestaurantViewModel @Inject constructor(
                         review = "",
                         isUpdated = true,
                         transformedRestaurant = restaurant.copy(
-                            reviews = newCommentList,
-                            averageRating = newCommentList.sumOf { it.rating } / newCommentList.size.toDouble(),
-                            ratingCount = newCommentList.size,
+                            reviews = newReviewList,
+                            averageRating = newReviewList.sumOf { it.rating } / newReviewList.size.toDouble(),
+                            ratingCount = newReviewList.size,
                         ),
                     )
                 }
@@ -162,7 +170,7 @@ class SpecificRestaurantViewModel @Inject constructor(
     private fun updateReview() {
         updateReviewUseCase(
             restaurantId = _specificRestaurantState.value.transformedRestaurant.id,
-            reviewId = _specificRestaurantState.value.commentBeingEdited!!.review_id.toString(),
+            reviewId = _specificRestaurantState.value.reviewBeingEdited!!.review_id.toString(),
             review = _specificRestaurantState.value.editingReviewValue,
             rating = _specificRestaurantState.value.editingRatingValue
         ).onEach {
@@ -189,7 +197,7 @@ class SpecificRestaurantViewModel @Inject constructor(
                 }
                 is Resource.Success -> _specificRestaurantState.update { state ->
                     state.copy(
-                        commentBeingEdited = null,
+                        reviewBeingEdited = null,
                         editingReviewError = null,
                         editingRatingError = null,
                         editingRatingValue = 0,
@@ -197,7 +205,8 @@ class SpecificRestaurantViewModel @Inject constructor(
                         isEditSubmitting = false,
                         transformedRestaurant = state.transformedRestaurant.copy(
                             reviews = state.transformedRestaurant.reviews.toMutableList().apply {
-                                val index = map { it.review_id }.indexOf(state.commentBeingEdited!!.review_id)
+                                val index =
+                                    map { it.review_id }.indexOf(state.reviewBeingEdited!!.review_id)
                                 set(index, it.result)
                             }
                         )
@@ -276,7 +285,7 @@ class SpecificRestaurantViewModel @Inject constructor(
             is ReviewEvent.OpenEditCommentDialog -> _specificRestaurantState.update { state ->
                 val review = state.transformedRestaurant.reviews[event.index]
                 state.copy(
-                    commentBeingEdited = review,
+                    reviewBeingEdited = review,
                     editingReviewValue = review.review,
                     editingRatingValue = review.rating.toInt(),
                 )
@@ -295,7 +304,7 @@ class SpecificRestaurantViewModel @Inject constructor(
             }
             is ReviewEvent.OnCloseEditCommentDialog -> _specificRestaurantState.update { state ->
                 state.copy(
-                    commentBeingEdited = null,
+                    reviewBeingEdited = null,
                     editingReviewError = null,
                     editingRatingError = null,
                     editingRatingValue = 0,
