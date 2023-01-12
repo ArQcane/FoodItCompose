@@ -6,6 +6,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -71,16 +73,17 @@ fun HomeScreen(
     }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
         scaffoldState = scaffoldState,
     ) { padding ->
-        Column() {
+        Column(modifier = Modifier
+            .verticalScroll(scrollState)
+            .fillMaxSize()) {
             StackedSearchBar(navController) //SearchBarFunctionality
+            Spacer(modifier = Modifier.padding(8.dp))
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
+
             ) {
                 AnimatedContent(
                     targetState = expensiveRestaurantState.isLoading || restaurantState.isLoading,
@@ -93,8 +96,6 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Column(
-                                modifier = Modifier
-                                    .verticalScroll(rememberScrollState())
                             ) {
                                 Text(
                                     text = "All Restaurants",
@@ -148,7 +149,6 @@ fun HomeScreen(
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .verticalScroll(rememberScrollState())
                             ) {
                                 Text(
                                     text = "All Restaurants",
@@ -207,7 +207,6 @@ fun HomeScreen(
                                         }
                                     }
                                 }
-                                Spacer(modifier = Modifier.padding(28.dp))
                             }
                         }
                     }
@@ -219,70 +218,77 @@ fun HomeScreen(
 
 @Composable
 private fun StackedSearchBar(navController: NavHostController) {
-    Box(
-        modifier = Modifier
-            .fillMaxHeight(0.2f),
-        contentAlignment = Alignment.TopCenter
-    ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.5f)
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colors.primary,
-                            MaterialTheme.colors.secondary
+                .height(140.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.8f)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colors.primary,
+                                MaterialTheme.colors.primaryVariant,
+                                MaterialTheme.colors.secondary
+                            )
+                        ),
+                        shape = RoundedCornerShape(
+                            topStart = 0.dp,
+                            topEnd = 0.dp,
+                            bottomEnd = 50.dp,
+                            bottomStart = 50.dp
+                        ),
+                    )
+            ) {
+                Row(verticalAlignment = Alignment.Top, modifier = Modifier.padding(start = 16.dp)) {
+                    Icon(
+                        Icons.Filled.Home, "Home Icon", modifier = Modifier
+                            .size(50.dp),
+                        tint = Color(
+                            parseColor("#5B3256")
                         )
                     )
-                )
-        ) {
-            Row(verticalAlignment = Alignment.Top) {
-                Icon(
-                    Icons.Filled.Home, "Home Icon", modifier = Modifier
-                        .size(50.dp),
-                    tint = Color(
-                        parseColor("#5B3256")
+                    Text(
+                        text = "Home",
+                        color = Color(parseColor("#5B3256")),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        modifier = Modifier.align(CenterVertically),
                     )
-                )
-                Text(
-                    text = "Home",
-                    color = Color(parseColor("#5B3256")),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    modifier = Modifier.align(CenterVertically),
-                )
+                }
+            }
+            OutlinedButton(
+                onClick = { navController.navigate(searchScreenRoute) },
+                border = BorderStroke(1.dp, color = Color.Black),
+                shape = RoundedCornerShape(25.dp),
+                modifier = Modifier
+                    .align(alignment = Alignment.Center)
+                    .fillMaxWidth(0.85f)
+                    .fillMaxHeight(0.55f)
+                    .zIndex(3f)
+                    .graphicsLayer {
+                        translationY = 90f
+                        shadowElevation = 100f
+                    },
+            ) {
+                Row {
+                    Icon(
+                        Icons.Outlined.Search,
+                        modifier = Modifier.size(30.dp),
+                        contentDescription = "Search Icon"
+                    )
+                    Spacer(Modifier.weight(0.5f))
+                    Text(
+                        "Search your Restaurants Here!",
+                        modifier = Modifier.align(CenterVertically)
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text("")
+                }
             }
         }
-        OutlinedButton(
-            onClick = { navController.navigate(searchScreenRoute) },
-            border = BorderStroke(1.dp, color = Color.Black),
-            shape = RoundedCornerShape(25.dp),
-            modifier = Modifier
-                .align(alignment = Alignment.Center)
-                .fillMaxWidth(0.85f)
-                .fillMaxHeight(0.55f)
-                .zIndex(3f)
-                .graphicsLayer {
-                    translationY = 40f
-                    shadowElevation = 100f
-                },
-        ) {
-            Row {
-                Icon(
-                    Icons.Outlined.Search,
-                    modifier = Modifier.size(30.dp),
-                    contentDescription = "Search Icon"
-                )
-                Spacer(Modifier.weight(0.5f))
-                Text(
-                    "Search your Restaurants Here!",
-                    modifier = Modifier.align(CenterVertically)
-                )
-                Spacer(Modifier.weight(1f))
-                Text("")
-            }
-        }
-    }
 }
 

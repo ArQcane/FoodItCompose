@@ -11,6 +11,7 @@ const val searchScreenRoute = "/search"
 const val profileScreenRoute = "/profile"
 const val editProfileScreenRoute = "/editProfile"
 const val restaurantDetailRoute = "restaurant/{restaurantId}"
+const val createReviewRoute = "createReview/{restaurantId}"
 const val TransitionDurationMillis = 500
 
 fun NavHostController.navigateToAuthScreen(

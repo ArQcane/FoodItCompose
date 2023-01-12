@@ -279,10 +279,10 @@ class SpecificRestaurantViewModel @Inject constructor(
             is ReviewEvent.OnSubmit -> {
                 createReview()
             }
-            is ReviewEvent.DeleteComment -> {
+            is ReviewEvent.DeleteReview -> {
                 deleteReview(index = event.index)
             }
-            is ReviewEvent.OpenEditCommentDialog -> _specificRestaurantState.update { state ->
+            is ReviewEvent.OpenEditReviewDialog -> _specificRestaurantState.update { state ->
                 val review = state.transformedRestaurant.reviews[event.index]
                 state.copy(
                     reviewBeingEdited = review,
@@ -302,7 +302,7 @@ class SpecificRestaurantViewModel @Inject constructor(
                     editingRatingError = null
                 )
             }
-            is ReviewEvent.OnCloseEditCommentDialog -> _specificRestaurantState.update { state ->
+            is ReviewEvent.OnCloseEditReviewDialog -> _specificRestaurantState.update { state ->
                 state.copy(
                     reviewBeingEdited = null,
                     editingReviewError = null,

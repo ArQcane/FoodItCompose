@@ -114,6 +114,7 @@ fun SpecificRestaurantScreen(
             ) { isLoading ->
                 if (!isLoading) {
                     Content(
+                        navController ,
                         specificRestaurantViewModel,
                         restaurantState,
                         restaurantState.transformedRestaurant,
@@ -143,7 +144,7 @@ fun SpecificRestaurantScreen(
                 ),
                 onDismissRequest = {
                     specificRestaurantViewModel.onEvent(
-                        ReviewEvent.OnCloseEditCommentDialog
+                        ReviewEvent.OnCloseEditReviewDialog
                     )
                 }
             ) {
@@ -290,9 +291,7 @@ fun ParallaxToolbar(
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-
                 )
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -426,6 +425,7 @@ fun CircularButton(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Content(
+    navController: NavHostController,
     specificRestaurantViewModel: SpecificRestaurantViewModel,
     specificRestaurantState: SpecificRestaurantState,
     transformedRestaurantAndReview: TransformedRestaurantAndReview,
@@ -436,6 +436,7 @@ fun Content(
             BasicInfo(transformedRestaurantAndReview)
             Description(transformedRestaurantAndReview)
             TabHeader(
+                navController = navController,
                 specificRestaurantViewModel,
                 specificRestaurantState = specificRestaurantState,
                 transformedRestaurantAndReview
@@ -448,6 +449,7 @@ fun Content(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TabHeader(
+    navController: NavHostController,
     specificRestaurantViewModel: SpecificRestaurantViewModel,
     specificRestaurantState: SpecificRestaurantState,
     transformedRestaurant: TransformedRestaurantAndReview
@@ -462,6 +464,7 @@ fun TabHeader(
         },
         TabItem.Reviews() {
             Reviews(
+                navController = navController,
                 specificRestaurantViewModel = specificRestaurantViewModel,
                 specificRestaurantState = specificRestaurantState,
                 transformedRestaurant = transformedRestaurant

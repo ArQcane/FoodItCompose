@@ -30,6 +30,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.common.components.CltButton
+import com.example.common.navigation.createReviewRoute
 import com.example.common.navigation.homeScreenRoute
 import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.review.TransformedReview
@@ -42,10 +44,14 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Reviews(
+    navController: NavHostController,
     specificRestaurantViewModel: SpecificRestaurantViewModel,
     specificRestaurantState: SpecificRestaurantState,
     transformedRestaurant: TransformedRestaurantAndReview
 ) {
+    fun navigateToCreateReview(restaurantId: String) {
+        navController.navigate("createReview/$restaurantId")
+    }
 
     Row(
         modifier = Modifier
@@ -60,7 +66,9 @@ fun Reviews(
                 fontSize = 18.sp,
                 modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)
             )
-            CreateReviewScreen(specificRestaurantViewModel)
+            CltButton(onClick = { navController.navigate("createReview/${transformedRestaurant.id}") }) {
+                Text(text = "Create a review now!", color = Color.White)
+            }
             if (transformedRestaurant.reviews.isEmpty()) {
                 EmptyReviews()
             }
@@ -127,14 +135,14 @@ fun Reviews(
                             currentUserId = specificRestaurantState.currentUserId.toString(),
                             updateReview = {
                                 specificRestaurantViewModel.onEvent(
-                                    ReviewEvent.OpenEditCommentDialog(
+                                    ReviewEvent.OpenEditReviewDialog(
                                         index = index
                                     )
                                 )
                             },
                             deleteReview = {
                                 specificRestaurantViewModel.onEvent(
-                                    ReviewEvent.DeleteComment(index = index)
+                                    ReviewEvent.DeleteReview(index = index)
                                 )
                             }
                         )

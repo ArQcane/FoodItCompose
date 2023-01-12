@@ -11,6 +11,7 @@ import androidx.navigation.*
 import com.example.common.navigation.*
 import com.example.restaurant.home.HomeScreen
 import com.example.restaurant.restaurantDetails.SpecificRestaurantScreen
+import com.example.restaurant.restaurantDetails.reviews.create.CreateReviewScreen
 import com.example.restaurant.search.SearchScreen
 import com.google.accompanist.navigation.animation.composable
 
@@ -27,11 +28,11 @@ fun NavHostController.navigateToAuthScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.logInNavComposable(navController: NavHostController){
+fun NavGraphBuilder.logInNavComposable(navController: NavHostController) {
     composable(
         homeScreenRoute,
         enterTransition = {
-            when(initialState.destination.route){
+            when (initialState.destination.route) {
                 splashScreenRoute -> expandIn(animationSpec = tween(500))
                 "login" -> expandIn(animationSpec = tween(500))
                 homeScreenRoute -> EnterTransition.None
@@ -61,15 +62,23 @@ fun NavGraphBuilder.logInNavComposable(navController: NavHostController){
     composable(
         restaurantDetailRoute,
         arguments = listOf(navArgument("restaurantId") { type = NavType.StringType })
-    ){ backStackEntry ->
-        backStackEntry?.arguments?.getString("restaurantId")?.let{ restaurantId ->
+    ) { backStackEntry ->
+        backStackEntry?.arguments?.getString("restaurantId")?.let { restaurantId ->
             SpecificRestaurantScreen(navController = navController)
+        }
+    }
+    composable(
+        createReviewRoute,
+        arguments = listOf(navArgument("restaurantId") { type = NavType.StringType })
+        ) {backStackEntry ->
+        backStackEntry?.arguments?.getString("restaurantId")?.let { restaurantId ->
+            CreateReviewScreen(navController = navController)
         }
     }
     composable(
         searchScreenRoute,
         enterTransition = {
-            when(initialState.destination.route){
+            when (initialState.destination.route) {
                 searchScreenRoute -> EnterTransition.None
                 homeScreenRoute -> {
                     slideIntoContainer(
@@ -86,7 +95,7 @@ fun NavGraphBuilder.logInNavComposable(navController: NavHostController){
             }
         },
         exitTransition = {
-            when(targetState.destination.route){
+            when (targetState.destination.route) {
                 profileScreenRoute -> {
                     slideOutOfContainer(
                         towards = AnimatedContentScope.SlideDirection.Left,
@@ -102,7 +111,7 @@ fun NavGraphBuilder.logInNavComposable(navController: NavHostController){
             }
         },
         popExitTransition = {
-            when(targetState.destination.route){
+            when (targetState.destination.route) {
                 profileScreenRoute -> {
                     slideOutOfContainer(
                         towards = AnimatedContentScope.SlideDirection.Left,
@@ -117,7 +126,7 @@ fun NavGraphBuilder.logInNavComposable(navController: NavHostController){
                 }
             }
         },
-    ){
+    ) {
         SearchScreen(navController = navController)
     }
 }

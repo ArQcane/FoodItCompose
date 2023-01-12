@@ -23,7 +23,7 @@ fun ShimmerLoadingCardPlaceholder(
             .padding(5.dp),
         elevation = 4.dp
     ) {
-        Column(modifier = Modifier.width(175.dp)) {
+        Column(modifier = Modifier.width(190.dp)) {
             CltShimmerAnimation(
                 modifier = Modifier
                     .fillMaxWidth()
