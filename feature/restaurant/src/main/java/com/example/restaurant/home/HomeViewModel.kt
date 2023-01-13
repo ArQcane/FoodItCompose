@@ -26,65 +26,60 @@ class HomeViewModel @Inject constructor(
     private val _restaurantState = MutableStateFlow(HomeState())
     val restaurantState = _restaurantState.asStateFlow()
 
-    private val _expensiveRestaurantState = MutableStateFlow(HomeState())
-    val expensiveRestaurantState = _expensiveRestaurantState.asStateFlow()
-
     private val _errorChannel = Channel<String>()
     val errorChannel = _errorChannel.receiveAsFlow()
 
 
     init {
         getRestaurants()
-        getExpensiveRestaurants()
+    }
+
+    fun refreshPage() {
+        _restaurantState.update { state ->
+            state.copy(isRefreshing = true)
+        }
+        getRestaurants()
     }
 
     private fun getRestaurants() {
-        getAllRestaurantsUseCase().onEach {
-            when (it) {
+        getAllRestaurantsUseCase().onEach { restaurantResource ->
+            when (restaurantResource) {
                 is Resource.Success -> _restaurantState.update { state ->
+                    val restaurantList = restaurantResource.result
+                    val favRestaurants = restaurantList
+                        .filter { it.isFavouriteByCurrentUser }
+                        .map { restaurantList.indexOf(it) }
+                    val featuredRestaurants = restaurantList
+                        .sortedByDescending { it.averageRating }
+                        .slice(0 until if (restaurantList.size < 5) restaurantList.size else 5)
+                        .map { restaurantList.indexOf(it) }
+
                     state.copy(
-                        restaurantList = it.result,
+                        restaurantList = restaurantList,
                         isLoading = false,
+                        isRefreshing = false,
+                        favRestaurants = favRestaurants,
+                        featuredRestaurants = featuredRestaurants
                     )
                 }
                 is Resource.Failure -> {
                     _restaurantState.update { state ->
-                        state.copy(isLoading = false)
+                        state.copy(
+                            isLoading = false,
+                            isRefreshing = false
+                        )
                     }
-                    if (it.error !is ResourceError.Default) return@onEach
-                    val defaultError = it.error as ResourceError.Default
+                    if (restaurantResource.error !is ResourceError.Default) return@onEach
+                    val defaultError = restaurantResource.error as ResourceError.Default
                     _errorChannel.send(defaultError.error)
                 }
                 is Resource.Loading -> _restaurantState.update { state ->
-                    state.copy(isLoading = it.isLoading)
+                    state.copy(isLoading = restaurantResource.isLoading)
                 }
             }
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
-    private fun getExpensiveRestaurants(){
-        getExpensiveRestaurantsUseCase().onEach {
-            when (it) {
-                is Resource.Success -> _expensiveRestaurantState.update { state ->
-                    delay(500L)
-                    state.copy(
-                        restaurantList = it.result,
-                        isLoading = false
-                    )
-                }
-                is Resource.Failure -> {
-                    _expensiveRestaurantState.update { state ->
-                        state.copy(isLoading = false)
-                    }
-                    if (it.error !is ResourceError.Default) return@onEach
-                    val defaultError = it.error as ResourceError.Default
-                    _errorChannel.send(defaultError.error)
-                }
-                is Resource.Loading -> _expensiveRestaurantState.update { state ->
-                    state.copy(isLoading = it.isLoading)
-                }
-            }
-        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
-    }
+
 
     fun toggleFavorite(restaurantId: String) {
         viewModelScope.launch {

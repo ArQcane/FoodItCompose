@@ -26,8 +26,6 @@ fun RestaurantCard(
     toggleFavourite: (String) -> Unit,
     navigateToRestaurantScreen: (String) -> Unit,
 ) {
-
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
