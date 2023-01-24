@@ -127,8 +127,8 @@ class EditProfileViewModel @Inject constructor(
                 is Resource.Success -> _editProfileState.update { state ->
                     Log.d("stateUser", state.user_id.toString())
                     val cleanImage: String =
-                        result.result.profile_pic.replace("data:image/png;base64,", "")
-                            .replace("data:image/jpeg;base64,", "")
+                        result.result.profile_pic?.replace("data:image/png;base64,", "")
+                            ?.replace("data:image/jpeg;base64,", "") ?: result.result.profile_pic!!
                     val decodedString: ByteArray = Base64.getDecoder().decode(cleanImage)
                     val decodedByte =
                         BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)

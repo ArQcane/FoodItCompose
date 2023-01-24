@@ -141,8 +141,8 @@ fun profileScreenContent(
 ) {
 
     val cleanImage: String =
-        profileState.user.profile_pic.replace("data:image/png;base64,", "")
-            .replace("data:image/jpeg;base64,", "")
+        profileState.user.profile_pic?.replace("data:image/png;base64,", "")
+            ?.replace("data:image/jpeg;base64,", "") ?: profileState.user.profile_pic!!
     val decodedString: ByteArray = Base64.getDecoder().decode(cleanImage)
     val decodedByte =
         BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)

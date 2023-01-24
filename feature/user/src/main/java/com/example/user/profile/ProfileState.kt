@@ -6,9 +6,9 @@ data class ProfileState(
     val user: User = User(
         user_id = 0,
         first_name = "",
-        last_name= "",
-        username= "",
-        gender= "",
+        last_name = "",
+        username = "",
+        gender = "",
         mobile_number = 0,
         email = "",
         address = "",

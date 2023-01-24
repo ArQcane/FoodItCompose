@@ -9,7 +9,7 @@ data class User(
     val mobile_number: Long,
     val email: String,
     val address: String,
-    val profile_pic: String,
+    val profile_pic: String?,
 )
 
 
