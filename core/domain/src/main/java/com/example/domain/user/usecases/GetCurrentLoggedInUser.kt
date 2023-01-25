@@ -19,7 +19,6 @@ class GetCurrentLoggedInUser @Inject constructor(
                 (tokenResource as Resource.Failure).error
             )
         )
-        Log.d("token", tokenResource.result)
         val userResource = userRepository.validateToken(token = tokenResource.result)
         if (userResource !is Resource.Success) return@flow emit(
             Resource.Failure(

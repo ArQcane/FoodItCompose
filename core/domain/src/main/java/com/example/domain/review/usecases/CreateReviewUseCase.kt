@@ -1,7 +1,5 @@
 package com.example.domain.review.usecases
 
-import android.util.Log
-import com.example.domain.review.Review
 import com.example.domain.review.ReviewRepository
 import com.example.domain.review.TransformedReview
 import com.example.domain.user.UserRepository
@@ -10,7 +8,6 @@ import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
-import org.w3c.dom.Comment
 import javax.inject.Inject
 
 class CreateReviewUseCase @Inject constructor(
@@ -50,7 +47,6 @@ class CreateReviewUseCase @Inject constructor(
                 if (reviewResource !is Resource.Success) return@flow emit(
                     Resource.Failure((reviewResource as Resource.Failure).error)
                 )
-                Log.d("insertIdResource", insertIdResource.result)
                 val userObject = userRepository.getUserById(userId)
                 if (userObject !is Resource.Success) return@flow emit(
                     Resource.Failure((userObject as Resource.Failure).error)

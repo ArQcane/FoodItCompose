@@ -9,7 +9,6 @@ import com.example.domain.user.UserRepository
 import com.example.domain.user.usecases.GetCurrentLoggedInUser
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.restaurant.restaurantDetails.SpecificRestaurantState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

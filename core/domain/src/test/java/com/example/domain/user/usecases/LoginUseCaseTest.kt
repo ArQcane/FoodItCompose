@@ -1,5 +1,6 @@
 package com.example.domain.user.usecases
 
+import com.example.domain.user.usecases.LoginUseCase
 import com.example.domain.user.TestUserRepo
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError

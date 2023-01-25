@@ -1,7 +1,6 @@
 package com.example.restaurant.restaurantDetails
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.favourites.usecases.ToggleFavouritesUseCase

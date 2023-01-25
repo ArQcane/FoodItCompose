@@ -1,5 +1,8 @@
 package com.example.domain.user
 
+import com.example.domain.user.ReviewUser
+import com.example.domain.user.User
+import com.example.domain.user.UserRepository
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
 import java.util.*
@@ -50,7 +53,11 @@ class TestUserRepo : UserRepository {
     }
 
     override suspend fun getUserById(id: String): Resource<ReviewUser> {
-        TODO("Not yet implemented")
+        return users.find { it.user_id.toString() == id }?.let {
+            Resource.Success(ReviewUser(it.username, it.profile_pic!!))
+        } ?: Resource.Failure(
+            ResourceError.Default("Cannot find user with id $id")
+        )
     }
 
     override suspend fun validateToken(token: String): Resource<User> {
