@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -36,6 +37,7 @@ import com.example.common.components.CltInput
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.registerScreenRoute
 import com.example.common.navigation.resetPasswordFromEmailRoute
+import com.example.test.utils.Tags
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -110,7 +112,8 @@ fun LoginScreen(
                         value = state.username,
                         label = "Username",
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .testTag(Tags.USERNAME_FIELD),
                         error = state.usernameError,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
@@ -134,7 +137,8 @@ fun LoginScreen(
                             )
                         },
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .testTag(Tags.PASSWORD_FIELD),
                         label = "Password",
                         error = state.userPassError,
                         isPassword = true,
@@ -168,7 +172,9 @@ fun LoginScreen(
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     CltButton(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(Tags.LOGIN_BTN),
                         enabled = !state.isLoading,
                         onClick = {
                             focusManager.clearFocus()

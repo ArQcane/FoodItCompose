@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ fun CltInput(
     error: String?,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    testTag: String = "",
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default
@@ -44,7 +46,7 @@ fun CltInput(
 
     Column(modifier = modifier) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(testTag),
             shape = RoundedCornerShape(10.dp),
             singleLine = true,
             value = value,
