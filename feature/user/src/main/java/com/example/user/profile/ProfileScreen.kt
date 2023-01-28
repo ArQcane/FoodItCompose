@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +37,7 @@ import com.example.common.navigation.editProfileScreenRoute
 import com.example.common.navigation.loginScreenRoute
 import com.example.common.navigation.navigateToAuthScreen
 import com.example.common.theme.Shapes
+import com.example.test.tag.Tags
 import com.example.user.profile.components.dialogs.CustomAlertDialog
 import com.example.user.profile.components.dialogs.InputAlertDialog
 import kotlinx.coroutines.launch
@@ -66,10 +68,10 @@ fun ProfileScreen(
     }
     Scaffold(
         scaffoldState = scaffoldState,
-    ) {
+    ) { padding ->
         Box(
             modifier = Modifier
-                .fillMaxHeight(),
+                .fillMaxHeight().padding(padding),
             contentAlignment = Alignment.TopCenter
         ) {
             Column(
@@ -209,7 +211,7 @@ fun profileScreenContent(
                     onClick = { navController.navigate(editProfileScreenRoute) },
                     shape = Shapes.medium,
                     border = BorderStroke(1.dp, color = MaterialTheme.colors.primary),
-                    modifier = Modifier.width(150.dp),
+                    modifier = Modifier.width(150.dp).testTag(Tags.EDIT_PROFILE_NAVIGATION_BTN),
                 ) {
                     Text("Edit Profile")
                 }

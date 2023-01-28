@@ -1,5 +1,6 @@
-package com.example.domain.user
+package com.example.test.user
 
+import android.media.Image
 import com.example.domain.user.ReviewUser
 import com.example.domain.user.User
 import com.example.domain.user.UserRepository
@@ -80,7 +81,24 @@ class TestUserRepo : UserRepository {
         profile_pic: String?,
         deleteImage: Boolean?
     ): Resource<String> {
-        TODO("Not yet implemented")
+        if (this.token != token) return Resource.Failure(
+            ResourceError.Default("Invalid token")
+        )
+        val user = users.last()
+        var updatedImage = profile_pic?.let {
+            ""
+        } ?: user.profile_pic
+        if (deleteImage == true) updatedImage = null
+        val updated = user.copy(
+            first_name = firstName ?: user.first_name,
+            last_name = lastName ?: user.last_name,
+            profile_pic = updatedImage
+        )
+        users = users.toMutableList().apply {
+            val index = map { it.user_id }.indexOf(updated.user_id)
+            set(index, updated)
+        }
+        return Resource.Success("Updated account with id ${updated.user_id}")
     }
 
     override suspend fun deleteAccount(userId: String): Resource<String> {

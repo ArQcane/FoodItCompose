@@ -46,7 +46,9 @@ fun CltInput(
 
     Column(modifier = modifier) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().testTag(testTag),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(testTag),
             shape = RoundedCornerShape(10.dp),
             singleLine = true,
             value = value,

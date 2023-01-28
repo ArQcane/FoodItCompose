@@ -1,5 +1,6 @@
 package com.example.authentication.login
 
+import android.nfc.Tag
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -37,7 +38,7 @@ import com.example.common.components.CltInput
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.registerScreenRoute
 import com.example.common.navigation.resetPasswordFromEmailRoute
-import com.example.test.utils.Tags
+import com.example.test.tag.Tags
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -69,7 +70,7 @@ fun LoginScreen(
     }
     Scaffold(
         scaffoldState = scaffoldState
-    ) {
+    ) { padding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -112,8 +113,8 @@ fun LoginScreen(
                         value = state.username,
                         label = "Username",
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(Tags.USERNAME_FIELD),
+                            .fillMaxWidth(),
+                        testTag = Tags.USERNAME_FIELD,
                         error = state.usernameError,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
@@ -137,8 +138,8 @@ fun LoginScreen(
                             )
                         },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(Tags.PASSWORD_FIELD),
+                            .fillMaxWidth(),
+                        testTag = Tags.PASSWORD_FIELD,
                         label = "Password",
                         error = state.userPassError,
                         isPassword = true,
@@ -172,9 +173,7 @@ fun LoginScreen(
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     CltButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(Tags.LOGIN_BTN),
+                        modifier = Modifier.fillMaxWidth().testTag(Tags.LOGIN_BTN),
                         enabled = !state.isLoading,
                         onClick = {
                             focusManager.clearFocus()

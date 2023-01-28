@@ -161,6 +161,7 @@ class CreateReviewViewModel @Inject constructor(
             is ReviewEvent.OnSubmit -> {
                 createReview()
             }
+            else -> Unit
         }
     }
 }

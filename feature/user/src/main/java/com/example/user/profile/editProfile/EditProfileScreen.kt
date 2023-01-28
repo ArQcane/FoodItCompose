@@ -1,5 +1,6 @@
 package com.example.user.profile.editProfile
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,8 +35,10 @@ import com.example.common.components.CltImagePicker
 import com.example.common.components.CltInput
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.profileScreenRoute
+import com.example.test.tag.Tags
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun EditProfileScreen(
@@ -199,6 +203,7 @@ fun EditProfileScreenContent(
                 label = "First Name",
                 modifier = Modifier
                     .fillMaxWidth(),
+                testTag = Tags.FIRST_NAME_INPUT,
                 error = editProfileState.firstNameError,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -281,7 +286,7 @@ fun EditProfileScreenContent(
             )
             Spacer(modifier = Modifier.padding(4.dp))
             CltButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(Tags.UPDATE_PROFILE_BTN),
                 enabled = !editProfileState.isLoading,
                 onClick = {
                     focusManager.clearFocus()

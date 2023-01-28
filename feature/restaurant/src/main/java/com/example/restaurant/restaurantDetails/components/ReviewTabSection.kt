@@ -170,6 +170,9 @@ fun reviewCard(
     val decodedString: ByteArray = Base64.getDecoder().decode(cleanImage)
     val decodedByte =
         BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size).asImageBitmap()
+
+
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -313,6 +316,7 @@ private fun EmptyReviews() {
                 }
             }
         }
+        val onBackground = MaterialTheme.colors.onBackground
         Text(text = buildAnnotatedString {
             withStyle(ParagraphStyle(textAlign = TextAlign.Center)) {
                 withStyle(SpanStyle(fontSize = 24.sp)) {
@@ -320,12 +324,8 @@ private fun EmptyReviews() {
                 }
                 withStyle(
                     SpanStyle(
-                        color = MaterialTheme.colors.onBackground.copy(
-                            alpha = if (isSystemInDarkTheme()) {
-                                0.5f
-                            } else {
-                                0.7f
-                            }
+                        color = onBackground.copy(
+                            alpha = 0.7f
                         )
                     )
                 ) {
@@ -345,6 +345,8 @@ private fun calculatePercentOfUsers(reviews: List<TransformedReview>, rating: Do
 @Composable
 private fun buildAnnotatedString(restaurant: TransformedRestaurantAndReview) =
     buildAnnotatedString {
+        val onBackground = MaterialTheme.colors.onBackground
+        val primary = MaterialTheme.colors.primary
         withStyle(
             ParagraphStyle(
                 textAlign = TextAlign.Center,
@@ -355,7 +357,7 @@ private fun buildAnnotatedString(restaurant: TransformedRestaurantAndReview) =
                 SpanStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 54.sp,
-                    color = MaterialTheme.colors.primary.copy(
+                    color = primary.copy(
                         alpha = 0.8f
                     )
                 )
@@ -366,7 +368,7 @@ private fun buildAnnotatedString(restaurant: TransformedRestaurantAndReview) =
             withStyle(
                 SpanStyle(
                     fontSize = 18.sp,
-                    color = MaterialTheme.colors.onBackground.copy(
+                    color = onBackground.copy(
                         alpha = 0.7f
                     )
                 )
@@ -377,7 +379,7 @@ private fun buildAnnotatedString(restaurant: TransformedRestaurantAndReview) =
             withStyle(
                 SpanStyle(
                     fontSize = 14.sp,
-                    color = MaterialTheme.colors.onBackground.copy(
+                    color = onBackground.copy(
                         alpha = 0.5f
                     )
                 )

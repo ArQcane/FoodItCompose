@@ -1,9 +1,9 @@
-package com.example.domain.reviews.usecases
+package com.example.domain.reviews
 
 import com.example.domain.review.usecases.CreateReviewUseCase
-import com.example.domain.reviews.TestReviewRepo
+import com.example.test.review.TestReviewRepo
 import com.example.domain.user.ReviewUser
-import com.example.domain.user.TestUserRepo
+import com.example.test.user.TestUserRepo
 import com.example.domain.user.User
 import com.example.domain.user.usecases.GetCurrentLoggedInUser
 import com.example.domain.utils.Resource

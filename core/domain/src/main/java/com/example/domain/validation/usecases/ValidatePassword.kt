@@ -20,7 +20,7 @@ class ValidatePassword @Inject constructor() {
             }
             LOGIN_FLAG -> {
                 isValidated = value.isNotEmpty() && value.isNotBlank()
-                error = "Password required!"
+                error = "Password required"
             }
             else -> throw IllegalArgumentException("Invalid flag provided")
         }

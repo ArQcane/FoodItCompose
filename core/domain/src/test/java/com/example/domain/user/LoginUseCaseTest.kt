@@ -1,10 +1,9 @@
-package com.example.domain.user.usecases
+package com.example.domain.user
 
 import com.example.domain.user.usecases.LoginUseCase
-import com.example.domain.user.TestUserRepo
+import com.example.test.user.TestUserRepo
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import com.example.domain.validation.usecases.ValidateEmail
 import com.example.domain.validation.usecases.ValidatePassword
 import com.example.domain.validation.usecases.ValidateUsername
 import kotlinx.coroutines.flow.last

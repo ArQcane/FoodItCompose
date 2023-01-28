@@ -1,16 +1,14 @@
-package com.example.domain.reviews.usecases
+package com.example.domain.reviews
 
 import com.example.domain.review.usecases.DeleteReviewUseCase
-import com.example.domain.reviews.TestReviewRepo
-import com.example.domain.user.TestUserRepo
-import com.example.domain.user.usecases.GetCurrentLoggedInUser
+import com.example.test.review.TestReviewRepo
+import com.example.test.user.TestUserRepo
 import com.example.domain.utils.Resource
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 
 class DeleteReviewUseCaseTest{
 

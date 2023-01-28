@@ -1,14 +1,10 @@
-package com.example.domain.reviews
+package com.example.test.review
 
-import androidx.lifecycle.Transformations.map
-import com.example.domain.restaurant.Restaurant
 import com.example.domain.review.Review
 import com.example.domain.review.ReviewRepository
 import com.example.domain.review.TotalReviews
-import com.example.domain.user.User
 import com.example.domain.utils.Resource
 import com.example.domain.utils.ResourceError
-import org.w3c.dom.Comment
 import java.util.*
 
 class TestReviewRepo : ReviewRepository {
@@ -54,7 +50,7 @@ class TestReviewRepo : ReviewRepository {
     }
 
     override suspend fun getTotalReviewsByUser(userId: String): Resource<TotalReviews> {
-        TODO("Not yet implemented")
+        return Resource.Success(TotalReviews(0))
     }
 
     override suspend fun createReview(

@@ -1,12 +1,10 @@
-package com.example.domain.user.usecases
+package com.example.domain.user
 
-import com.example.domain.user.TestUserRepo
-import com.example.domain.user.UserRepository
+import com.example.test.user.TestUserRepo
 import com.example.domain.user.usecases.CreateAccountUseCase
 import com.example.domain.utils.Resource
 import com.example.domain.validation.usecases.*
 import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before

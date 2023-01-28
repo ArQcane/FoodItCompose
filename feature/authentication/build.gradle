@@ -7,11 +7,11 @@ plugins {
 
 android {
     namespace 'com.example.authentication'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         minSdk 27
-        targetSdk 32
+        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -61,6 +61,7 @@ dependencies {
     implementation "androidx.room:room-runtime:2.3.0"
     implementation "androidx.room:room-ktx:2.3.0"
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.2'
+    implementation project(path: ':core:test')
     kapt "androidx.room:room-compiler:2.3.0"
 
     //hilt
@@ -95,6 +96,7 @@ dependencies {
     implementation project(":core:domain")
     implementation project(":core:data")
     implementation project(":feature:common")
+    testImplementation project(":core:test")
 
     implementation "dev.chrisbanes.accompanist:accompanist-glide:0.4.2"
     implementation "com.google.accompanist:accompanist-navigation-animation:0.23.0"

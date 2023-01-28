@@ -48,7 +48,7 @@ class ProfileViewModel @Inject constructor(
                     Log.d("stateUser", state.user.user_id.toString())
                     state.copy(
                         isLoading = false,
-                        user = result.result
+                        user = result.result,
                     )
                 }
                 is Resource.Failure -> {
