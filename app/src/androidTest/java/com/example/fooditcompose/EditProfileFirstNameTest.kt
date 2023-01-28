@@ -54,7 +54,7 @@ class EditProfileFirstNameTest {
                 }
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = homeScreenRoute
+                    startDestination = profileScreenRoute
                 ) {
                     logInNavComposable(navController)
                     profileNavComposable(navController)

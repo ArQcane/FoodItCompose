@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CltInput(
+    leadingIcon: @Composable () -> Unit = {},
     value: String,
     label: String,
     error: String?,
@@ -49,6 +50,7 @@ fun CltInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(testTag),
+            leadingIcon = leadingIcon,
             shape = RoundedCornerShape(10.dp),
             singleLine = true,
             value = value,

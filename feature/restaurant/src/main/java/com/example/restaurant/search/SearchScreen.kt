@@ -74,47 +74,34 @@ fun SearchScreen(
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .background(
-                            Brush.horizontalGradient(
-                                colors = listOf(
-                                    MaterialTheme.colors.primary,
-                                    MaterialTheme.colors.secondary
-                                )
-                            )
+                            Color.White
                         )
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth(0.85f)
-                            .fillMaxHeight(0.7f)
-                            .background(Color(parseColor("#F3F3F3")), RoundedCornerShape(25.dp))
-                            .clip(shape = RoundedCornerShape(25.dp))
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 12.dp)
-                        ) {
-                            IconButton(onClick = { searchViewModel.onEvent(SearchEvent.OnSearch) }, modifier = Modifier.size(30.dp)) {
-                                Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
+                    CltInput(
+                        value = state.searchedQuery,
+                        leadingIcon = {
+                            IconButton(
+                                onClick = { searchViewModel.onEvent(SearchEvent.OnSearch) },
+                                modifier = Modifier.size(30.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Search,
+                                    contentDescription = "Search"
+                                )
                             }
-                            Spacer(Modifier.weight(0.5f))
-                            CltInput(
-                                value = state.searchedQuery,
-                                label = "Search Your Restaurants Here!",
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                error = state.searchedQueryError,
-                                onValueChange = {
-                                    searchViewModel.onEvent(
-                                        SearchEvent.OnSearchedQueryChanged(searchedQuery = it)
-                                    )
-                                }
+                        },
+                        label = "Search Your Restaurants Here!",
+                        modifier = Modifier
+                            .fillMaxWidth().padding(horizontal = 20.dp),
+                        error = state.searchedQueryError,
+                        onValueChange = {
+                            searchViewModel.onEvent(
+                                SearchEvent.OnSearchedQueryChanged(searchedQuery = it)
                             )
-                            Spacer(Modifier.weight(1f))
-                            Text("")
                         }
-                    }
+                    )
                 }
+
             }
             Column(
                 modifier = Modifier
@@ -123,7 +110,7 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.spacedBy(26.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally,
 
-            ) {
+                ) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -149,7 +136,7 @@ fun SearchScreen(
                                 }
                             )
                         }
-                        item(){
+                        item() {
                             Spacer(modifier = Modifier.padding(28.dp))
                         }
                     }

@@ -2,9 +2,12 @@ package com.example.common.components
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
@@ -43,13 +46,14 @@ fun CltImagePicker(
     }
 
     val pickImage = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
+        uri ?: return@rememberLauncherForActivityResult
         val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             ImageDecoder.decodeBitmap(
                 ImageDecoder.createSource(
                     context.contentResolver,
-                    uri!!
+                    uri
                 )
             )
         } else {
@@ -90,11 +94,17 @@ fun CltImagePicker(
         Spacer(modifier = Modifier.height(10.dp))
         CltButton(
             modifier = Modifier
-                .width(imageWidth).align(Alignment.CenterHorizontally),
+                .width(imageWidth)
+                .align(Alignment.CenterHorizontally),
             text = value?.let { "Change picture" } ?: "Choose picture",
             withLoading = true,
             enabled = true,
-            onClick = { pickImage.launch("image/*") }
+            onClick = {
+                val pickVisualMediaRequest = PickVisualMediaRequest(
+                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                )
+                pickImage.launch(pickVisualMediaRequest)
+            }
         )
         AnimatedVisibility(
             visible = error != null,

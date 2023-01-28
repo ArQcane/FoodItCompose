@@ -24,7 +24,7 @@ class TestUserRepo : UserRepository {
                     mobile_number = 6587789994,
                     email = "$it${10 - it}@gmail.com",
                     address = "living in street$it",
-                    profile_pic = null,
+                    profile_pic = testProfilePic,
                 )
                 add(user)
             }

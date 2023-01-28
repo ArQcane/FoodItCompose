@@ -74,7 +74,7 @@ fun RegisterScreen(
 
     Scaffold(
         scaffoldState = scaffoldState
-    ) {
+    ) { padding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier

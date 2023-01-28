@@ -71,7 +71,8 @@ fun ProfileScreen(
     ) { padding ->
         Box(
             modifier = Modifier
-                .fillMaxHeight().padding(padding),
+                .fillMaxHeight()
+                .padding(padding),
             contentAlignment = Alignment.TopCenter
         ) {
             Column(
@@ -142,8 +143,7 @@ fun profileScreenContent(
     profileState: ProfileState
 ) {
 
-    val cleanImage: String =
-        profileState.user.profile_pic?.replace("data:image/png;base64,", "")
+    val cleanImage: String = profileState.user.profile_pic?.replace("data:image/png;base64,", "")
             ?.replace("data:image/jpeg;base64,", "") ?: profileState.user.profile_pic!!
     val decodedString: ByteArray = Base64.getDecoder().decode(cleanImage)
     val decodedByte =
@@ -211,7 +211,9 @@ fun profileScreenContent(
                     onClick = { navController.navigate(editProfileScreenRoute) },
                     shape = Shapes.medium,
                     border = BorderStroke(1.dp, color = MaterialTheme.colors.primary),
-                    modifier = Modifier.width(150.dp).testTag(Tags.EDIT_PROFILE_NAVIGATION_BTN),
+                    modifier = Modifier
+                        .width(150.dp)
+                        .testTag(Tags.EDIT_PROFILE_NAVIGATION_BTN),
                 ) {
                     Text("Edit Profile")
                 }
