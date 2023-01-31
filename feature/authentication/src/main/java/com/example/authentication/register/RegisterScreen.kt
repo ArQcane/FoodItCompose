@@ -30,11 +30,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.authentication.R
 import com.example.authentication.navigationArgs.navigateToAuthScreen
-import com.example.common.components.CltButton
-import com.example.common.components.CltImagePicker
-import com.example.common.components.CltInput
+import com.example.common.components.GradientButton
+import com.example.common.components.ProfileImagePicker
+import com.example.common.components.CustomInputTextField
 import com.example.common.navigation.loginScreenRoute
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -121,7 +120,7 @@ fun RegisterScreen(
                         color = MaterialTheme.colors.primary
                     )
                     Spacer(modifier = Modifier.padding(12.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.first_name,
                         label = "First Name",
                         modifier = Modifier
@@ -141,7 +140,7 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.last_name,
                         label = "Last Name",
                         modifier = Modifier
@@ -161,7 +160,7 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.username,
                         label = "User Name",
                         modifier = Modifier
@@ -186,7 +185,7 @@ fun RegisterScreen(
                         Modifier.padding(4.dp),
                         fontSize = 12.sp,
                     )
-                    CltInput(
+                    CustomInputTextField(
                         value = state.user_pass,
                         label = "User Password",
                         modifier = Modifier
@@ -206,7 +205,7 @@ fun RegisterScreen(
                             )
                         }
                     )
-                    CltInput(
+                    CustomInputTextField(
                         value = state.confirmUserPass,
                         label = "Confirm User Password",
                         modifier = Modifier
@@ -227,7 +226,7 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.gender,
                         label = "User Gender",
                         modifier = Modifier
@@ -247,7 +246,7 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.mobile_number.toString(),
                         label = "User Mobile Number",
                         modifier = Modifier
@@ -273,7 +272,7 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.email,
                         label = "User Email Address",
                         modifier = Modifier
@@ -293,7 +292,7 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.address,
                         label = "User Address",
                         modifier = Modifier
@@ -313,7 +312,7 @@ fun RegisterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltImagePicker(
+                    ProfileImagePicker(
                         modifier = Modifier
                             .fillMaxWidth(0.6f)
                             .aspectRatio(1f)
@@ -338,7 +337,7 @@ fun RegisterScreen(
                         )
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
-                    CltButton(
+                    GradientButton(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !state.isLoading,
                         onClick = {

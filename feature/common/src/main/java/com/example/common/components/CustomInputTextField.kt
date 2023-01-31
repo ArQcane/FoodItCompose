@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CltInput(
+fun CustomInputTextField(
     leadingIcon: @Composable () -> Unit = {},
     value: String,
     label: String,

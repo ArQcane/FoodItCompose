@@ -30,9 +30,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.example.common.components.CltButton
-import com.example.common.components.CltImagePicker
-import com.example.common.components.CltInput
+import com.example.common.components.GradientButton
+import com.example.common.components.ProfileImagePicker
+import com.example.common.components.CustomInputTextField
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.profileScreenRoute
 import com.example.test.tag.Tags
@@ -182,7 +182,7 @@ fun EditProfileScreenContent(
                 color = MaterialTheme.colors.primary
             )
             Spacer(modifier = Modifier.padding(12.dp))
-            CltImagePicker(
+            ProfileImagePicker(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .wrapContentHeight()
@@ -198,7 +198,7 @@ fun EditProfileScreenContent(
                 error = editProfileState.profilePicError
             )
             Spacer(modifier = Modifier.padding(4.dp))
-            CltInput(
+            CustomInputTextField(
                 value = editProfileState.first_name,
                 label = "First Name",
                 modifier = Modifier
@@ -219,7 +219,7 @@ fun EditProfileScreenContent(
                 }
             )
             Spacer(modifier = Modifier.padding(4.dp))
-            CltInput(
+            CustomInputTextField(
                 value = editProfileState.last_name,
                 label = "Last Name",
                 modifier = Modifier
@@ -239,7 +239,7 @@ fun EditProfileScreenContent(
                 }
             )
             Spacer(modifier = Modifier.padding(4.dp))
-            CltInput(
+            CustomInputTextField(
                 value = editProfileState.mobile_number.toString(),
                 label = "User Mobile Number",
                 modifier = Modifier
@@ -265,7 +265,7 @@ fun EditProfileScreenContent(
                 }
             )
             Spacer(modifier = Modifier.padding(4.dp))
-            CltInput(
+            CustomInputTextField(
                 value = editProfileState.address,
                 label = "User Address",
                 modifier = Modifier
@@ -285,7 +285,7 @@ fun EditProfileScreenContent(
                 }
             )
             Spacer(modifier = Modifier.padding(4.dp))
-            CltButton(
+            GradientButton(
                 modifier = Modifier.fillMaxWidth().testTag(Tags.UPDATE_PROFILE_BTN),
                 enabled = !editProfileState.isLoading,
                 onClick = {

@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun CltShimmerAnimation(
+fun ShimmerAnimation(
     modifier: Modifier = Modifier,
     lightModeBaseColor: Color = Color.LightGray.copy(0.3f),
     lightModeHighlightColor: Color = Color.LightGray.copy(0.8f),

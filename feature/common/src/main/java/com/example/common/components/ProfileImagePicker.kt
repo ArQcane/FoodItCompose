@@ -2,10 +2,8 @@ package com.example.common.components
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,7 +30,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CltImagePicker(
+fun ProfileImagePicker(
     modifier: Modifier = Modifier,
     value: Bitmap?,
     onValueChange: (Bitmap) -> Unit,
@@ -92,7 +90,7 @@ fun CltImagePicker(
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
-        CltButton(
+        GradientButton(
             modifier = Modifier
                 .width(imageWidth)
                 .align(Alignment.CenterHorizontally),

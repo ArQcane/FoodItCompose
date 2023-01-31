@@ -1,6 +1,5 @@
 package com.example.restaurant.search
 
-import android.graphics.Color.parseColor
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
@@ -20,8 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -31,7 +27,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.example.common.components.CltInput
+import com.example.common.components.CustomInputTextField
 import com.example.restaurant.search.components.SearchedRestaurantGridCard
 import com.example.restaurant.search.components.ShimmerSearchPlaceholder
 import kotlinx.coroutines.launch
@@ -77,7 +73,7 @@ fun SearchScreen(
                             Color.White
                         )
                 ) {
-                    CltInput(
+                    CustomInputTextField(
                         value = state.searchedQuery,
                         leadingIcon = {
                             IconButton(

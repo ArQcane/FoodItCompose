@@ -2,11 +2,9 @@ package com.example.restaurant.restaurantDetails.components
 
 import android.graphics.BitmapFactory
 import android.os.Build
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,14 +28,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.common.components.CltButton
-import com.example.common.navigation.createReviewRoute
-import com.example.common.navigation.homeScreenRoute
+import com.example.common.components.GradientButton
 import com.example.domain.restaurant.TransformedRestaurantAndReview
 import com.example.domain.review.TransformedReview
 import com.example.restaurant.restaurantDetails.SpecificRestaurantState
 import com.example.restaurant.restaurantDetails.SpecificRestaurantViewModel
-import com.example.restaurant.restaurantDetails.reviews.create.CreateReviewScreen
 import com.example.restaurant.restaurantDetails.reviews.create.ReviewEvent
 import java.util.*
 
@@ -66,7 +61,7 @@ fun Reviews(
                 fontSize = 18.sp,
                 modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)
             )
-            CltButton(onClick = { navController.navigate("createReview/${transformedRestaurant.id}") }) {
+            GradientButton(onClick = { navController.navigate("createReview/${transformedRestaurant.id}") }) {
                 Text(text = "Create a review now!", color = Color.White)
             }
             if (transformedRestaurant.reviews.isEmpty()) {

@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.common.components.CltShimmerAnimation
+import com.example.common.components.ShimmerAnimation
 
 @Composable
 fun ShimmerSearchPlaceholder() {
@@ -39,7 +39,7 @@ fun ShimmerSearchPlaceholder() {
                     shape = RoundedCornerShape(24.dp),
                     modifier = Modifier.wrapContentSize(),
                 ) {
-                    CltShimmerAnimation(
+                    ShimmerAnimation(
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .height(20.dp)
@@ -48,7 +48,7 @@ fun ShimmerSearchPlaceholder() {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                CltShimmerAnimation(
+                ShimmerAnimation(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
                         .height(25.dp)
@@ -56,7 +56,7 @@ fun ShimmerSearchPlaceholder() {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                CltShimmerAnimation(
+                ShimmerAnimation(
                     modifier = Modifier
                         .fillMaxWidth(0.6f)
                         .height(20.dp)
@@ -64,7 +64,7 @@ fun ShimmerSearchPlaceholder() {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                CltShimmerAnimation(
+                ShimmerAnimation(
                     modifier = Modifier
                         .fillMaxWidth(0.6f)
                         .height(20.dp)
@@ -72,7 +72,7 @@ fun ShimmerSearchPlaceholder() {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                CltShimmerAnimation(
+                ShimmerAnimation(
                     modifier = Modifier
                         .height(25.dp)
                         .fillMaxWidth(0.5f)
@@ -82,7 +82,7 @@ fun ShimmerSearchPlaceholder() {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CltShimmerAnimation(
+                    ShimmerAnimation(
                         modifier = Modifier
                             .background(color = Color.White)
                             .width(75.dp)
@@ -90,7 +90,7 @@ fun ShimmerSearchPlaceholder() {
                             .clip(RoundedCornerShape(8.dp))
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
-                    CltShimmerAnimation(
+                    ShimmerAnimation(
                         modifier = Modifier
                             .fillMaxWidth(0.3f)
                             .aspectRatio(1f)
@@ -102,7 +102,7 @@ fun ShimmerSearchPlaceholder() {
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.size(width = 140.dp, height = 140.dp)
             ) {
-                CltShimmerAnimation(
+                ShimmerAnimation(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
                         .fillMaxWidth()

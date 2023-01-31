@@ -37,9 +37,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.authentication.R
 import com.example.authentication.navigationArgs.navigateToAuthScreen
-import com.example.common.components.CltButton
-import com.example.common.components.CltInput
-import kotlinx.coroutines.flow.collect
+import com.example.common.components.GradientButton
+import com.example.common.components.CustomInputTextField
 import kotlinx.coroutines.launch
 
 
@@ -75,7 +74,7 @@ fun ResetPasswordWithEmailScreen(
     Scaffold(
         scaffoldState = scaffoldState
 
-    ) {
+    ) { padding ->
         Column(
             verticalArrangement = Arrangement.Center
         ) {
@@ -149,7 +148,7 @@ fun ResetPasswordWithEmailScreen(
                         color = MaterialTheme.colors.primary
                     )
                     Spacer(modifier = Modifier.padding(16.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.email,
                         label = "Email",
                         modifier = Modifier
@@ -169,7 +168,7 @@ fun ResetPasswordWithEmailScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
-                    CltButton(
+                    GradientButton(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !state.isLoading,
                         onClick = {

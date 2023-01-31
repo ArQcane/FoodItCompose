@@ -46,9 +46,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.example.common.components.CltButton
-import com.example.common.components.CltImageFromNetwork
-import com.example.common.components.CltInput
+import com.example.common.components.GradientButton
+import com.example.common.components.ImageBitmapFromNetwork
+import com.example.common.components.CustomInputTextField
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.theme.Shapes
 import com.example.common.theme.primary
@@ -160,7 +160,7 @@ fun SpecificRestaurantScreen(
                         modifier = Modifier.padding(10.dp),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        CltInput(
+                        CustomInputTextField(
                             value = restaurantState.editingReviewValue,
                             label = "Review",
                             error = restaurantState.editingReviewError,
@@ -212,7 +212,7 @@ fun SpecificRestaurantScreen(
                                 }
                             }
                             Spacer(modifier = Modifier.width(10.dp))
-                            CltButton(
+                            GradientButton(
                                 text = "Submit",
                                 withLoading = true,
                                 enabled = !restaurantState.isEditSubmitting,
@@ -280,7 +280,7 @@ fun ParallaxToolbar(
                     .graphicsLayer {
                         alpha = 1f - offsetProgress
                     }) {
-                CltImageFromNetwork(
+                ImageBitmapFromNetwork(
                     contentScale = ContentScale.Crop,
                     url = transformedRestaurant.restaurant_logo,
                     placeholder = {

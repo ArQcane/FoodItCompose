@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.common.components.CltImageFromNetwork
+import com.example.common.components.ImageBitmapFromNetwork
 import com.example.domain.restaurant.TransformedRestaurant
 
 
@@ -34,7 +34,7 @@ fun RestaurantCard(
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.width(190.dp)) {
-            CltImageFromNetwork(
+            ImageBitmapFromNetwork(
                 url = restaurant.restaurant_logo,
                 placeholder = {
                     Box(contentAlignment = Alignment.Center) {

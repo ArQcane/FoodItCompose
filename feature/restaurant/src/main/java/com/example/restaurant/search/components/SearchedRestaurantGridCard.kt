@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.common.components.CltImageFromNetwork
+import com.example.common.components.ImageBitmapFromNetwork
 import com.example.domain.restaurant.TransformedRestaurant
 
 @Composable
@@ -150,7 +150,7 @@ fun SearchedRestaurantGridCard(
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.size(width = 140.dp, height = 140.dp)
             ) {
-                CltImageFromNetwork(
+                ImageBitmapFromNetwork(
                     url = restaurant.restaurant_logo,
                     placeholder = {
                         Box(contentAlignment = Alignment.Center) {

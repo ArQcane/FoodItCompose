@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CltButton(
+fun GradientButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     shape: Shape = RoundedCornerShape(10.dp),
@@ -54,7 +54,7 @@ fun CltButton(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CltButton(
+fun GradientButton(
     modifier: Modifier = Modifier,
     text: String,
     withLoading: Boolean,

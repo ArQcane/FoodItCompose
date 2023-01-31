@@ -1,12 +1,9 @@
 package com.example.restaurant.restaurantDetails.reviews.create
 
-import android.graphics.Color.parseColor
-import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -21,10 +18,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -37,13 +32,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.example.common.components.CltButton
-import com.example.common.components.CltImageFromNetwork
-import com.example.common.components.CltInput
+import com.example.common.components.GradientButton
+import com.example.common.components.ImageBitmapFromNetwork
+import com.example.common.components.CustomInputTextField
 import com.example.restaurant.R
 import com.example.restaurant.restaurantDetails.CircularButton
-import com.example.restaurant.restaurantDetails.SpecificRestaurantState
-import com.example.restaurant.restaurantDetails.SpecificRestaurantViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
@@ -78,7 +71,7 @@ fun CreateReviewScreen(
 
     Scaffold(
         scaffoldState = scaffoldState,
-    ) {
+    ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxHeight(),
@@ -205,7 +198,7 @@ fun DescriptionBox(createReviewViewModel: CreateReviewViewModel) {
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.size(width = 140.dp, height = 140.dp)
             ) {
-                CltImageFromNetwork(
+                ImageBitmapFromNetwork(
                     url = state.transformedRestaurant.restaurant_logo,
                     placeholder = {
                         Box(contentAlignment = Alignment.Center) {
@@ -237,7 +230,7 @@ fun SendReviewBox(
 
     Box(modifier = Modifier.background(White)) {
         Column() {
-            CltInput(
+            CustomInputTextField(
                 modifier = Modifier.onFocusEvent {
                     if (!it.isFocused) return@onFocusEvent
                     scope.launch {
@@ -297,7 +290,7 @@ fun SendReviewBox(
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))
-                CltButton(
+                GradientButton(
                     text = "Submit",
                     withLoading = true,
                     enabled = !state.isSubmitting,

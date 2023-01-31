@@ -17,7 +17,7 @@ import java.net.URL
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CltImageFromNetwork(
+fun ImageBitmapFromNetwork(
     modifier: Modifier = Modifier,
     url: String,
     placeholder: @Composable () -> Unit,

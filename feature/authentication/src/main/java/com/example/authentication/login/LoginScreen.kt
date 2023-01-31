@@ -1,6 +1,5 @@
 package com.example.authentication.login
 
-import android.nfc.Tag
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -33,13 +32,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.example.authentication.R
-import com.example.common.components.CltButton
-import com.example.common.components.CltInput
+import com.example.common.components.GradientButton
+import com.example.common.components.CustomInputTextField
 import com.example.common.navigation.homeScreenRoute
 import com.example.common.navigation.registerScreenRoute
 import com.example.common.navigation.resetPasswordFromEmailRoute
 import com.example.test.tag.Tags
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -109,7 +107,7 @@ fun LoginScreen(
                         color = colors.primaryVariant
                     )
                     Spacer(modifier = Modifier.padding(16.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.username,
                         label = "Username",
                         modifier = Modifier
@@ -130,7 +128,7 @@ fun LoginScreen(
                         }
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
-                    CltInput(
+                    CustomInputTextField(
                         value = state.user_pass,
                         onValueChange = {
                             loginViewModel.onEvent(
@@ -172,7 +170,7 @@ fun LoginScreen(
                         }
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
-                    CltButton(
+                    GradientButton(
                         modifier = Modifier.fillMaxWidth().testTag(Tags.LOGIN_BTN),
                         enabled = !state.isLoading,
                         onClick = {

@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.common.components.CltShimmerAnimation
+import com.example.common.components.ShimmerAnimation
 
 @Composable
 fun ShimmerLoadingCardPlaceholder(
@@ -24,7 +24,7 @@ fun ShimmerLoadingCardPlaceholder(
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.width(190.dp)) {
-            CltShimmerAnimation(
+            ShimmerAnimation(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
@@ -40,13 +40,13 @@ fun ShimmerLoadingCardPlaceholder(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CltShimmerAnimation(
+                    ShimmerAnimation(
                         modifier = Modifier
                             .weight(1f)
                             .height(25.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    CltShimmerAnimation(
+                    ShimmerAnimation(
                         modifier = Modifier
                             .fillMaxWidth(0.2f)
                             .aspectRatio(1f)
@@ -54,13 +54,13 @@ fun ShimmerLoadingCardPlaceholder(
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                CltShimmerAnimation(
+                ShimmerAnimation(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .height(20.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                CltShimmerAnimation(
+                ShimmerAnimation(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
                         .height(25.dp)
